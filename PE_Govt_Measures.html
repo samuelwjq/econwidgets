@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Government Corrective Measures for Positive Externalities</title>
   <style>
-/* ECON WIDGET DESIGN SYSTEM v1 — shared across all four standalone files. */
+/* ECON WIDGET DESIGN SYSTEM v2 — shared across all four standalone files. */
 :root{--accent:#4169e1;--ink:#1f2937;--muted:#6b7280;--border:#e5e7eb;--panel:#f3f4f6;--blue:#2563eb;--green:#16a34a;--red:#dc2626;--radius:8px}
 *{box-sizing:border-box}
 body{font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:var(--ink);background:#fff;max-width:1240px;margin:0 auto;padding:20px 16px;line-height:1.5}
@@ -31,7 +31,7 @@ select,button{font:600 13px/1.4 system-ui,sans-serif;min-height:40px;border:1px 
 select{width:auto;text-overflow:ellipsis}
 button:hover{border-color:var(--accent);background:#f0f4ff}
 :focus-visible{outline:3px solid #819bea;outline-offset:3px}
-.toolbar{display:flex;gap:8px;flex-wrap:wrap;align-items:center;padding-top:8px;border-top:1px solid #dcdfe5}
+.export-format{display:flex;align-items:center;gap:6px;font-size:12px;font-weight:600}.toolbar{margin-top:12px;display:flex;gap:8px;flex-wrap:wrap;align-items:center;padding-top:8px;border-top:1px solid #dcdfe5}
 .toolbar .hint{flex:1;font-size:12px;color:var(--muted);min-width:140px}
 .reset-button{color:#4169e1;border-color:#b6c6f5}
 .diagram-frame{overflow-x:auto;border:1px solid var(--border);border-radius:var(--radius);background:#fff}
@@ -163,8 +163,8 @@ strong,b{color:#dc2626!important;font-weight:700}
       <text id="label-policy-curve" fill="#4169e1" font-weight="bold" style="display: none;"></text>
       <text id="label-policy-arrow" fill="#4169e1" font-weight="bold" font-size="11" style="display: none;">Subsidy</text>
 
-      <text x="75" y="20" font-weight="bold">Price / Costs / Benefits</text>
-      <text x="575" y="425" font-weight="bold">Qty</text>
+      <text class="axis-title" x="64" y="12" text-anchor="end" font-weight="bold" style="font-size:12px"><tspan x="64">Price</tspan><tspan x="64" dy="14">Costs</tspan><tspan x="64" dy="14">Benefits</tspan></text>
+      <text class="axis-title" x="600" y="385" font-weight="bold">Qty</text>
       
 
       <line id="arrow-meb" stroke="#2563eb" stroke-width="2" marker-start="url(#arrow-start-blue)" marker-end="url(#arrow-end-blue)" style="display: none;" />
@@ -221,7 +221,7 @@ strong,b{color:#dc2626!important;font-weight:700}
     <h3 class="glossary-title">Key Concepts & Policies</h3>
 <details><summary>Diagram assumptions &amp; definitions</summary><p>This diagram illustrates positive externalities in consumption: MSB = MPB + MEB, with no external costs (MSC = MPC).</p><p><strong>MPB:</strong> the additional benefit to the consumer from consuming an additional unit. <strong>MPC:</strong> the additional cost to the producer of producing an additional unit.</p></details>
 
-    <details open>
+    <details>
       <summary>Deadweight Loss (DWL)</summary>
       <p><b>DWL</b> is the reduction in <b>net benefit to society</b> because output is not at the <b>socially optimal level</b> where <b>MSB = MSC</b>.</p>
     </details>
@@ -879,7 +879,7 @@ strong,b{color:#dc2626!important;font-weight:700}
   toggleSubsidyCost.addEventListener('change', updateDiagram);
 
 
-  /* SHARED INTERACTIONS v1 — presentation only; original equations are above. */
+  /* SHARED INTERACTIONS v2 — presentation only; original equations are above. */
   const widgetSvg=document.getElementById('diagram');
   const widgetControls=document.querySelector('.controls');
   const widgetIsPolicy=!!document.getElementById('policy-select');
@@ -897,8 +897,8 @@ strong,b{color:#dc2626!important;font-weight:700}
   tip.addEventListener('mouseleave',hideTooltip);
   const toolbar=document.createElement('div');toolbar.className='toolbar';
   toolbar.innerHTML='<span class="hint">Hover, tap or focus diagram points and shaded areas.</span><button type="button" class="zoom-button" aria-pressed="false">Enlarge diagram</button><button type="button" class="reset-button"><strong>Reset Diagram</strong></button>';
-  widgetControls.append(toolbar);
-  const help=document.createElement('p');help.className='diagram-help';help.textContent='Use Enlarge diagram for a closer view on smaller screens.';widgetFrame.after(help);
+  widgetFrame.after(toolbar);toolbar.setAttribute("aria-label","Diagram view and export controls");
+  const help=document.createElement('p');help.className='diagram-help';help.textContent='Use Enlarge diagram for a closer view on smaller screens.';toolbar.after(help);
   toolbar.querySelector('.zoom-button').onclick=e=>{
     const enlarged=widgetFrame.classList.toggle('zoomed');
     e.currentTarget.setAttribute('aria-pressed',String(enlarged));e.currentTarget.textContent=enlarged?'Fit diagram':'Enlarge diagram';
@@ -907,12 +907,12 @@ strong,b{color:#dc2626!important;font-weight:700}
   toolbar.querySelector('.reset-button').onclick=()=>{
     widgetInitial.forEach(({el,value,checked})=>{el.value=value;if(el.type==='checkbox')el.checked=checked;});
     const select=document.getElementById('policy-select');if(select)select.dispatchEvent(new Event('change'));
-    document.querySelectorAll('.sidebar details').forEach(el=>el.open=el.hasAttribute('data-initial-open'));
+    document.querySelectorAll('.sidebar details').forEach(el=>el.open=false);
     widgetFrame.classList.remove('zoomed');widgetFrame.scrollLeft=0;
     const zoom=toolbar.querySelector('.zoom-button');zoom.textContent='Enlarge diagram';zoom.setAttribute('aria-pressed','false');
     dismissTooltip();updateDiagram();
   };
-  document.querySelectorAll('.sidebar details[open]').forEach(el=>el.setAttribute('data-initial-open',''));
+  document.querySelectorAll('.sidebar details').forEach(el=>el.open=false);
   document.getElementById('toggle-tooltips').addEventListener('change',dismissTooltip);
   widgetControls.addEventListener('input',dismissTooltip);widgetControls.addEventListener('change',dismissTooltip);
   document.addEventListener('keydown',e=>{if(e.key==='Escape')dismissTooltip();});
@@ -1032,6 +1032,9 @@ strong,b{color:#dc2626!important;font-weight:700}
   const exportStatus=document.createElement('p');exportStatus.className='diagram-help';exportStatus.setAttribute('role','status');toolbar.after(exportStatus);
   const downloadButton=document.createElement('button');downloadButton.type='button';downloadButton.textContent='Download diagram';toolbar.append(downloadButton);
   const copyButton=document.createElement('button');copyButton.type='button';copyButton.textContent='Copy diagram';toolbar.append(copyButton);
+  const exportLabel=document.createElement('label');exportLabel.className='export-format';exportLabel.textContent='Image style ';
+  const exportStyle=document.createElement('select');exportStyle.setAttribute('aria-label','Image style');exportStyle.innerHTML='<option value=colour>Colour</option><option value=grayscale>Grayscale (print)</option>';exportLabel.append(exportStyle);toolbar.insertBefore(exportLabel,downloadButton);
+  exportStyle.addEventListener('change',()=>{exportStatus.textContent='';});
   function diagramSVG(){
     const clone=widgetSvg.cloneNode(true),src=[widgetSvg,...widgetSvg.querySelectorAll('*')],dst=[clone,...clone.querySelectorAll('*')];
     const props=['display','visibility','fill','fill-opacity','stroke','stroke-width','stroke-opacity','stroke-dasharray','stroke-linecap','stroke-linejoin','paint-order','opacity','font-family','font-size','font-weight','font-style','text-anchor','dominant-baseline','baseline-shift','marker-start','marker-end'];
@@ -1041,12 +1044,33 @@ strong,b{color:#dc2626!important;font-weight:700}
     const ns='http://www.w3.org/2000/svg',out=document.createElementNS(ns,'svg');out.setAttribute('xmlns',ns);out.setAttribute('width','1420');out.setAttribute('height','1140');out.setAttribute('viewBox','0 0 710 570');
     const bg=document.createElementNS(ns,'rect');bg.setAttribute('width','710');bg.setAttribute('height','570');bg.setAttribute('fill','white');out.append(bg);
     const title=document.createElementNS(ns,'text');title.setAttribute('x','20');title.setAttribute('y','25');title.setAttribute('style','font:bold 17px system-ui;fill:#4169e1');title.textContent=document.querySelector('h1').textContent;out.append(title);
-    const policy=document.getElementById('policy-select');if(policy){const sub=document.createElementNS(ns,'text');sub.setAttribute('x','20');sub.setAttribute('y','45');sub.setAttribute('style','font:13px system-ui;fill:#374151');sub.textContent=policy.selectedOptions[0].textContent;out.append(sub);}out.append(clone);if(policy?.value==='ban'){const legend=document.createElementNS(ns,'text');legend.setAttribute('x','20');legend.setAttribute('y','553');legend.setAttribute('style','font:12px system-ui;fill:#374151');legend.textContent='Red shading: DWL under ban. Amber shading: free-market DWL (if shown).';out.append(legend);}return new XMLSerializer().serializeToString(out);
+    const policy=document.getElementById('policy-select');if(policy){const sub=document.createElementNS(ns,'text');sub.setAttribute('x','20');sub.setAttribute('y','45');sub.setAttribute('style','font:13px system-ui;fill:#374151');sub.textContent=policy.selectedOptions[0].textContent;out.append(sub);}out.append(clone);if(policy?.value==='ban'){const legend=document.createElementNS(ns,'text');legend.setAttribute('x','20');legend.setAttribute('y','553');legend.setAttribute('style','font:12px system-ui;fill:#374151');legend.textContent='Red shading: DWL under ban. Amber shading: free-market DWL (if shown).';out.append(legend);}if(exportStyle.value==='grayscale')makeGrayscale(out);return new XMLSerializer().serializeToString(out);
+  }
+  function makeGrayscale(out){
+    const ns='http://www.w3.org/2000/svg';
+    const defs=document.createElementNS(ns,'defs');out.prepend(defs);
+    const rgb=value=>{const m=value.match(/^rgba?\(([^)]+)\)$/);if(m)return m[1].split(/[, ]+/).filter(Boolean).map(Number);const h=value.match(/^#([0-9a-f]{6})$/i);return h?[0,2,4].map(i=>parseInt(h[1].slice(i,i+2),16)):null;};
+    const kind=c=>c[0]>c[1]&&c[1]>c[2]*2?'other':c[0]>c[1]*1.3&&c[0]>c[2]*1.3?'social':c[1]>c[0]*1.2&&c[1]>c[2]*1.1?'private-cost':c[2]>c[0]*1.2&&c[2]>c[1]*1.1?(c[0]>50?'policy':'private-benefit'):'other';
+    const patterns={};
+    function hatch(k){if(patterns[k])return patterns[k];const id='print-hatch-'+k,pat=document.createElementNS(ns,'pattern');Object.entries({id,width:8,height:8,patternUnits:'userSpaceOnUse'}).forEach(([a,v])=>pat.setAttribute(a,v));
+      const bg=document.createElementNS(ns,'rect');Object.entries({width:8,height:8,fill:'#fff'}).forEach(([a,v])=>bg.setAttribute(a,v));pat.append(bg);
+      const path=document.createElementNS(ns,'path');Object.entries({d:k==='social'?'M-2,2 L2,-2 M0,8 L8,0 M6,10 L10,6':k==='policy'?'M0,0 L8,8 M0,8 L8,0':'M0,4 L8,4',fill:'none',stroke:'#777','stroke-width':1}).forEach(([a,v])=>path.setAttribute(a,v));pat.append(path);defs.append(pat);return patterns[k]='url(#'+id+')';}
+    // Freeze distinct line styles in the exported copy; live diagrams remain in colour.
+    const elements=[...out.querySelectorAll('*')].filter(el=>!defs.contains(el));
+    elements.forEach(el=>{for(const prop of ['fill','stroke']){const value=el.style.getPropertyValue(prop)||el.getAttribute(prop),c=rgb(value||'');if(!c)continue;
+      const alpha=c[3]??1,chromatic=(Math.max(...c.slice(0,3))-Math.min(...c.slice(0,3)))/Math.max(1,...c.slice(0,3))>.5;
+      if(alpha===0){el.style.setProperty(prop,'transparent');continue;}
+      const k=kind(c),shape=['polygon','rect','path'].includes(el.tagName);
+      if(prop==='fill'&&chromatic&&shape&&!el.closest('marker')){el.style.setProperty('fill',hatch(k));el.style.setProperty('fill-opacity','1');}
+      else {const gray=Math.round(.2126*c[0]+.7152*c[1]+.0722*c[2]);el.style.setProperty(prop,prop==='fill'&&['text','tspan'].includes(el.tagName)?'#222':`rgba(${gray},${gray},${gray},${alpha})`);}
+      if(prop==='stroke'&&chromatic&&['line','path'].includes(el.tagName)&&!el.closest('marker')&&!el.classList.contains('collision-leader')&&!el.classList.contains('label-leader')){el.style.setProperty('stroke','#333');el.style.setProperty('stroke-dasharray',k==='social'?'3 3':k==='private-cost'?'9 4':k==='policy'?'9 3 2 3':'none');}
+    }});
+    out.querySelectorAll('text').forEach(el=>{if(el.textContent.startsWith('Red shading:'))el.textContent='Diagonal hatch: DWL under ban. Horizontal hatch: free-market DWL (if shown).';});
   }
   async function diagramPNG(){const blob=new Blob([diagramSVG()],{type:'image/svg+xml;charset=utf-8'}),url=URL.createObjectURL(blob);try{const img=new Image();await new Promise((resolve,reject)=>{img.onload=resolve;img.onerror=reject;img.src=url;});const canvas=document.createElement('canvas');canvas.width=1420;canvas.height=1140;canvas.getContext('2d').drawImage(img,0,0);return await new Promise((resolve,reject)=>canvas.toBlob(b=>b?resolve(b):reject(new Error('Image creation failed')),'image/png'));}finally{URL.revokeObjectURL(url);}}
-  function saveImage(blob){const url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=document.title.replace(/[^a-z0-9]+/gi,'_')+'.png';document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),60000);}
-  downloadButton.onclick=async()=>{try{saveImage(await diagramPNG());exportStatus.textContent='Diagram image prepared for download.';}catch(e){exportStatus.textContent='Unable to create the image. Please try opening the widget in its own browser tab.';}};
-  copyButton.onclick=async()=>{try{if(!navigator.clipboard?.write||!window.ClipboardItem)throw new Error('Clipboard unavailable');const png=diagramPNG();await navigator.clipboard.write([new ClipboardItem({'image/png':png})]);exportStatus.textContent='Diagram copied. Paste it into your notes.';}catch(e){exportStatus.textContent='Image copying is unavailable in this browser or embed. Use Download diagram instead.';}};
+  function saveImage(blob){const url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=document.title.replace(/[^a-z0-9]+/gi,'_')+(exportStyle.value==='grayscale'?'_Grayscale':'')+'.png';document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),60000);}
+  downloadButton.onclick=async()=>{try{saveImage(await diagramPNG());exportStatus.textContent=(exportStyle.value==='grayscale'?'Grayscale':'Colour')+' diagram prepared for download.';}catch(e){exportStatus.textContent='Unable to create the image. Please try opening the widget in its own browser tab.';}};
+  copyButton.onclick=async()=>{try{if(!navigator.clipboard?.write||!window.ClipboardItem)throw new Error('Clipboard unavailable');const png=diagramPNG();await navigator.clipboard.write([new ClipboardItem({'image/png':png})]);exportStatus.textContent=(exportStyle.value==='grayscale'?'Grayscale':'Colour')+' diagram copied. Paste it into your notes.';}catch(e){exportStatus.textContent='Image copying is unavailable in this browser or embed. Use Download diagram instead.';}};
 
   function qualitativeControls(){document.querySelectorAll('input[type="range"]').forEach(el=>{const lo=+el.min,hi=+el.max,v=+el.value,t=(v-lo)/(hi-lo);el.setAttribute('aria-valuetext',t===0?'Minimum':t===1?'Maximum':t<.34?'Low':t<.67?'Moderate':'High');});}
   function updateDiagram(){restoreLabelPresentation();renderDiagram();qualitativeControls();mergeExactLabels();labelLayout();avoidLabelCollisions();registerTargets();}
