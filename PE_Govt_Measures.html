@@ -85,6 +85,8 @@ strong,b{color:#dc2626!important;font-weight:700}
 .tooltip{background:#fff;color:var(--ink);border-color:#b6c6f5}
 .tooltip-close{color:var(--ink)}
 .tooltip-close:hover{background:#f0f4ff}
+.ban-free-area{fill:rgba(217,119,6,.18);stroke:#b45309;stroke-width:1.4;stroke-dasharray:4,3;cursor:pointer}
+.area-key{display:flex;gap:8px 16px;flex-wrap:wrap;align-items:center;font-size:12px;margin:8px 2px}.area-key[hidden],.ban-legend[hidden]{display:none}.key-heading{font-weight:600;color:#4b5563}.key-item{display:inline-flex;align-items:center;gap:6px}.key-item i{display:inline-block;width:16px;height:12px;border:1px solid #777;flex-shrink:0}.key-colour{opacity:.65}.key-pattern.social{background:repeating-linear-gradient(135deg,#fff 0 4px,#777 4px 5px)}.key-pattern.other{background:repeating-linear-gradient(0deg,#fff 0 4px,#777 4px 5px)}.key-pattern.policy{background:repeating-linear-gradient(45deg,transparent 0 4px,#777 4px 5px),repeating-linear-gradient(135deg,#fff 0 4px,#777 4px 5px)}.related-widget{margin:12px 2px}.related-widget a{display:inline-block;color:#4169e1;font-size:13px;font-weight:600;text-decoration:underline;text-underline-offset:3px;padding:8px 0;max-width:100%}
 </style>
 </head>
 <body>
@@ -100,6 +102,7 @@ strong,b{color:#dc2626!important;font-weight:700}
             <option value="none">None (Uncorrected Market Failure)</option>
             <option value="indirect_subsidy">Indirect Subsidy (to Producers)</option>
             <option value="direct_subsidy">Direct Subsidy (to Consumers)</option>
+            <option value="free_provision">Free Provision (No Consumer Price)</option>
             <option value="joint_provision">Joint Provision (Public + Private Supply)</option>
             <option value="education">Education & Campaigns</option>
           </select>
@@ -163,7 +166,7 @@ strong,b{color:#dc2626!important;font-weight:700}
       <text id="label-policy-curve" fill="#4169e1" font-weight="bold" style="display: none;"></text>
       <text id="label-policy-arrow" fill="#4169e1" font-weight="bold" font-size="11" style="display: none;">Subsidy</text>
 
-      <text class="axis-title" x="64" y="12" text-anchor="end" font-weight="bold" style="font-size:12px"><tspan x="64">Price</tspan><tspan x="64" dy="14">Costs</tspan><tspan x="64" dy="14">Benefits</tspan></text>
+      <text class="axis-title" x="64" y="12" text-anchor="end" font-weight="bold" style="font-size:12px"><tspan x="64">Price /</tspan><tspan x="64" dy="14">Costs /</tspan><tspan x="64" dy="14">Benefits</tspan></text>
       <text class="axis-title" x="600" y="385" font-weight="bold">Qty</text>
       
 
@@ -248,7 +251,7 @@ strong,b{color:#dc2626!important;font-weight:700}
 
     <details>
       <summary>Free Provision</summary>
-      <p>An extreme case of a subsidy where the government <b>fully subsidises</b> the entire cost of a product and provides it to consumers at <b>zero price</b>.</p>
+      <p>A full producer subsidy lets consumers receive the good at <b>zero price</b>. Producers receive a reimbursement from the government. Varying MEB reveals <b>excessive, socially optimal or insufficient provision</b>. Free provision eliminates DWL only when its output coincides with Qs; it can otherwise improve or worsen welfare relative to the free market.</p>
     </details>
 
     <details>
@@ -258,7 +261,7 @@ strong,b{color:#dc2626!important;font-weight:700}
 
     <details>
       <summary>Joint Provision</summary>
-      <p>The government supplies a fixed quantity alongside private producers. Total supply is the <b>horizontal sum</b> of public and private supply. A lower market price can reduce private output, so the increase in total output is smaller than public output.<br><br>This branch isolates the market-supply effect. Public output is sold at the market price; public production costs are not specified. The original Qs is a reference only: a new social optimum and DWL require a model of public resource costs.</p>
+      <p>The government supplies a fixed quantity alongside private producers. Total supply is the <b>horizontal sum</b> of public and private supply. MPC* is drawn as a parallel shift of MPC = MSC, using a constant horizontal addition over the displayed range. A lower market price can reduce private output, so the increase in total output is smaller than public output.<br><br>This branch isolates the market-supply effect. Public output is sold at the market price; public production costs are not specified. The original Qs is a reference only: a new social optimum and DWL require a model of public resource costs.</p>
     </details>
 
     <details>
@@ -624,13 +627,13 @@ strong,b{color:#dc2626!important;font-weight:700}
       sliderContainer.style.display='flex';sliderLabel.innerHTML='<strong>Government Output (Qg):</strong>';
       const qg=sliderVal;currentQ=60+.45*qg;const qp=currentQ-qg,price=75-.55*currentQ,qx=toSvgX(currentQ),px=toSvgX(qp),py=toSvgY(price);
       const el=(tag,attrs,text)=>{const e=document.createElementNS('http://www.w3.org/2000/svg',tag);Object.entries(attrs).forEach(([k,v])=>e.setAttribute(k,v));e.classList.add('joint-only');if(text!==undefined)e.textContent=text;document.getElementById('diagram').append(e);return e;};
-      document.getElementById('label-mpc').textContent='S_private';document.getElementById('label-es').textContent='Es';labelQs.textContent='Qs';document.getElementById('dot-a').style.display='none';document.getElementById('label-a').style.display='none';
-      linePolicyCurve.setAttribute('x1',toSvgX(qg));linePolicyCurve.setAttribute('y1',toSvgY(15));linePolicyCurve.setAttribute('x2',toSvgX(95));linePolicyCurve.setAttribute('y2',toSvgY(15+.45*(95-qg)));linePolicyCurve.style.display=qg>0?'inline':'none';
-      if(qg>0)el('line',{x1:toSvgX(qg),y1:380,x2:toSvgX(qg),y2:toSvgY(15),class:'line-policy'});
-      labelPolicyCurve.textContent='S_total';labelPolicyCurve.setAttribute('x',toSvgX(95)+6);labelPolicyCurve.setAttribute('y',toSvgY(15+.45*(95-qg))+4);labelPolicyCurve.style.display=qg>0?'inline':'none';
+      document.getElementById('label-mpc').textContent='MPC = MSC';document.getElementById('label-es').textContent='Es';labelQs.textContent='Qs';document.getElementById('dot-a').style.display='none';document.getElementById('label-a').style.display='none';
+      linePolicyCurve.setAttribute('x1',toSvgX(Math.max(0,qg-15/.45)));linePolicyCurve.setAttribute('y1',toSvgY(Math.max(0,15-.45*qg)));linePolicyCurve.setAttribute('x2',toSvgX(95));linePolicyCurve.setAttribute('y2',toSvgY(15+.45*(95-qg)));linePolicyCurve.style.display=qg>0?'inline':'none';
+      
+      labelPolicyCurve.textContent='MPC*';labelPolicyCurve.setAttribute('x',toSvgX(95)+6);labelPolicyCurve.setAttribute('y',toSvgY(15+.45*(95-qg))+4);labelPolicyCurve.style.display=qg>0?'inline':'none';
       if(qg>0){dotPol.setAttribute('cx',qx);dotPol.setAttribute('cy',py);dotPol.style.display='block';lineQpol.setAttribute('x1',qx);lineQpol.setAttribute('x2',qx);lineQpol.setAttribute('y1',py);lineQpol.setAttribute('y2',380);lineQpol.style.display='inline';labelQpol.textContent='Qtotal';labelQpol.setAttribute('x',qx);labelQpol.setAttribute('y',418);labelQpol.style.display='inline';
         el('line',{x1:px,y1:py,x2:px,y2:380,class:'guide-line'});el('circle',{cx:px,cy:py,r:3.5,fill:'#16a34a'});el('text',{id:'joint-private-label',x:px,y:418,'text-anchor':'middle','font-weight':'bold',fill:'#16a34a'},'Qprivate');
-        arrowPolicy.setAttribute('x1',px);arrowPolicy.setAttribute('x2',qx);arrowPolicy.setAttribute('y1',449);arrowPolicy.setAttribute('y2',449);arrowPolicy.style.display='block';labelPolicyArrow.setAttribute('x',(px+qx)/2);labelPolicyArrow.setAttribute('y',465);labelPolicyArrow.setAttribute('dominant-baseline','auto');labelPolicyArrow.setAttribute('text-anchor','middle');labelPolicyArrow.textContent='Government output (Qg)';labelPolicyArrow.style.display='inline';
+        arrowPolicy.setAttribute('x1',px);arrowPolicy.setAttribute('x2',qx);arrowPolicy.setAttribute('y1',335);arrowPolicy.setAttribute('y2',335);arrowPolicy.style.display='block';labelPolicyArrow.setAttribute('x',(px+qx)/2);labelPolicyArrow.setAttribute('y',322);labelPolicyArrow.setAttribute('dominant-baseline','auto');labelPolicyArrow.setAttribute('text-anchor','middle');labelPolicyArrow.textContent='Government output (Qg)';labelPolicyArrow.style.display='inline';
         el('line',{x1:70,y1:py,x2:qx,y2:py,class:'guide-line'});el('text',{id:'joint-price-label',x:60,y:py-4,'text-anchor':'end','font-weight':'bold',fill:'#4169e1'},'Pjoint');}
       document.getElementById('joint-results').innerHTML=`<h2>Public output and the change in market output are different.</h2><p>${qg>0?'Government provision <strong>increases total supply</strong>. Private output <strong>falls</strong>, while total output <strong>rises</strong>. Some government output replaces private output, so the increase in total output is smaller than government output.':'With <strong>no government provision</strong>, private output and total output remain at the original market outcome.'}</p><p><strong>Total output</strong> combines government and private output.</p><p><strong>Scope:</strong> fixed government output, sold at the market price, is added horizontally to private supply. Qs marks the <em>original</em> social optimum. Government production costs are unspecified, so this branch does not determine a new social optimum or DWL.</p>`;
     }
@@ -787,7 +790,7 @@ strong,b{color:#dc2626!important;font-weight:700}
     if(policy==='joint_provision'&&toggleGap.checked&&Math.abs(currentQ-qs)>1e-9){
       const left=toSvgX(Math.min(currentQ,qs)),right=toSvgX(Math.max(currentQ,qs));
       arrowGap.setAttribute('x1',left+4);arrowGap.setAttribute('x2',right-4);arrowGap.setAttribute('y1',345);arrowGap.setAttribute('y2',345);arrowGap.style.display='block';
-      labelGap.setAttribute('x',(left+right)/2);labelGap.setAttribute('y',332);labelGap.textContent='Gap to original Qs';labelGap.style.display='block';
+      labelGap.setAttribute('x',(left+right)/2);labelGap.setAttribute('y',332);labelGap.textContent=currentQ<qs?'Under-consumption / Under-production':'Over-consumption / Over-production';labelGap.style.display='block';
     }
     if (!toggleTooltips.checked) {
       diagramTooltip.style.display = 'none';
@@ -869,6 +872,7 @@ strong,b{color:#dc2626!important;font-weight:700}
 
   policySelect.addEventListener('change', () => {
     policySlider.value = 0;
+    if(policySelect.value==='free_provision')toggleSubsidyCost.checked=false;
     updateDiagram();
   });
   policySlider.addEventListener('input', updateDiagram);
@@ -878,6 +882,51 @@ strong,b{color:#dc2626!important;font-weight:700}
   toggleMeb.addEventListener('change', updateDiagram);
   toggleSubsidyCost.addEventListener('change', updateDiagram);
 
+
+  // Free provision: a full producer subsidy fixes consumer price at zero.
+  const freeControls=document.createElement('div');freeControls.id='free-controls';freeControls.className='control-row';freeControls.style.display='none';
+  freeControls.innerHTML='<div class="control-group"><label for="free-meb-slider"><strong>MEB:</strong></label><span class="scale-label">None</span><input id="free-meb-slider" type="range" min="0" max="120" value="60" step="1"><span class="scale-label">High</span></div><label class="toggle-label"><input type="checkbox" id="free-compare" checked> Compare free-market DWL</label>';
+  document.querySelector('.controls').append(freeControls);
+  const freeResults=document.createElement('section');freeResults.id='free-results';freeResults.className='policy-note';freeResults.setAttribute('aria-live','polite');freeResults.style.display='none';document.getElementById('joint-results').after(freeResults);
+  const freeSlider=document.getElementById('free-meb-slider'),freeCompare=document.getElementById('free-compare');
+  freeSlider.addEventListener('input',updateDiagram);freeCompare.addEventListener('change',updateDiagram);
+  const baseRenderDiagram=renderDiagram;let freeHidden=[];
+  renderDiagram=function(){
+    freeHidden.forEach(([el,display])=>el.style.display=display);freeHidden=[];document.getElementById('free-scene')?.remove();
+    baseRenderDiagram();const active=policySelect.value==='free_provision';freeControls.style.display=active?'flex':'none';freeResults.style.display=active?'block':'none';
+    if(!active)return;
+    sliderContainer.style.display='none';toggleSubsidyCostLabel.style.display='flex';toggleDwl.disabled=false;
+    const svg=document.getElementById('diagram'),ns='http://www.w3.org/2000/svg';
+    [...svg.children].filter(el=>el.tagName!=='defs').forEach(el=>{freeHidden.push([el,el.style.display]);el.style.display='none';});
+    const scene=document.createElementNS(ns,'g');scene.id='free-scene';svg.append(scene);
+    const add=(tag,attrs={},text)=>{const el=document.createElementNS(ns,tag);Object.entries(attrs).forEach(([k,v])=>el.setAttribute(k,v));if(text!==undefined)el.textContent=text;scene.append(el);return el;};
+    const txt=(x,y,t,attrs={})=>add('text',{x,y,'font-weight':'bold',...attrs},t),x=q=>70+2.65*q,y=p=>380-1.75*p;
+    const demand=q=>75-.55*q,cost=q=>15+.45*q,qf=75/.55,qe=60,meb=(qf-qe)*Number(freeSlider.value)/80,qs=qe+meb,pp=cost(qf),social=q=>demand(q)+meb;
+    const freeLoss=.5*(qf-qs)**2,marketLoss=.5*(qe-qs)**2,epsilon=1e-7;
+    window.currentFreeModel={qf,qe,qs,meb,pp,pc:0,subsidy:pp,freeLoss,marketLoss};
+    const tooltip=(el,html,label)=>{el.classList.add('has-tooltip');el.setAttribute('aria-label',label);el.onmousemove=e=>showTooltip(html,e);el.onmouseleave=hideTooltip;el.onclick=e=>showTooltip(html,e);};
+    const line=(a,b,c,d,attrs={})=>add('line',{x1:x(a),y1:y(b),x2:x(c),y2:y(d),...attrs});
+    const area=(id,q,className,html)=>{const el=add('polygon',{id,class:className,points:`${x(qs)},${y(cost(qs))} ${x(q)},${y(cost(q))} ${x(q)},${y(social(q))}`});tooltip(el,html,'Explain '+id.replaceAll('-',' '));};
+    if(freeCompare.checked&&marketLoss>epsilon)area('free-market-loss',qe,'ban-free-area','<strong>Free-market DWL</strong><br>The unregulated market under-consumes because consumers do not take MEB into account. The area measures social benefits forgone between Qe and Qs.');
+    if(toggleDwl.checked&&freeLoss>epsilon)area('free-policy-loss',qf,'dwl-poly',qf>qs?'<strong>DWL under free provision</strong><br>Output exceeds Qs. MSC exceeds MSB on the excess units.':'<strong>DWL under free provision</strong><br>Output is below Qs. Further units would create net social benefits, even though their private benefit is negative in this stylised linear model.');
+    if(toggleSubsidyCost.checked){const r=add('rect',{x:x(0),y:y(pp),width:x(qf)-x(0),height:y(0)-y(pp),class:'subsidy-rect'});scene.prepend(r);tooltip(r,'<strong>Government subsidy expenditure</strong><br>The subsidy reimburses producers while consumers pay no price. This payment is a transfer; resource costs are represented by MPC = MSC. Fiscal distortion and administration costs are excluded.','Explain subsidy expenditure');}
+    line(0,0,190,0,{class:'axis','marker-end':'url(#arrow)'});add('line',{x1:70,y1:380,x2:70,y2:25,class:'axis','marker-end':'url(#arrow)'});
+    const heading=txt(64,12,'',{'text-anchor':'end',class:'axis-title',style:'font-size:12px'});['Price /','Costs /','Benefits'].forEach((word,i)=>{const span=document.createElementNS(ns,'tspan');span.setAttribute('x',64);if(i)span.setAttribute('dy',14);span.textContent=word;heading.append(span);});txt(x(190)+9,385,'Qty',{class:'axis-title'});
+    line(0,demand(0),qf,0,{class:'line-mpb'});txt(x(qf)-8,y(0)-17,'MPB',{fill:'#2563eb','text-anchor':'end'});
+    line(0,cost(0),190,cost(190),{class:'line-mpc'});txt(x(190)+6,y(cost(190))+4,'MPC = MSC',{fill:'#16a34a'});
+    line(0,social(0),Math.min(190,(75+meb)/.55),Math.max(0,social(190)),{class:'line-msb'});txt(x(190)+6,y(Math.max(0,social(190)))+4,meb>epsilon?'MSB':'MPB = MSB',{fill:'#dc2626'});
+    line(qf,0,190,cost(190)-pp,{class:'line-policy',style:'stroke-dasharray:none'});txt(x(190)+6,y(cost(190)-pp)+4,'MPC*',{fill:'#4169e1'});
+    line(qf,0,qf,pp,{class:'guide-line'});line(0,pp,qf,pp,{class:'guide-line'});txt(60,y(pp)+4,'Pp',{'text-anchor':'end',fill:'#4169e1'});txt(60,379,'Pc (free)',{'text-anchor':'end',fill:'#4169e1',style:'font-size:11px'});
+    const point=(q,p,t,color,label)=>{const e=add('circle',{cx:x(q),cy:y(p),r:4.5,fill:color});txt(x(q)+8,y(p)-9,t,{fill:color});tooltip(e,label,'Explain '+t);};
+    line(qe,0,qe,cost(qe),{class:'guide-line'});line(0,cost(qe),qe,cost(qe),{class:'guide-line'});txt(60,y(cost(qe))+4,'Pe',{'text-anchor':'end'});txt(x(qe),402,meb<epsilon?'Qe = Qs':'Qe',{'text-anchor':'middle'});point(qe,cost(qe),meb<epsilon?'Ee = Es':'Ee','#1f2937','<strong>Free-market equilibrium</strong><br>MPB = MPC. Private curves and this output remain fixed as MEB changes.');
+    line(qs,0,qs,cost(qs),{class:'guide-line'});if(meb>epsilon)txt(x(qs),402,Math.abs(qs-qf)<epsilon?'Qs = Qf':'Qs',{'text-anchor':'middle',fill:'#dc2626'});if(meb>epsilon)point(qs,cost(qs),'Es','#dc2626','<strong>Social optimum</strong><br>MSB = MSC. The socially optimal output rises as MEB increases.');
+    if(Math.abs(qs-qf)>epsilon)txt(x(qf),402,'Qf',{'text-anchor':'middle',fill:'#4169e1'});point(qf,0,'Ef','#4169e1','<strong>Free provision</strong><br>Consumers pay no price. Producers receive Pp, funded by the government. Output stays fixed at Qf while MEB varies.');
+    if(toggleMeb.checked&&meb>epsilon){line(20,demand(20),20,social(20),{class:'free-externality',stroke:'#2563eb','stroke-width':2});txt(x(20)+10,(y(demand(20))+y(social(20)))/2+4,'MEB',{fill:'#2563eb'});}
+    if(toggleGap.checked&&Math.abs(qf-qs)>epsilon){line(Math.min(qf,qs),-27,Math.max(qf,qs),-27,{class:'free-gap-arrow',stroke:'#dc2626','stroke-width':2,'marker-start':'url(#arrow-start-red)','marker-end':'url(#arrow-end-red)'});txt((x(qf)+x(qs))/2,447,qf>qs?'Over-consumption / Over-production':'Under-consumption / Under-production',{class:'free-gap-label','text-anchor':'middle',fill:'#dc2626',style:'font-size:11px'});}
+    const state=Math.abs(qf-qs)<epsilon?'Socially optimal provision':qf>qs?'Excessive provision':'Insufficient provision';
+    const comparison=freeLoss<epsilon?'Free provision <strong>eliminates DWL</strong>.':Math.abs(freeLoss-marketLoss)<epsilon?'Free provision and the free market have <strong>the same DWL</strong>.':freeLoss<marketLoss?'Free provision <strong>reduces DWL</strong>, but some loss remains.':'Free provision <strong>increases DWL</strong> relative to the free market.';
+    freeResults.innerHTML=`<h2>${state}</h2><p>${qf>qs+epsilon?'MEB is too low to justify all the units consumed for free.':qs>qf+epsilon?'MEB is high enough that some socially beneficial units remain unprovided.':'MEB exactly offsets the gap between social cost and private benefit at the free-provision output.'}</p><p>${comparison}</p><p><strong>Mechanism:</strong> the government reimburses producers through a full subsidy. MPC* is MPC less the subsidy; the consumer price is zero. Producers receive Pp. The subsidy is fixed as MEB changes.</p><p><strong>Assumptions:</strong> linear private curves, constant MEB, no rationing, and no administration or tax-financing distortion costs. Negative private benefits beyond the demand intercept represent unwillingness to consume additional units without compensation. The full-subsidy outcome is socially optimal only at the matching MEB level.</p>`;
+  };
 
   /* SHARED INTERACTIONS v2 — presentation only; original equations are above. */
   const widgetSvg=document.getElementById('diagram');
@@ -959,8 +1008,8 @@ strong,b{color:#dc2626!important;font-weight:700}
     ['label-meb','label-mec'].forEach(id=>document.getElementById(id)?.setAttribute('fill','#2563eb'));
     const mecGroup=document.getElementById('group-mec');if(mecGroup)mecGroup.querySelectorAll('line,polygon,text').forEach(el=>el.setAttribute(el.tagName==='line'?'stroke':'fill','#2563eb'));
     if(!widgetIsPolicy)widgetSvg.querySelectorAll('#arrow-purple-start path,#arrow-purple-end path').forEach(el=>el.setAttribute('fill','#2563eb'));
-    widgetSvg.querySelectorAll('#label-qe,#label-qs,#label-qpol,#label-pe,#label-ps,#label-ppol,#label-ee,#label-es,#group-dynamic-axis-labels text,#group-dynamic-nodes text,#ban-scene text,.joint-only text,#label-mpc,#label-policy-curve').forEach(el=>{
-      const text=el.textContent;const pattern=/\b([QPES])(?:_)?(private|total|joint|quota|sub|edu|gov|s0|g|b|e|s|c|p|t)\b/g;
+    widgetSvg.querySelectorAll('#label-qe,#label-qs,#label-qpol,#label-pe,#label-ps,#label-ppol,#label-ee,#label-es,#group-dynamic-axis-labels text,#group-dynamic-nodes text,#ban-scene text,#free-scene text,.joint-only text,#label-mpc,#label-policy-curve').forEach(el=>{
+      const text=el.textContent;const pattern=/\b([QPES])(?:_)?(private|total|joint|quota|sub|edu|gov|s0|g|b|e|s|c|p|t|f)\b/g;
       if(!pattern.test(text))return;pattern.lastIndex=0;el.replaceChildren();let last=0;
       for(const m of text.matchAll(pattern)){el.append(document.createTextNode(text.slice(last,m.index)+m[1]));const sub=document.createElementNS('http://www.w3.org/2000/svg','tspan');sub.setAttribute('baseline-shift','sub');sub.setAttribute('font-size','9');sub.textContent=m[2];el.append(sub);last=m.index+m[0].length;}el.append(document.createTextNode(text.slice(last)));
     });
@@ -1040,11 +1089,11 @@ strong,b{color:#dc2626!important;font-weight:700}
     const props=['display','visibility','fill','fill-opacity','stroke','stroke-width','stroke-opacity','stroke-dasharray','stroke-linecap','stroke-linejoin','paint-order','opacity','font-family','font-size','font-weight','font-style','text-anchor','dominant-baseline','baseline-shift','marker-start','marker-end'];
     src.forEach((el,i)=>{const cs=getComputedStyle(el);props.forEach(p=>{let v=cs.getPropertyValue(p);if(p.startsWith('marker'))v=v.replace(/url\(["']?[^#)]*#([^)'" ]+)["']?\)/g,'url(#$1)');dst[i].style.setProperty(p,v);});dst[i].removeAttribute('tabindex');dst[i].removeAttribute('role');});
     clone.querySelectorAll('.touch-target').forEach(e=>e.remove());
-    clone.setAttribute('x','0');clone.setAttribute('y','55');clone.setAttribute('width','710');clone.setAttribute('height','470');clone.style.width='710px';clone.style.height='470px';
-    const ns='http://www.w3.org/2000/svg',out=document.createElementNS(ns,'svg');out.setAttribute('xmlns',ns);out.setAttribute('width','1420');out.setAttribute('height','1140');out.setAttribute('viewBox','0 0 710 570');
-    const bg=document.createElementNS(ns,'rect');bg.setAttribute('width','710');bg.setAttribute('height','570');bg.setAttribute('fill','white');out.append(bg);
+    clone.setAttribute('x','0');clone.setAttribute('y','110');clone.setAttribute('width','710');clone.setAttribute('height','470');clone.style.width='710px';clone.style.height='470px';
+    const ns='http://www.w3.org/2000/svg',out=document.createElementNS(ns,'svg');out.setAttribute('xmlns',ns);out.setAttribute('width','1420');out.setAttribute('height','1250');out.setAttribute('viewBox','0 0 710 625');
+    const bg=document.createElementNS(ns,'rect');bg.setAttribute('width','710');bg.setAttribute('height','625');bg.setAttribute('fill','white');out.append(bg);
     const title=document.createElementNS(ns,'text');title.setAttribute('x','20');title.setAttribute('y','25');title.setAttribute('style','font:bold 17px system-ui;fill:#4169e1');title.textContent=document.querySelector('h1').textContent;out.append(title);
-    const policy=document.getElementById('policy-select');if(policy){const sub=document.createElementNS(ns,'text');sub.setAttribute('x','20');sub.setAttribute('y','45');sub.setAttribute('style','font:13px system-ui;fill:#374151');sub.textContent=policy.selectedOptions[0].textContent;out.append(sub);}out.append(clone);if(policy?.value==='ban'){const legend=document.createElementNS(ns,'text');legend.setAttribute('x','20');legend.setAttribute('y','553');legend.setAttribute('style','font:12px system-ui;fill:#374151');legend.textContent='Red shading: DWL under ban. Amber shading: free-market DWL (if shown).';out.append(legend);}if(exportStyle.value==='grayscale')makeGrayscale(out);return new XMLSerializer().serializeToString(out);
+    const policy=document.getElementById('policy-select');if(policy){const sub=document.createElementNS(ns,'text');sub.setAttribute('x','20');sub.setAttribute('y','45');sub.setAttribute('style','font:13px system-ui;fill:#374151');sub.textContent=policy.selectedOptions[0].textContent;out.append(sub);}out.append(clone);appendExportKey(out);if(exportStyle.value==='grayscale')makeGrayscale(out);return new XMLSerializer().serializeToString(out);
   }
   function makeGrayscale(out){
     const ns='http://www.w3.org/2000/svg';
@@ -1063,17 +1112,72 @@ strong,b{color:#dc2626!important;font-weight:700}
       const k=kind(c),shape=['polygon','rect','path'].includes(el.tagName);
       if(prop==='fill'&&chromatic&&shape&&!el.closest('marker')){el.style.setProperty('fill',hatch(k));el.style.setProperty('fill-opacity','1');}
       else {const gray=Math.round(.2126*c[0]+.7152*c[1]+.0722*c[2]);el.style.setProperty(prop,prop==='fill'&&['text','tspan'].includes(el.tagName)?'#222':`rgba(${gray},${gray},${gray},${alpha})`);}
-      if(prop==='stroke'&&chromatic&&['line','path'].includes(el.tagName)&&!el.closest('marker')&&!el.classList.contains('collision-leader')&&!el.classList.contains('label-leader')){el.style.setProperty('stroke','#333');el.style.setProperty('stroke-dasharray',k==='social'?'3 3':k==='private-cost'?'9 4':k==='policy'?'9 3 2 3':'none');}
+      if(prop==='stroke'&&chromatic&&['line','path'].includes(el.tagName)&&!el.closest('marker')&&!el.classList.contains('collision-leader')&&!el.classList.contains('label-leader')){el.style.setProperty('stroke','#333');el.style.setProperty('stroke-dasharray','none');}
     }});
-    out.querySelectorAll('text').forEach(el=>{if(el.textContent.startsWith('Red shading:'))el.textContent='Diagonal hatch: DWL under ban. Horizontal hatch: free-market DWL (if shown).';});
+    
   }
-  async function diagramPNG(){const blob=new Blob([diagramSVG()],{type:'image/svg+xml;charset=utf-8'}),url=URL.createObjectURL(blob);try{const img=new Image();await new Promise((resolve,reject)=>{img.onload=resolve;img.onerror=reject;img.src=url;});const canvas=document.createElement('canvas');canvas.width=1420;canvas.height=1140;canvas.getContext('2d').drawImage(img,0,0);return await new Promise((resolve,reject)=>canvas.toBlob(b=>b?resolve(b):reject(new Error('Image creation failed')),'image/png'));}finally{URL.revokeObjectURL(url);}}
+  async function diagramPNG(){const blob=new Blob([diagramSVG()],{type:'image/svg+xml;charset=utf-8'}),url=URL.createObjectURL(blob);try{const img=new Image();await new Promise((resolve,reject)=>{img.onload=resolve;img.onerror=reject;img.src=url;});const canvas=document.createElement('canvas');canvas.width=1420;canvas.height=img.naturalHeight;canvas.getContext('2d').drawImage(img,0,0);return await new Promise((resolve,reject)=>canvas.toBlob(b=>b?resolve(b):reject(new Error('Image creation failed')),'image/png'));}finally{URL.revokeObjectURL(url);}}
   function saveImage(blob){const url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=document.title.replace(/[^a-z0-9]+/gi,'_')+(exportStyle.value==='grayscale'?'_Grayscale':'')+'.png';document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),60000);}
   downloadButton.onclick=async()=>{try{saveImage(await diagramPNG());exportStatus.textContent=(exportStyle.value==='grayscale'?'Grayscale':'Colour')+' diagram prepared for download.';}catch(e){exportStatus.textContent='Unable to create the image. Please try opening the widget in its own browser tab.';}};
   copyButton.onclick=async()=>{try{if(!navigator.clipboard?.write||!window.ClipboardItem)throw new Error('Clipboard unavailable');const png=diagramPNG();await navigator.clipboard.write([new ClipboardItem({'image/png':png})]);exportStatus.textContent=(exportStyle.value==='grayscale'?'Grayscale':'Colour')+' diagram copied. Paste it into your notes.';}catch(e){exportStatus.textContent='Image copying is unavailable in this browser or embed. Use Download diagram instead.';}};
 
+  // Approved UX: contextual area key, selected-policy glossary, paired-widget navigation.
+  const areaKey=document.createElement('div');areaKey.className='area-key';areaKey.setAttribute('aria-label','Shaded area colour and grayscale key');widgetFrame.after(areaKey);
+  const glossaryItems=[...document.querySelectorAll('.sidebar > details')];
+  const glossaryPolicyNames={indirect_subsidy:'Indirect Subsidy',direct_subsidy:'Direct Subsidy',free_provision:'Free Provision',joint_provision:'Joint Provision',education:'Education & Campaigns',tax:'Tax',quota:'Quota on Output',ban:'Ban (a quota of zero)',qpoll:'Quota on Pollutant',rd:'Research & Development (R&D)',edu:'Education & Campaigns'};
+  const normalise=s=>s.replace(/\s+/g,' ').trim();
+  const nameOf=el=>normalise(el.querySelector('summary')?.textContent||'');
+  const policyNames=new Set(Object.values(glossaryPolicyNames));policyNames.add('Direct Government Provision');policyNames.add('Legislation (Compulsory Consumption)');
+  const counterpart={
+    'PE_Govt_Measures.html':['Positive_Externalities.html','Explore positive externalities'],
+    'Positive_Externalities.html':['PE_Govt_Measures.html','Explore government measures for positive externalities'],
+    'NE_Govt_Measures.html':['Negative_Externalities.html','Explore negative externalities'],
+    'Negative_Externalities.html':['NE_Govt_Measures.html','Explore government measures for negative externalities']
+  };
+  const fileKey=document.title.includes('Government')?(document.title.includes('Positive')?'PE_Govt_Measures.html':'NE_Govt_Measures.html'):(document.title.includes('Positive')?'Positive_Externalities.html':'Negative_Externalities.html');
+  const nav=document.createElement('nav');nav.className='related-widget';nav.setAttribute('aria-label','Related economics widget');const link=document.createElement('a');link.href=counterpart[fileKey][0];link.textContent=counterpart[fileKey][1];nav.append(link);help.after(nav);
+  function visibleArea(id){const el=document.getElementById(id);if(!el||!visible(el))return false;const box=el.getBBox();return box.width>1e-7&&box.height>1e-7;}
+  function currentAreaKey(){
+    const policy=document.getElementById('policy-select')?.value;if(!['ban','free_provision'].includes(policy))return [];
+    const entries=[];
+    const candidates=policy==='ban'?[['ban-loss-area','DWL under ban','social','#dc2626'],['ban-free-area','Free-market DWL','other','#d97706']]:[['free-policy-loss','Free-provision DWL','social','#dc2626'],['free-market-loss','Free-market DWL','other','#d97706']];
+    candidates.forEach(([id,label,pattern,colour])=>{if(visibleArea(id))entries.push({label,pattern,colour});});
+    if(policy==='free_provision'&&[...document.querySelectorAll('#free-scene .subsidy-rect')].some(el=>visible(el)&&el.getBBox().height>0))entries.push({label:'Subsidy expenditure',pattern:'policy',colour:'#4169e1'});
+    return entries;
+  }
+  function approvedUX(){
+    const entries=currentAreaKey();areaKey.replaceChildren();areaKey.hidden=!entries.length;
+    if(entries.length){const heading=document.createElement('span');heading.className='key-heading';heading.textContent='Colour / grayscale key';areaKey.append(heading);entries.forEach(entry=>{const item=document.createElement('span');item.className='key-item';const colour=document.createElement('i');colour.className='key-colour';colour.style.backgroundColor=entry.colour;colour.setAttribute('aria-hidden','true');const pattern=document.createElement('i');pattern.className='key-pattern '+entry.pattern;pattern.setAttribute('aria-hidden','true');item.append(colour,pattern,document.createTextNode(entry.label));areaKey.append(item);});}
+    document.querySelector('.ban-legend')?.setAttribute('hidden','');
+    const policy=document.getElementById('policy-select')?.value;if(!policy)return;
+    const selectedName=glossaryPolicyNames[policy],selected=glossaryItems.find(el=>nameOf(el)===selectedName);
+    const order=[...(selected?[selected]:[]),...glossaryItems.filter(el=>el!==selected&&!policyNames.has(nameOf(el))),...glossaryItems.filter(el=>el!==selected&&policyNames.has(nameOf(el)))];
+    const sidebar=document.querySelector('.sidebar');order.forEach(el=>sidebar.append(el));
+  }
+  function appendExportKey(out){
+    const entries=currentAreaKey(),ns='http://www.w3.org/2000/svg',height=entries.length?625+18*(entries.length-1):625;
+    out.setAttribute('height',String(height*2));out.setAttribute('viewBox','0 0 710 '+height);out.querySelector('rect')?.setAttribute('height',String(height));
+    entries.forEach((entry,i)=>{const text=document.createElementNS(ns,'text');text.setAttribute('x','20');text.setAttribute('y',String(608+i*18));text.setAttribute('style','font:12px system-ui;fill:#374151');const kind=exportStyle.value==='grayscale'?{social:'Diagonal hatch',other:'Horizontal hatch',policy:'Crosshatch'}[entry.pattern]:{social:'Red shading',other:'Amber shading',policy:'Blue shading'}[entry.pattern];text.textContent=kind+': '+entry.label;out.append(text);});
+  }
+
+  function compactAnnotations(){
+    const defs=widgetSvg.querySelector('defs'),ns='http://www.w3.org/2000/svg';
+    if(!widgetSvg.querySelector('#externality-start'))for(const [id,d,ref] of [['externality-start','M10,1 L0,5 L10,9 Z',1],['externality-end','M0,1 L10,5 L0,9 Z',9]]){const m=document.createElementNS(ns,'marker');Object.entries({id,viewBox:'0 0 10 10',refX:ref,refY:5,markerWidth:5,markerHeight:5,orient:'auto'}).forEach(([k,v])=>m.setAttribute(k,v));const path=document.createElementNS(ns,'path');path.setAttribute('d',d);path.setAttribute('fill','#2563eb');m.append(path);defs.append(m);}
+    widgetSvg.querySelectorAll('#arrow-meb,#meb-arrow,#mec-arrow,#group-mec line,#ban-scene line,.free-externality').forEach(el=>{
+      if(!visible(el)||Math.abs(+el.getAttribute('x1')- +el.getAttribute('x2'))>1e-6)return;
+      if(getComputedStyle(el).stroke!=='rgb(37, 99, 235)'&&!el.matches('#arrow-meb,#meb-arrow,#mec-arrow,.free-externality'))return;
+      if(Math.abs(+el.getAttribute('y2')- +el.getAttribute('y1'))>=10){el.setAttribute('marker-start','url(#externality-start)');el.setAttribute('marker-end','url(#externality-end)');}
+    });
+    const captions=[...widgetSvg.querySelectorAll('#label-output-gap,#label-gap,#label-overprod,#ban-scene text,.free-gap-label')].filter(el=>visible(el)&&/(Under|Over)-(consumption|production)/i.test(el.textContent));
+    const qlabels=[...widgetSvg.querySelectorAll('text')].filter(el=>visible(el)&&/^[Qq]/.test(el.textContent)&&+el.getAttribute('y')>=380&&+el.getAttribute('y')<440);
+    const bottom=Math.max(402,...qlabels.map(el=>el.getBBox().y+el.getBBox().height));
+    captions.forEach(el=>el.setAttribute('y',Math.min(459,bottom+28)));
+    widgetSvg.querySelectorAll('#under-arrow,#over-arrow,#arrow-gap,#line-overprod,.free-gap-arrow').forEach(el=>{if(visible(el)){el.setAttribute('y1',Math.min(441,bottom+10));el.setAttribute('y2',Math.min(441,bottom+10));}});
+    widgetSvg.querySelectorAll('#ban-scene line').forEach(el=>{if(+el.getAttribute('y1')===452&&+el.getAttribute('y2')===452){el.setAttribute('y1',Math.min(441,bottom+10));el.setAttribute('y2',Math.min(441,bottom+10));}});
+  }
+
   function qualitativeControls(){document.querySelectorAll('input[type="range"]').forEach(el=>{const lo=+el.min,hi=+el.max,v=+el.value,t=(v-lo)/(hi-lo);el.setAttribute('aria-valuetext',t===0?'Minimum':t===1?'Maximum':t<.34?'Low':t<.67?'Moderate':'High');});}
-  function updateDiagram(){restoreLabelPresentation();renderDiagram();qualitativeControls();mergeExactLabels();labelLayout();avoidLabelCollisions();registerTargets();}
+  function updateDiagram(){restoreLabelPresentation();renderDiagram();qualitativeControls();mergeExactLabels();labelLayout();compactAnnotations();avoidLabelCollisions();registerTargets();approvedUX();}
   updateDiagram();
 
 </script>

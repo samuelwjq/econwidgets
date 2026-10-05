@@ -85,6 +85,7 @@ strong,b{color:#dc2626!important;font-weight:700}
 .tooltip{background:#fff;color:var(--ink);border-color:#b6c6f5}
 .tooltip-close{color:var(--ink)}
 .tooltip-close:hover{background:#f0f4ff}
+.area-key{display:flex;gap:8px 16px;flex-wrap:wrap;align-items:center;font-size:12px;margin:8px 2px}.area-key[hidden],.ban-legend[hidden]{display:none}.key-heading{font-weight:600;color:#4b5563}.key-item{display:inline-flex;align-items:center;gap:6px}.key-item i{display:inline-block;width:16px;height:12px;border:1px solid #777;flex-shrink:0}.key-colour{opacity:.65}.key-pattern.social{background:repeating-linear-gradient(135deg,#fff 0 4px,#777 4px 5px)}.key-pattern.other{background:repeating-linear-gradient(0deg,#fff 0 4px,#777 4px 5px)}.key-pattern.policy{background:repeating-linear-gradient(45deg,transparent 0 4px,#777 4px 5px),repeating-linear-gradient(135deg,#fff 0 4px,#777 4px 5px)}.related-widget{margin:12px 2px}.related-widget a{display:inline-block;color:#4169e1;font-size:13px;font-weight:600;text-decoration:underline;text-underline-offset:3px;padding:8px 0;max-width:100%}
 </style>
 </head>
 <body>
@@ -207,7 +208,7 @@ strong,b{color:#dc2626!important;font-weight:700}
       <line x1="70" y1="380" x2="70" y2="25" class="axis" marker-end="url(#arrow)" />
 
       <!-- Axis Headers -->
-      <text class="axis-title" x="64" y="12" text-anchor="end" font-weight="bold" style="font-size:12px"><tspan x="64">Price</tspan><tspan x="64" dy="14">Costs</tspan><tspan x="64" dy="14">Benefits</tspan></text>
+      <text class="axis-title" x="64" y="12" text-anchor="end" font-weight="bold" style="font-size:12px"><tspan x="64">Price /</tspan><tspan x="64" dy="14">Costs /</tspan><tspan x="64" dy="14">Benefits</tspan></text>
       <text class="axis-title" x="600" y="385" font-weight="bold">Qty</text>
       
 
@@ -1020,7 +1021,7 @@ strong,b{color:#dc2626!important;font-weight:700}
     if(document.getElementById('ban-compare').checked&&b.freeDwl>ECON_EPS){const a=banEl('polygon',{id:'ban-free-area',class:'ban-free-area',points:pts([[b.qs,mpb(b.qs)],[b.qe,mpb(b.qe)],[b.qe,msc(b.qe)],[b.qs,msc(b.qs)]])});explainBan(a,freeExplanation,'Explain free-market deadweight loss');}
     if(dwlCheck.checked&&b.banDwl>ECON_EPS){const a=banEl('polygon',{id:'ban-loss-area',class:'dwl-poly',points:pts([[0,mpb(0)],[0,msc(0)],[b.qs,mpb(b.qs)]])});explainBan(a,banExplanation,'Explain deadweight loss under the ban');}
     banEl('line',{x1:70,y1:380,x2:590,y2:380,class:'axis','marker-end':'url(#arrow)'});banEl('line',{x1:70,y1:380,x2:70,y2:25,class:'axis','marker-end':'url(#arrow)'});
-    const axisTitle=txt(64,12,'',{'text-anchor':'end',class:'axis-title',style:'font-size:12px'});['Price','Costs','Benefits'].forEach((word,i)=>{const span=document.createElementNS('http://www.w3.org/2000/svg','tspan');span.setAttribute('x','64');if(i)span.setAttribute('dy','14');span.textContent=word;axisTitle.append(span);});txt(600,385,'Qty',{class:'axis-title'});
+    const axisTitle=txt(64,12,'',{'text-anchor':'end',class:'axis-title',style:'font-size:12px'});['Price /','Costs /','Benefits'].forEach((word,i)=>{const span=document.createElementNS('http://www.w3.org/2000/svg','tspan');span.setAttribute('x','64');if(i)span.setAttribute('dy','14');span.textContent=word;axisTitle.append(span);});txt(600,385,'Qty',{class:'axis-title'});
     line(0,mpb(0),85,mpb(85),{class:'line-mpb'});line(0,mpc(0),80,mpc(80),{class:'line-mpc'});if(mec>ECON_EPS)line(0,msc(0),80,msc(80),{class:'line-msc'});
     txt(x(85)+6,y(mpb(85))+5,'MPB = MSB',{fill:'#2563eb'});txt(x(80)+6,y(mpc(80))+5,mec===0?'MPC = MSC':'MPC',{fill:'#16a34a'});if(mec>ECON_EPS)txt(x(80)+6,y(msc(80))-12,'MSC = MPC + MEC',{fill:'#dc2626'});
     banEl('line',{x1:70,y1:380,x2:70,y2:40,stroke:'#4169e1','stroke-width':3,'stroke-dasharray':'6,4'});txt(82,48,'Ban: no output',{fill:'#4169e1'});
@@ -1202,11 +1203,11 @@ strong,b{color:#dc2626!important;font-weight:700}
     const props=['display','visibility','fill','fill-opacity','stroke','stroke-width','stroke-opacity','stroke-dasharray','stroke-linecap','stroke-linejoin','paint-order','opacity','font-family','font-size','font-weight','font-style','text-anchor','dominant-baseline','baseline-shift','marker-start','marker-end'];
     src.forEach((el,i)=>{const cs=getComputedStyle(el);props.forEach(p=>{let v=cs.getPropertyValue(p);if(p.startsWith('marker'))v=v.replace(/url\(["']?[^#)]*#([^)'" ]+)["']?\)/g,'url(#$1)');dst[i].style.setProperty(p,v);});dst[i].removeAttribute('tabindex');dst[i].removeAttribute('role');});
     clone.querySelectorAll('.touch-target').forEach(e=>e.remove());
-    clone.setAttribute('x','0');clone.setAttribute('y','55');clone.setAttribute('width','710');clone.setAttribute('height','470');clone.style.width='710px';clone.style.height='470px';
-    const ns='http://www.w3.org/2000/svg',out=document.createElementNS(ns,'svg');out.setAttribute('xmlns',ns);out.setAttribute('width','1420');out.setAttribute('height','1140');out.setAttribute('viewBox','0 0 710 570');
-    const bg=document.createElementNS(ns,'rect');bg.setAttribute('width','710');bg.setAttribute('height','570');bg.setAttribute('fill','white');out.append(bg);
+    clone.setAttribute('x','0');clone.setAttribute('y','110');clone.setAttribute('width','710');clone.setAttribute('height','470');clone.style.width='710px';clone.style.height='470px';
+    const ns='http://www.w3.org/2000/svg',out=document.createElementNS(ns,'svg');out.setAttribute('xmlns',ns);out.setAttribute('width','1420');out.setAttribute('height','1250');out.setAttribute('viewBox','0 0 710 625');
+    const bg=document.createElementNS(ns,'rect');bg.setAttribute('width','710');bg.setAttribute('height','625');bg.setAttribute('fill','white');out.append(bg);
     const title=document.createElementNS(ns,'text');title.setAttribute('x','20');title.setAttribute('y','25');title.setAttribute('style','font:bold 17px system-ui;fill:#4169e1');title.textContent=document.querySelector('h1').textContent;out.append(title);
-    const policy=document.getElementById('policy-select');if(policy){const sub=document.createElementNS(ns,'text');sub.setAttribute('x','20');sub.setAttribute('y','45');sub.setAttribute('style','font:13px system-ui;fill:#374151');sub.textContent=policy.selectedOptions[0].textContent;out.append(sub);}out.append(clone);if(policy?.value==='ban'){const legend=document.createElementNS(ns,'text');legend.setAttribute('x','20');legend.setAttribute('y','553');legend.setAttribute('style','font:12px system-ui;fill:#374151');legend.textContent='Red shading: DWL under ban. Amber shading: free-market DWL (if shown).';out.append(legend);}if(exportStyle.value==='grayscale')makeGrayscale(out);return new XMLSerializer().serializeToString(out);
+    const policy=document.getElementById('policy-select');if(policy){const sub=document.createElementNS(ns,'text');sub.setAttribute('x','20');sub.setAttribute('y','45');sub.setAttribute('style','font:13px system-ui;fill:#374151');sub.textContent=policy.selectedOptions[0].textContent;out.append(sub);}out.append(clone);appendExportKey(out);if(exportStyle.value==='grayscale')makeGrayscale(out);return new XMLSerializer().serializeToString(out);
   }
   function makeGrayscale(out){
     const ns='http://www.w3.org/2000/svg';
@@ -1225,17 +1226,73 @@ strong,b{color:#dc2626!important;font-weight:700}
       const k=kind(c),shape=['polygon','rect','path'].includes(el.tagName);
       if(prop==='fill'&&chromatic&&shape&&!el.closest('marker')){el.style.setProperty('fill',hatch(k));el.style.setProperty('fill-opacity','1');}
       else {const gray=Math.round(.2126*c[0]+.7152*c[1]+.0722*c[2]);el.style.setProperty(prop,prop==='fill'&&['text','tspan'].includes(el.tagName)?'#222':`rgba(${gray},${gray},${gray},${alpha})`);}
-      if(prop==='stroke'&&chromatic&&['line','path'].includes(el.tagName)&&!el.closest('marker')&&!el.classList.contains('collision-leader')&&!el.classList.contains('label-leader')){el.style.setProperty('stroke','#333');el.style.setProperty('stroke-dasharray',k==='social'?'3 3':k==='private-cost'?'9 4':k==='policy'?'9 3 2 3':'none');}
+      if(prop==='stroke'&&chromatic&&['line','path'].includes(el.tagName)&&!el.closest('marker')&&!el.classList.contains('collision-leader')&&!el.classList.contains('label-leader')){el.style.setProperty('stroke','#333');el.style.setProperty('stroke-dasharray','none');}
     }});
-    out.querySelectorAll('text').forEach(el=>{if(el.textContent.startsWith('Red shading:'))el.textContent='Diagonal hatch: DWL under ban. Horizontal hatch: free-market DWL (if shown).';});
+    
   }
-  async function diagramPNG(){const blob=new Blob([diagramSVG()],{type:'image/svg+xml;charset=utf-8'}),url=URL.createObjectURL(blob);try{const img=new Image();await new Promise((resolve,reject)=>{img.onload=resolve;img.onerror=reject;img.src=url;});const canvas=document.createElement('canvas');canvas.width=1420;canvas.height=1140;canvas.getContext('2d').drawImage(img,0,0);return await new Promise((resolve,reject)=>canvas.toBlob(b=>b?resolve(b):reject(new Error('Image creation failed')),'image/png'));}finally{URL.revokeObjectURL(url);}}
+  async function diagramPNG(){const blob=new Blob([diagramSVG()],{type:'image/svg+xml;charset=utf-8'}),url=URL.createObjectURL(blob);try{const img=new Image();await new Promise((resolve,reject)=>{img.onload=resolve;img.onerror=reject;img.src=url;});const canvas=document.createElement('canvas');canvas.width=1420;canvas.height=img.naturalHeight;canvas.getContext('2d').drawImage(img,0,0);return await new Promise((resolve,reject)=>canvas.toBlob(b=>b?resolve(b):reject(new Error('Image creation failed')),'image/png'));}finally{URL.revokeObjectURL(url);}}
   function saveImage(blob){const url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=document.title.replace(/[^a-z0-9]+/gi,'_')+(exportStyle.value==='grayscale'?'_Grayscale':'')+'.png';document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),60000);}
   downloadButton.onclick=async()=>{try{saveImage(await diagramPNG());exportStatus.textContent=(exportStyle.value==='grayscale'?'Grayscale':'Colour')+' diagram prepared for download.';}catch(e){exportStatus.textContent='Unable to create the image. Please try opening the widget in its own browser tab.';}};
   copyButton.onclick=async()=>{try{if(!navigator.clipboard?.write||!window.ClipboardItem)throw new Error('Clipboard unavailable');const png=diagramPNG();await navigator.clipboard.write([new ClipboardItem({'image/png':png})]);exportStatus.textContent=(exportStyle.value==='grayscale'?'Grayscale':'Colour')+' diagram copied. Paste it into your notes.';}catch(e){exportStatus.textContent='Image copying is unavailable in this browser or embed. Use Download diagram instead.';}};
 
+  // Approved UX: contextual area key, selected-policy glossary, paired-widget navigation.
+  const areaKey=document.createElement('div');areaKey.className='area-key';areaKey.setAttribute('aria-label','Shaded area colour and grayscale key');widgetFrame.after(areaKey);
+  const glossaryItems=[...document.querySelectorAll('.sidebar > details')];
+  const glossaryPolicyNames={indirect_subsidy:'Indirect Subsidy',direct_subsidy:'Direct Subsidy',free_provision:'Free Provision',joint_provision:'Joint Provision',education:'Education & Campaigns',tax:'Tax',quota:'Quota on Output',ban:'Ban (a quota of zero)',qpoll:'Quota on Pollutant',rd:'Research & Development (R&D)',edu:'Education & Campaigns'};
+  const normalise=s=>s.replace(/\s+/g,' ').trim();
+  const nameOf=el=>normalise(el.querySelector('summary')?.textContent||'');
+  const policyNames=new Set(Object.values(glossaryPolicyNames));policyNames.add('Direct Government Provision');policyNames.add('Legislation (Compulsory Consumption)');
+  const counterpart={
+    'PE_Govt_Measures.html':['Positive_Externalities.html','Explore positive externalities'],
+    'Positive_Externalities.html':['PE_Govt_Measures.html','Explore government measures for positive externalities'],
+    'NE_Govt_Measures.html':['Negative_Externalities.html','Explore negative externalities'],
+    'Negative_Externalities.html':['NE_Govt_Measures.html','Explore government measures for negative externalities']
+  };
+  const fileKey=document.title.includes('Government')?(document.title.includes('Positive')?'PE_Govt_Measures.html':'NE_Govt_Measures.html'):(document.title.includes('Positive')?'Positive_Externalities.html':'Negative_Externalities.html');
+  const nav=document.createElement('nav');nav.className='related-widget';nav.setAttribute('aria-label','Related economics widget');const link=document.createElement('a');link.href=counterpart[fileKey][0];link.textContent=counterpart[fileKey][1];nav.append(link);help.after(nav);
+  function visibleArea(id){const el=document.getElementById(id);if(!el||!visible(el))return false;const box=el.getBBox();return box.width>1e-7&&box.height>1e-7;}
+  function currentAreaKey(){
+    const policy=document.getElementById('policy-select')?.value;if(!['ban','free_provision'].includes(policy))return [];
+    const entries=[];
+    const candidates=policy==='ban'?[['ban-loss-area','DWL under ban','social','#dc2626'],['ban-free-area','Free-market DWL','other','#d97706']]:[['free-policy-loss','Free-provision DWL','social','#dc2626'],['free-market-loss','Free-market DWL','other','#d97706']];
+    candidates.forEach(([id,label,pattern,colour])=>{if(visibleArea(id))entries.push({label,pattern,colour});});
+    if(policy==='free_provision'&&[...document.querySelectorAll('#free-scene .subsidy-rect')].some(el=>visible(el)&&el.getBBox().height>0))entries.push({label:'Subsidy expenditure',pattern:'policy',colour:'#4169e1'});
+    return entries;
+  }
+  function approvedUX(){
+    const entries=currentAreaKey();areaKey.replaceChildren();areaKey.hidden=!entries.length;
+    if(entries.length){const heading=document.createElement('span');heading.className='key-heading';heading.textContent='Colour / grayscale key';areaKey.append(heading);entries.forEach(entry=>{const item=document.createElement('span');item.className='key-item';const colour=document.createElement('i');colour.className='key-colour';colour.style.backgroundColor=entry.colour;colour.setAttribute('aria-hidden','true');const pattern=document.createElement('i');pattern.className='key-pattern '+entry.pattern;pattern.setAttribute('aria-hidden','true');item.append(colour,pattern,document.createTextNode(entry.label));areaKey.append(item);});}
+    document.querySelector('.ban-legend')?.setAttribute('hidden','');
+    const policy=document.getElementById('policy-select')?.value;if(!policy)return;
+    const selectedName=glossaryPolicyNames[policy],selected=glossaryItems.find(el=>nameOf(el)===selectedName);
+    const order=[...(selected?[selected]:[]),...glossaryItems.filter(el=>el!==selected&&!policyNames.has(nameOf(el))),...glossaryItems.filter(el=>el!==selected&&policyNames.has(nameOf(el)))];
+    const sidebar=document.querySelector('.sidebar');order.forEach(el=>sidebar.append(el));
+  }
+  function appendExportKey(out){
+    const entries=currentAreaKey(),ns='http://www.w3.org/2000/svg',height=entries.length?625+18*(entries.length-1):625;
+    out.setAttribute('height',String(height*2));out.setAttribute('viewBox','0 0 710 '+height);out.querySelector('rect')?.setAttribute('height',String(height));
+    entries.forEach((entry,i)=>{const text=document.createElementNS(ns,'text');text.setAttribute('x','20');text.setAttribute('y',String(608+i*18));text.setAttribute('style','font:12px system-ui;fill:#374151');const kind=exportStyle.value==='grayscale'?{social:'Diagonal hatch',other:'Horizontal hatch',policy:'Crosshatch'}[entry.pattern]:{social:'Red shading',other:'Amber shading',policy:'Blue shading'}[entry.pattern];text.textContent=kind+': '+entry.label;out.append(text);});
+  }
+
+  function compactAnnotations(){
+    const defs=widgetSvg.querySelector('defs'),ns='http://www.w3.org/2000/svg';
+    if(!widgetSvg.querySelector('#externality-start'))for(const [id,d,ref] of [['externality-start','M10,1 L0,5 L10,9 Z',1],['externality-end','M0,1 L10,5 L0,9 Z',9]]){const m=document.createElementNS(ns,'marker');Object.entries({id,viewBox:'0 0 10 10',refX:ref,refY:5,markerWidth:5,markerHeight:5,orient:'auto'}).forEach(([k,v])=>m.setAttribute(k,v));const path=document.createElementNS(ns,'path');path.setAttribute('d',d);path.setAttribute('fill','#2563eb');m.append(path);defs.append(m);}
+    widgetSvg.querySelectorAll('#arrow-meb,#meb-arrow,#mec-arrow,#group-mec line,#ban-scene line,.free-externality').forEach(el=>{
+      if(!visible(el)||Math.abs(+el.getAttribute('x1')- +el.getAttribute('x2'))>1e-6)return;
+      if(getComputedStyle(el).stroke!=='rgb(37, 99, 235)'&&!el.matches('#arrow-meb,#meb-arrow,#mec-arrow,.free-externality'))return;
+      if(Math.abs(+el.getAttribute('y2')- +el.getAttribute('y1'))>=10){el.setAttribute('marker-start','url(#externality-start)');el.setAttribute('marker-end','url(#externality-end)');}
+    });
+    widgetSvg.querySelectorAll('#group-mec polygon').forEach(el=>el.style.display='none');
+    const captions=[...widgetSvg.querySelectorAll('#label-output-gap,#label-gap,#label-overprod,#ban-scene text,.free-gap-label')].filter(el=>visible(el)&&/(Under|Over)-(consumption|production)/i.test(el.textContent));
+    const qlabels=[...widgetSvg.querySelectorAll('text')].filter(el=>visible(el)&&/^[Qq]/.test(el.textContent)&&+el.getAttribute('y')>=380&&+el.getAttribute('y')<440);
+    const bottom=Math.max(402,...qlabels.map(el=>el.getBBox().y+el.getBBox().height));
+    captions.forEach(el=>el.setAttribute('y',Math.min(459,bottom+28)));
+    widgetSvg.querySelectorAll('#under-arrow,#over-arrow,#arrow-gap,#line-overprod,.free-gap-arrow').forEach(el=>{if(visible(el)){el.setAttribute('y1',Math.min(441,bottom+10));el.setAttribute('y2',Math.min(441,bottom+10));}});
+    widgetSvg.querySelectorAll('#ban-scene line').forEach(el=>{if(+el.getAttribute('y1')===452&&+el.getAttribute('y2')===452){el.setAttribute('y1',Math.min(441,bottom+10));el.setAttribute('y2',Math.min(441,bottom+10));}});
+  }
+
   function qualitativeControls(){document.querySelectorAll('input[type="range"]').forEach(el=>{const lo=+el.min,hi=+el.max,v=+el.value,t=(v-lo)/(hi-lo);el.setAttribute('aria-valuetext',t===0?'Minimum':t===1?'Maximum':t<.34?'Low':t<.67?'Moderate':'High');});}
-  function updateDiagram(){restoreLabelPresentation();renderDiagram();qualitativeControls();mergeExactLabels();labelLayout();avoidLabelCollisions();registerTargets();}
+  function updateDiagram(){restoreLabelPresentation();renderDiagram();qualitativeControls();mergeExactLabels();labelLayout();compactAnnotations();avoidLabelCollisions();registerTargets();approvedUX();}
   updateDiagram();
 
 </script>
