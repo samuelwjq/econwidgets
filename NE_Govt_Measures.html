@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Government Policies for Negative Externalities</title>
+  <title>Government Measures To Correct Negative Externalities</title>
   <style>
 /* ECON WIDGET DESIGN SYSTEM v2 — shared across all four standalone files. */
 :root{--accent:#4169e1;--ink:#1f2937;--muted:#6b7280;--border:#e5e7eb;--panel:#f3f4f6;--blue:#2563eb;--green:#16a34a;--red:#dc2626;--radius:8px}
@@ -87,9 +87,144 @@ strong,b{color:#dc2626!important;font-weight:700}
 .tooltip-close:hover{background:#f0f4ff}
 .area-key{display:flex;gap:8px 16px;flex-wrap:wrap;align-items:center;font-size:12px;margin:8px 2px}.area-key[hidden],.ban-legend[hidden]{display:none}.key-heading{font-weight:600;color:#4b5563}.key-item{display:inline-flex;align-items:center;gap:6px}.key-item i{display:inline-block;width:16px;height:12px;border:1px solid #777;flex-shrink:0}.key-colour{opacity:.65}.key-pattern.social{background:repeating-linear-gradient(135deg,#fff 0 4px,#777 4px 5px)}.key-pattern.other{background:repeating-linear-gradient(0deg,#fff 0 4px,#777 4px 5px)}.key-pattern.policy{background:repeating-linear-gradient(45deg,transparent 0 4px,#777 4px 5px),repeating-linear-gradient(135deg,#fff 0 4px,#777 4px 5px)}.related-widget{margin:12px 2px}.related-widget a{display:inline-block;color:#4169e1;font-size:13px;font-weight:600;text-decoration:underline;text-underline-offset:3px;padding:8px 0;max-width:100%}
 </style>
+<style data-shared-interface="approved">
+/* Approved Collection Interface. Embedded By build.py; No External Dependencies. */
+:root { --radius:8px; --ui-text:14px; }
+.widget-header { text-align:center; border-left:0; border-bottom:3px solid var(--accent); padding:0 0 12px; margin-bottom:10px; }
+.widget-header h1 { font-size:24px; line-height:1.3; }
+.widget-header p { font-size:14px; }
+.controls,.sidebar { border-radius:8px; }
+select,button { font-size:14px; min-height:44px; border-radius:6px; }
+.tabs button { font-size:14px; }
+.control-group>label:not(.toggle-label):not(.checkbox-label),.policy-selector>label,.slider-card>label,
+.checkbox-label,.toggle-label,summary,.elastic-label,.slider-card output,.shift-output { font-size:14px; }
+.checkbox-label,.toggle-label { min-height:44px; }
+.scale-label,.range-ends,.slider-scale,.diagram-help,.model-note,.note-small,.glossary-intro,.case-help,.curve-key,.legend,.area-key,.surplus-key { font-size:13px; }
+details p,.summary-table,.outcomes,.policy-note,.mechanism,.walkthrough-copy,.controls .instruction { font-size:14px; line-height:1.55; }
+.summary-table th,.summary-table td,.outcomes th,.outcomes td { font-size:14px; }
+.glossary-title { font-size:17px; }
+.reset-button,.reset-button strong { color:var(--accent)!important; font-weight:700; }
+.controls label strong { color:inherit!important; }
+.tooltip strong { color:var(--red)!important; }
+.tooltip[data-surplus="cs"] strong { color:var(--blue)!important; }
+.tooltip[data-surplus="ps"] strong { color:var(--green)!important; }
+svg#diagram text { font-size:14px; }
+svg#diagram text[font-size="11"],svg#diagram text[font-size="12"] { font-size:12px; }
+svg#diagram text[style*="font-size:11px"],svg#diagram text[style*="font-size: 11px"] { font-size:12px!important; }
+svg#diagram tspan[baseline-shift="sub"] { font-size:10px; }
+svg#diagram .guide-line { stroke:#9ca3af; stroke-width:1; stroke-dasharray:4,4; }
+svg#diagram .axis,svg#diagram line[marker-end="url(#axis-arrow)"] { stroke:#374151; stroke-width:2; }
+svg#diagram path[data-tip]:not([fill]) { stroke-width:2.5; }
+.widget-nav { margin:0 0 14px; text-align:center; }
+.widget-nav a { padding:8px 12px; font-size:14px; min-height:40px; }
+.ui-actionbar { position:relative; gap:8px; margin:12px 0; }
+.ui-legacy-zoom { display:none!important; }
+.ui-export { padding:0; margin:0; background:#fff; position:relative; border:1px solid #d1d5db; border-radius:6px; }
+.ui-export>summary { padding:8px 12px; min-height:44px; gap:12px; }
+.ui-export-panel { position:absolute; z-index:130; top:calc(100% + 6px); left:0; padding:12px; display:flex; flex-wrap:wrap; gap:10px; width:280px; max-width:calc(100vw - 40px); background:#fff; border:1px solid var(--border); box-shadow:0 8px 22px #0002; border-radius:8px; }
+.ui-export-panel .export-format { width:100%; font-size:14px; }
+.ui-export-panel button { flex:1; }
+.ui-current-policy { margin-bottom:12px; }
+.ui-current-policy>h3 { font-size:14px; color:var(--accent); margin:0 0 8px; }
+.ui-curve-key { display:flex; flex-wrap:wrap; gap:6px 16px; margin:8px 0; }
+.ui-curve-key span { display:inline-flex; align-items:center; gap:6px; }
+.ui-curve-key i { display:inline-block; width:20px; border-top:2.5px solid; }
+.ui-focus-outcome { display:none; }
+.tooltip.ui-tooltip { display:none!important; pointer-events:auto; font-size:14px; line-height:1.55; width:auto; max-width:min(360px,calc(100vw - 24px)); }
+.tooltip.ui-tooltip[data-open="true"] { display:block!important; }
+.tooltip.ui-tooltip .tooltip-close { min-width:40px; min-height:40px; top:0; right:0; }
+.tooltip.ui-tooltip .ui-tooltip-state { display:block; margin-top:8px; font-size:12px; color:var(--muted); }
+.tooltip.ui-tooltip[hidden] { display:none!important; }
+body.ui-focus { overflow:hidden; }
+body.ui-focus .sidebar,body.ui-focus>.widget-header,body.ui-focus>.widget-nav { display:none!important; }
+body.ui-focus .main-content { position:fixed; inset:0; z-index:1000; background:#fff; padding:16px; overflow:auto; display:grid; grid-template-columns:240px minmax(0,1fr); gap:12px 18px; align-content:start; }
+body.ui-focus .main-content>.ui-actionbar { grid-column:1/-1; margin:0; position:sticky; top:-16px; padding:8px 0; background:#fff; z-index:140; }
+body.ui-focus .main-content>.controls { grid-column:1; grid-row:2; margin:0; }
+body.ui-focus .main-content>.diagram-frame { grid-column:2; grid-row:2; align-self:start; }
+body.ui-focus .main-content>.legend,body.ui-focus .main-content>.curve-key,body.ui-focus .main-content>.area-key,body.ui-focus .main-content>.surplus-key { grid-column:2; margin:0; }
+body.ui-focus .main-content>.summary-wrap,body.ui-focus .main-content>.table-wrap,body.ui-focus .main-content>.mechanism,body.ui-focus .main-content>.model-note,body.ui-focus .main-content>.diagram-help,body.ui-focus .main-content>.related-widget { display:none!important; }
+body.ui-focus .main-content>.policy-note,body.ui-focus .main-content>.result-banner { grid-column:2; }
+body.ui-focus .main-content>.ui-focus-outcome { display:block; grid-column:2; font-size:14px; background:#f0f4ff; border:1px solid #cbd7fa; border-radius:8px; padding:10px 12px; }
+body.ui-focus .main-content>.tabs { grid-column:1/-1; grid-row:2; }
+body.ui-focus .main-content:has(>.tabs)>.controls,body.ui-focus .main-content:has(>.tabs)>.diagram-frame { grid-row:3; }
+body.ui-focus .main-content>.tooltip { z-index:1100; grid-column:2; }
+body.ui-focus .main-content>.ui-walk-panel { grid-column:1; }
+body.ui-focus .diagram-frame.zoomed svg { min-width:0!important; }
+body.ui-focus .controls .toggle-grid,body.ui-focus .controls .option-row,body.ui-focus .controls .checkbox-group { display:none; }
+@media(max-width:900px) {
+ .tooltip.ui-tooltip { position:relative; left:auto!important; top:auto!important; width:100%; max-width:none!important; margin:10px 0; }
+ body.ui-focus .main-content { display:block; padding:12px; }
+ body.ui-focus .main-content>.controls { margin-bottom:12px; }
+ body.ui-focus .main-content>.ui-actionbar { top:-12px; margin-bottom:12px; }
+ body.ui-focus .main-content>.tabs { margin-bottom:12px; }
+}
+@media(max-width:480px) {
+ .widget-header h1 { font-size:21px; }
+ .summary-table,.summary-table th,.summary-table td,.outcomes th,.outcomes td { font-size:14px; }
+ .ui-export-panel { left:auto; right:0; }
+}
+@media print { .ui-actionbar,.widget-nav,.ui-tooltip { display:none!important; } }
+
+/* Compact Sizing: Preserve The Existing Layout, Controls And Teaching Content. */
+body.widget-page { padding:12px; }
+.widget-page .widget-header { padding-bottom:8px; margin-bottom:6px; }
+.widget-page .widget-header h1 { font-size:22px; }
+.widget-page .widget-header p { margin-top:3px; }
+.widget-page .widget-nav { margin-bottom:8px; }
+.widget-page .widget-nav a { padding:6px 10px; }
+.widget-page .layout { grid-template-columns:minmax(0,1fr) clamp(260px,25vw,300px); gap:14px; }
+.widget-page .sidebar { padding:12px; }
+.widget-page .glossary-title { font-size:16px; margin-bottom:8px; padding-bottom:5px; }
+.widget-page .sidebar details { margin-bottom:5px; padding:0 10px; }
+.widget-page .sidebar summary { min-height:44px; padding:6px 0; gap:8px; line-height:1.35; }
+.widget-page .sidebar details p { margin-bottom:9px; }
+.widget-page .ui-current-policy { margin-bottom:8px; }
+.widget-page .ui-current-policy>h3 { margin-bottom:5px; }
+.widget-page .controls { padding:8px 12px; gap:8px; margin-bottom:8px; }
+.widget-page .control-row,.widget-page .control-group,.widget-page .policy-selector,.widget-page .slider-card { gap:6px; }
+.widget-page .checkbox-group,.widget-page .option-row,.widget-page .toggle-grid { gap:0 12px; }
+.widget-page button,.widget-page select { padding:6px 9px; min-height:44px; }
+.widget-page .tabs { gap:6px; margin-bottom:8px; }
+.widget-page .ui-actionbar { gap:6px; margin:8px 0; padding-top:6px; }
+.widget-page .ui-export>summary { padding:6px 10px; min-height:44px; }
+.widget-page svg#diagram { width:100%; max-width:var(--diagram-max-width); height:auto; margin-inline:auto; }
+.widget-page .diagram-help { margin-top:4px; }
+.widget-page .legend,.widget-page .area-key,.widget-page .curve-key,.widget-page .surplus-key,.widget-page .ui-curve-key { margin-top:6px; margin-bottom:6px; gap:6px 12px; }
+.widget-page .summary-wrap,.widget-page .table-wrap { margin-top:10px; }
+.widget-page .summary-table caption { padding:8px 10px; }
+.widget-page .summary-table th,.widget-page .summary-table td,.widget-page .outcomes th,.widget-page .outcomes td { padding:8px 10px; }
+.widget-page .mechanism,.widget-page .policy-note { padding:10px; margin-top:8px; }
+/* Focus View Remains Available At A Larger Size Than The Normal Page. */
+body.widget-page.ui-focus svg#diagram { max-width:none; }
+body.widget-page.ui-focus .main-content>.ui-actionbar { margin:0; }
+/* Index: The Same Spacing Principles, With All Topic Groups Retained. */
+body.index-page main { width:min(100% - 24px,1060px); padding:24px 0; }
+.index-page header { padding:0 0 12px; margin-bottom:20px; border-bottom-width:3px; }
+.index-page h1 { font-size:clamp(24px,3.2vw,34px); line-height:1.2; }
+.index-page .eyebrow { margin-bottom:5px; }
+.index-page h2 { font-size:18px; margin-bottom:10px; }
+.index-page .grid { gap:10px; }
+.index-page .card { min-height:80px; padding:14px 16px; }
+.index-page .card h3 { font-size:16px; line-height:1.35; }
+.index-page .topic+.topic { margin-top:22px; }
+.index-page footer { margin-top:22px; }
+@media(max-width:900px) {
+ .widget-page .layout { grid-template-columns:minmax(0,1fr); }
+ .widget-page .sidebar { padding:12px; }
+}
+@media(max-width:480px) {
+ body.widget-page { padding:10px 8px; }
+ .widget-page .widget-header h1 { font-size:20px; }
+ .widget-page .controls { padding:8px 10px; }
+ .widget-page .layout { gap:12px; }
+ body.index-page main { padding:18px 0; }
+ .index-page .card { min-height:64px; padding:12px; }
+}
+
+</style>
 </head>
-<body>
-<header class="widget-header"><h1>Negative externalities · Government measures</h1><p>A-level Economics · Interactive diagrams</p></header>
+<body class="widget-page" style="--diagram-max-width:710px">
+<header class="widget-header"><h1>Government Measures To Correct Negative Externalities</h1><p>Topic 5 · A-Level Economics · Interactive Diagrams</p></header>
 
 <div class="layout">
   <div class="main-content">
@@ -209,7 +344,7 @@ strong,b{color:#dc2626!important;font-weight:700}
 
       <!-- Axis Headers -->
       <text class="axis-title" x="64" y="12" text-anchor="end" font-weight="bold" style="font-size:12px"><tspan x="64">Price /</tspan><tspan x="64" dy="14">Costs /</tspan><tspan x="64" dy="14">Benefits</tspan></text>
-      <text class="axis-title" x="600" y="385" font-weight="bold">Qty</text>
+      <text class="axis-title" x="600" y="385" font-weight="bold">Quantity</text>
       
 
       <!-- Baseline Market Curves -->
@@ -1021,7 +1156,7 @@ strong,b{color:#dc2626!important;font-weight:700}
     if(document.getElementById('ban-compare').checked&&b.freeDwl>ECON_EPS){const a=banEl('polygon',{id:'ban-free-area',class:'ban-free-area',points:pts([[b.qs,mpb(b.qs)],[b.qe,mpb(b.qe)],[b.qe,msc(b.qe)],[b.qs,msc(b.qs)]])});explainBan(a,freeExplanation,'Explain free-market deadweight loss');}
     if(dwlCheck.checked&&b.banDwl>ECON_EPS){const a=banEl('polygon',{id:'ban-loss-area',class:'dwl-poly',points:pts([[0,mpb(0)],[0,msc(0)],[b.qs,mpb(b.qs)]])});explainBan(a,banExplanation,'Explain deadweight loss under the ban');}
     banEl('line',{x1:70,y1:380,x2:590,y2:380,class:'axis','marker-end':'url(#arrow)'});banEl('line',{x1:70,y1:380,x2:70,y2:25,class:'axis','marker-end':'url(#arrow)'});
-    const axisTitle=txt(64,12,'',{'text-anchor':'end',class:'axis-title',style:'font-size:12px'});['Price /','Costs /','Benefits'].forEach((word,i)=>{const span=document.createElementNS('http://www.w3.org/2000/svg','tspan');span.setAttribute('x','64');if(i)span.setAttribute('dy','14');span.textContent=word;axisTitle.append(span);});txt(600,385,'Qty',{class:'axis-title'});
+    const axisTitle=txt(64,12,'',{'text-anchor':'end',class:'axis-title',style:'font-size:12px'});['Price /','Costs /','Benefits'].forEach((word,i)=>{const span=document.createElementNS('http://www.w3.org/2000/svg','tspan');span.setAttribute('x','64');if(i)span.setAttribute('dy','14');span.textContent=word;axisTitle.append(span);});txt(600,385,'Quantity',{class:'axis-title'});
     line(0,mpb(0),85,mpb(85),{class:'line-mpb'});line(0,mpc(0),80,mpc(80),{class:'line-mpc'});if(mec>ECON_EPS)line(0,msc(0),80,msc(80),{class:'line-msc'});
     txt(x(85)+6,y(mpb(85))+5,'MPB = MSB',{fill:'#2563eb'});txt(x(80)+6,y(mpc(80))+5,mec===0?'MPC = MSC':'MPC',{fill:'#16a34a'});if(mec>ECON_EPS)txt(x(80)+6,y(msc(80))-12,'MSC = MPC + MEC',{fill:'#dc2626'});
     banEl('line',{x1:70,y1:380,x2:70,y2:40,stroke:'#4169e1','stroke-width':3,'stroke-dasharray':'6,4'});txt(82,48,'Ban: no output',{fill:'#4169e1'});
@@ -1290,5 +1425,300 @@ strong,b{color:#dc2626!important;font-weight:700}
 
 </script>
 
+<script data-shared-interface="approved">
+/* Shared Collection Interface. Economic Models Remain In Their Original Scripts. */
+(() => {
+ 'use strict';
+ const svg=document.getElementById('diagram');
+ const titleCase=s=>s.replace(/(^|[\s/·:–—(\-])([a-z])/g,(_,a,b)=>a+b.toUpperCase());
+ function visible(el) { for(let n=el;n&&n.nodeType===1;n=n.parentElement) if(n.hidden||getComputedStyle(n).display==='none'||getComputedStyle(n).visibility==='hidden')return false; return true; }
+ const chromeSelector='h1,h2,h3,summary,button,label,option,output,.scale-label,.range-ends,.slider-scale,.elastic-label,.curve-key,.legend,.surplus-key,.area-key,.step-number,.case-current,caption,th,.summary-table td,.outcomes td,.result-banner,svg text';
+ let normalising=false;
+ function normalise(root=document) {
+  if(normalising)return; normalising=true;
+  const nodes=[...(root.matches?.(chromeSelector)?[root]:[]),...root.querySelectorAll(chromeSelector)];
+  for(const el of nodes) {
+   if(el.closest('.tooltip')||el.matches('tspan'))continue;
+   const walker=document.createTreeWalker(el,NodeFilter.SHOW_TEXT);
+   while(walker.nextNode()) {
+    const n=walker.currentNode;
+    if(n.parentElement?.closest('tspan[baseline-shift="sub"],script,style,.tooltip'))continue;
+    // Preserve Curve Symbols, Mathematical Subscripts And Coordinates.
+    if(el.closest('svg')&&/^[QPESWL][a-z0-9₀-₉]+(?:\s*=.*)?$/.test(n.nodeValue.trim()))continue;
+    const next=titleCase(n.nodeValue); if(next!==n.nodeValue)n.nodeValue=next;
+   }
+  }
+  normalising=false;
+ }
+ normalise();
+ if(!svg) { new MutationObserver(()=>normalise()).observe(document.body,{childList:true,subtree:true,characterData:true}); return; }
+ const main=document.querySelector('.main-content'),controls=document.querySelector('.controls'),frame=svg.closest('.diagram-frame');
+ svg.setAttribute('role','group');
+ const nav=document.querySelector('.related-widget');
+ if(nav) { nav.classList.add('widget-nav'); document.querySelector('.widget-header').after(nav); nav.querySelector('a').textContent='Back To Main Index'; }
+
+ // Place Economic Adjustments Before Presentation Options.
+ const options=controls?.querySelector(':scope>.toggle-grid,:scope>.option-row,:scope>.checkbox-group');
+ const banControls=document.getElementById('ban-controls');
+ if(banControls&&controls)controls.append(banControls);
+ if(options)controls.append(options);
+
+ // A Fixed Glossary Order, With A Separate Current-Policy Entry.
+ const sidebar=document.querySelector('.sidebar'),glossaryContainer=document.getElementById('glossary')||sidebar;
+ const glossaryItems=glossaryContainer?[...glossaryContainer.children].filter(n=>n.tagName==='DETAILS'):[];
+ if(sidebar)sidebar.querySelector('.glossary-title').textContent='Glossary';
+ const policySelect=document.getElementById('policy-select');
+ let currentPolicy=null;
+ const policyNames={ceiling:'ceiling',floor:'floor',wage:'wage',quota:'Quota On Output',tax:'Tax',ban:'Ban (A Quota Of Zero)',qpoll:'Quota On Pollutant',rd:'Research & Development (R&D)',edu:'Education & Campaigns',indirect_subsidy:'Indirect Subsidy',direct_subsidy:'Direct Subsidy',free_provision:'Free Provision',joint_provision:'Joint Provision',education:'Education & Campaigns'};
+ if(policySelect&&sidebar) {
+  // Disable Only The Old Reordering Pass. Preserve Its Area-Key Updates.
+  if(typeof approvedUX==='function') {
+   const oldApproved=approvedUX;
+   approvedUX=function(){oldApproved();stabiliseGlossary();};
+  }
+  currentPolicy=document.createElement('section');currentPolicy.className='ui-current-policy';
+  currentPolicy.innerHTML='<h3>Current Policy</h3><details><summary></summary><div class="ui-policy-definition"></div></details>';
+  sidebar.querySelector('.glossary-title').after(currentPolicy);
+ }
+ function stabiliseGlossary() {
+  if(!policySelect||!glossaryContainer)return;
+  const existing=[...glossaryContainer.children].filter(n=>glossaryItems.includes(n));
+  if(existing.some((n,i)=>n!==glossaryItems[i]))glossaryItems.forEach(n=>glossaryContainer.append(n));
+  const k=policySelect.value;
+  let selected=document.getElementById('glossary-'+k);
+  if(!selected) {
+   const name=titleCase(policyNames[k]||'');
+   selected=glossaryItems.find(n=>titleCase(n.querySelector('summary')?.textContent.replace(/\s+/g,' ').trim()||'')===name);
+  }
+  currentPolicy.hidden=!selected||k==='none';
+  if(selected) {
+   const text=selected.querySelector('summary').textContent;
+   const html=[...selected.children].filter(n=>n.tagName!=='SUMMARY').map(n=>n.outerHTML).join('');
+   const term=currentPolicy.querySelector('summary'),definition=currentPolicy.querySelector('.ui-policy-definition');
+   if(term.textContent!==text){term.textContent=text;currentPolicy.querySelector('details').open=false;}
+   if(definition.innerHTML!==html)definition.innerHTML=html;
+  }
+ }
+
+ // One Action Bar. Keep Hidden Legacy Zoom Buttons For Existing Reset Handlers.
+ const bars=[...main.querySelectorAll('.toolbar')],bar=bars[0]||document.createElement('div');
+ const reset=main.querySelector('#reset,.reset-button'),oldZoom=main.querySelector('#zoom,.zoom-button');
+ const download=main.querySelector('#download')||[...main.querySelectorAll('button')].find(b=>/^Download Diagram$/i.test(b.textContent.trim()));
+ const copy=main.querySelector('#copy')||[...main.querySelectorAll('button')].find(b=>/^Copy Diagram$/i.test(b.textContent.trim()));
+ const style=main.querySelector('#image-style,#export-style,.export-format select');
+ const exportLabel=style?.closest('label');
+ const oldHint=bar.querySelector('.hint:not([role="status"])');if(oldHint)oldHint.remove();
+ bar.className='toolbar ui-actionbar';bar.setAttribute('aria-label','Diagram Actions');
+ if(oldZoom){oldZoom.classList.add('ui-legacy-zoom');oldZoom.tabIndex=-1;oldZoom.setAttribute('aria-hidden','true');bar.append(oldZoom);}
+ if(reset){reset.textContent='Reset Diagram';bar.append(reset);}
+ const focus=document.createElement('button');focus.type='button';focus.textContent='Focus View';focus.setAttribute('aria-pressed','false');bar.append(focus);
+ const exportMenu=document.createElement('details');exportMenu.className='ui-export';exportMenu.innerHTML='<summary>Export Diagram</summary><div class="ui-export-panel"></div>';
+ const exportPanel=exportMenu.querySelector('div');
+ if(exportLabel)exportPanel.append(exportLabel);if(download)exportPanel.append(download);if(copy)exportPanel.append(copy);
+ bar.append(exportMenu);frame.after(bar);
+ bars.filter(n=>n!==bar).forEach(n=>{if(!n.children.length)n.remove();});
+ let status=main.querySelector('#export-status,[role="status"]');
+ if(!status){status=document.createElement('p');status.className='diagram-help';status.setAttribute('role','status');bar.after(status);}
+ if(bar.contains(status)){status.classList.add('diagram-help');bar.after(status);}
+ for(const help of main.querySelectorAll('.diagram-help'))if(/Use Enlarge Diagram/i.test(help.textContent))help.textContent='Use Focus View For A Closer View On Smaller Screens.';
+ document.addEventListener('click',e=>{if(!exportMenu.contains(e.target))exportMenu.open=false;});
+
+ // Compact Curve Keys For Multi-Curve Externality Policy Diagrams.
+ let curveKey=null;
+ if(document.querySelector('.line-mpb')&&policySelect) {curveKey=document.createElement('div');curveKey.className='curve-key ui-curve-key';frame.after(curveKey);}
+ function updateCurveKey() {
+  if(!curveKey)return;
+  const has=selector=>[...svg.querySelectorAll(selector)].some(visible);
+  const entries=[];
+  if(policySelect.value!=='none') {
+   if(has('.line-mpb'))entries.push(['#2563eb','Private Benefit']);
+   if(has('.line-mpc'))entries.push(['#16a34a','Private Cost']);
+   if(has('.line-msb,.line-msc'))entries.push(['#dc2626','Social Benefit / Cost']);
+   if(has('.line-policy,.line-tax,.line-quota,.line-qpoll,.line-rd,.line-edu'))entries.push(['#4169e1','Policy / Restriction']);
+  }
+  const html=entries.map(([c,t])=>'<span><i style="border-color:'+c+'"></i>'+t+'</span>').join('');
+  curveKey.hidden=!entries.length;if(curveKey.innerHTML!==html)curveKey.innerHTML=html;
+ }
+
+ // Unified Explanations: Hover Preview, Tap/Click/Keyboard Pin, Explicit Dismissal.
+ const tip=document.getElementById('diagram-tooltip')||document.getElementById('tooltip');
+ tip.classList.add('ui-tooltip');tip.setAttribute('role','note');tip.setAttribute('aria-live','polite');
+ frame.after(tip);
+ let pinned=false,activeTarget=null,collecting=false,collected='',timer=null,suppressFocus=false;
+ const enabled=()=>!document.querySelector('#tooltips,#toggle-tooltips,#show-tooltips')||document.querySelector('#tooltips,#toggle-tooltips,#show-tooltips').checked;
+ function closeTip(returnFocus=false) {
+  clearTimeout(timer);pinned=false;window.widgetTipPinned=false;
+  const target=activeTarget;if(target)target.removeAttribute('aria-describedby');
+  activeTarget=null;tip.hidden=true;tip.dataset.open='false';tip.style.display='none';
+  if(returnFocus&&target?.isConnected){suppressFocus=true;target.focus();suppressFocus=false;}
+ }
+ if(typeof showTooltip==='function')showTooltip=(html)=>{if(collecting)collected=html;};
+ if(typeof hideTooltip==='function')hideTooltip=()=>{if(!pinned)closeTip();};
+ if(typeof dismissTooltip==='function')dismissTooltip=()=>closeTip();
+ // Models Call These When Their State Changes. Pinning Does Not Survive A Redraw.
+ if(typeof hideTip==='function')hideTip=()=>closeTip();
+ function targetOf(event){return event.target.closest('[data-tip],[data-tooltip-target],.has-tooltip,.touch-target');}
+ function message(target) {
+  if(target.dataset.tipHtml)return target.dataset.tipHtml;
+  if(target.dataset.tip){const span=document.createElement('span');span.textContent=target.dataset.tip;return span.outerHTML;}
+  collecting=true;collected='';
+  const r=target.getBoundingClientRect();
+  target.dispatchEvent(new MouseEvent('mousemove',{bubbles:false,clientX:r.left+r.width/2,clientY:r.top+r.height/2}));
+  collecting=false;
+  return collected;
+ }
+ function show(target,pin,event) {
+  clearTimeout(timer);if(!enabled()||!target||!visible(target))return;
+  if(pinned&&!pin)return;
+  const html=message(target);if(!html)return;
+  if(activeTarget&&activeTarget!==target)activeTarget.removeAttribute('aria-describedby');
+  activeTarget=target;pinned=pin;window.widgetTipPinned=pin;
+  tip.dataset.surplus=target.id==='cs-area'?'cs':target.id==='ps-area'?'ps':'';
+  tip.innerHTML='<button type="button" class="tooltip-close" aria-label="Close Explanation">×</button><div class="ui-tooltip-content">'+html+'</div><span class="ui-tooltip-state">'+(pin?'Pinned Explanation':'Tap Or Press Enter To Pin')+'</span>';
+  tip.querySelector('button').onclick=()=>closeTip(true);
+  tip.hidden=false;tip.style.display='block';tip.dataset.open='true';
+  target.setAttribute('aria-describedby',tip.id);
+  if(innerWidth>900) {
+   const r=target.getBoundingClientRect(),box=tip.getBoundingClientRect();
+   tip.style.left=Math.max(12,Math.min(event?.clientX??r.left,innerWidth-box.width-12))+'px';
+   tip.style.top=Math.max(12,Math.min((event?.clientY??r.bottom)+12,innerHeight-box.height-12))+'px';
+  }
+ }
+ for(const type of ['pointerover','pointerout','click','focusin','focusout','keydown'])svg.addEventListener(type,e=>{
+  const target=targetOf(e);if(!target)return;
+  // Retain PPC Dragging And Arrow-Key Movement.
+  if(type==='keydown'&&!['Enter',' ','Escape'].includes(e.key))return;
+  e.stopImmediatePropagation();
+  if(type==='pointerover'&&e.pointerType==='mouse')show(target,false,e);
+  if(type==='pointerout'&&e.pointerType==='mouse'&&!pinned&&!tip.contains(e.relatedTarget))timer=setTimeout(()=>closeTip(),160);
+  if(type==='click')show(target,true,e);
+  if(type==='focusin'&&!suppressFocus)show(target,true);
+  if(type==='focusout'&&!pinned&&!tip.contains(e.relatedTarget))closeTip();
+  if(type==='keydown') { e.preventDefault();if(e.key==='Escape')closeTip(true);else show(target,true); }
+ },true);
+ tip.addEventListener('pointerenter',()=>clearTimeout(timer));
+ tip.addEventListener('pointerleave',()=>{if(!pinned)timer=setTimeout(()=>closeTip(),160);});
+ document.addEventListener('pointerdown',e=>{if(!tip.contains(e.target)&&!e.target.closest('[data-tip],[data-tooltip-target],.has-tooltip,.touch-target'))closeTip();},true);
+ controls?.addEventListener('input',()=>closeTip(),true);controls?.addEventListener('change',()=>closeTip(),true);
+ svg.addEventListener('pointerdown',e=>{if(e.target.closest('.draggable'))closeTip();},true);
+ document.addEventListener('keydown',e=>{if(e.key==='Escape'&&tip.dataset.open==='true'){e.stopImmediatePropagation();e.preventDefault();closeTip(true);}},true);
+ window.addEventListener('resize',()=>closeTip());
+
+ // Focus View Leaves The Economic Scenario And Existing Reset Rules Intact.
+ const focusOutcome=document.createElement('div');focusOutcome.className='ui-focus-outcome';focusOutcome.setAttribute('aria-live','polite');bar.after(focusOutcome);
+ function updateFocusOutcome(){
+  const lines=[...main.querySelectorAll('.summary-table tbody tr,.outcomes tbody tr')].filter(row=>/Price|Quantity|Wage|Labour Employed/i.test(row.querySelector('th')?.textContent||'')).slice(0,2).map(row=>(row.querySelector('th')?.textContent||'').trim()+': '+row.lastElementChild.textContent.trim());
+  const text=lines.join(' · ');focusOutcome.hidden=!text;if(focusOutcome.textContent!==text)focusOutcome.textContent=text;
+ }
+ let focusPlaceholder=null,walkPlaceholder=null,focusBefore=null,oldRole=null,oldModal=null;
+ function exitFocus(){
+  if(!document.body.classList.contains('ui-focus'))return;
+  closeTip();document.body.classList.remove('ui-focus');focus.textContent='Focus View';focus.setAttribute('aria-pressed','false');
+  if(focusPlaceholder){focusPlaceholder.replaceWith(bar);focusPlaceholder=null;}
+  const walk=document.getElementById('walk-panel');if(walkPlaceholder&&walk){walkPlaceholder.replaceWith(walk);walk.classList.remove('ui-walk-panel');walkPlaceholder=null;}
+  if(oldRole===null)main.removeAttribute('role');else main.setAttribute('role',oldRole);
+  if(oldModal===null)main.removeAttribute('aria-modal');else main.setAttribute('aria-modal',oldModal);
+  main.removeAttribute('aria-label');focusBefore?.focus();
+ }
+ focus.onclick=()=>{
+  if(document.body.classList.contains('ui-focus'))return exitFocus();
+  closeTip();focusBefore=document.activeElement;oldRole=main.getAttribute('role');oldModal=main.getAttribute('aria-modal');
+  focusPlaceholder=document.createComment('Action Bar Position');bar.before(focusPlaceholder);main.prepend(bar);
+  const walk=document.getElementById('walk-panel');if(walk){walkPlaceholder=document.createComment('Walkthrough Position');walk.before(walkPlaceholder);walk.classList.add('ui-walk-panel');main.append(walk);}
+  document.body.classList.add('ui-focus');main.setAttribute('role','dialog');main.setAttribute('aria-modal','true');main.setAttribute('aria-label','Diagram Focus View');
+  focus.textContent='Exit Focus View';focus.setAttribute('aria-pressed','true');main.scrollTop=0;focus.focus();
+ };
+ document.addEventListener('keydown',e=>{
+  if(!document.body.classList.contains('ui-focus'))return;
+  if(e.key==='Escape'){e.preventDefault();exitFocus();return;}
+  if(e.key==='Tab') {
+   const targets=[...main.querySelectorAll('button,input,select,summary,a,[tabindex="0"]')].filter(n=>visible(n)&&!n.disabled&&n.tabIndex>=0);
+   const first=targets[0],last=targets.at(-1);
+   if(e.shiftKey&&document.activeElement===first){e.preventDefault();last?.focus();}
+   else if(!e.shiftKey&&document.activeElement===last){e.preventDefault();first?.focus();}
+  }
+ });
+
+ // One Export Frame: Heading, Current Context, Diagram And Visible Legends.
+ function exportContext() {
+  const items=[];
+  if(policySelect)items.push(policySelect.selectedOptions[0].textContent);
+  for(const id of ['step-count','case-current','elasticity-label']){const n=document.getElementById(id);if(n&&visible(n)&&n.textContent.trim())items.push(n.textContent.trim());}
+  if(document.getElementById('curvature')) {
+   const state=window.widgetState;
+   if(state)items.push(state.mode==='points'?'Production Points':state.growthCase==='potential'?'Potential Growth':'Actual Growth & Reallocation');
+  }
+  const outputs=[...controls.querySelectorAll('output')].filter(visible).map(n=>n.textContent.trim()).filter(Boolean);
+  items.push(...outputs);return [...new Set(items)].map(titleCase).join(' · ');
+ }
+ async function exportPNG() {
+  const ns='http://www.w3.org/2000/svg',vb=svg.viewBox.baseVal,clone=svg.cloneNode(true),out=document.createElementNS(ns,'svg');
+  const live=[svg,...svg.querySelectorAll('*')],copies=[clone,...clone.querySelectorAll('*')];
+  const props=['display','visibility','fill','fill-opacity','stroke','stroke-width','stroke-opacity','stroke-dasharray','stroke-linecap','stroke-linejoin','paint-order','opacity','font-family','font-size','font-weight','font-style','text-anchor','dominant-baseline','baseline-shift','marker-start','marker-end'];
+  live.forEach((n,i)=>{const cs=getComputedStyle(n);for(const p of props){let value=cs.getPropertyValue(p);if(p.startsWith('marker'))value=value.replace(/url\(["']?[^#)]*#([^)'" ]+)["']?\)/g,'url(#$1)');copies[i].style.setProperty(p,value);}
+   copies[i].removeAttribute('tabindex');copies[i].removeAttribute('aria-describedby');copies[i].removeAttribute('role');});
+  clone.querySelectorAll('.touch-target,.point-ring').forEach(n=>n.remove());
+  const add=(tag,attrs,text,parent=out)=>{const n=document.createElementNS(ns,tag);Object.entries(attrs).forEach(([k,v])=>n.setAttribute(k,v));if(text!==undefined)n.textContent=text;parent.append(n);return n;};
+  const width=vb.width,padding=20;
+  const canvas=document.createElement('canvas'),ctx=canvas.getContext('2d');ctx.font='14px system-ui';
+  function wrap(s){const lines=[];let line='';for(const word of s.split(/\s+/)){const next=line?line+' '+word:word;if(line&&ctx.measureText(next).width>width-padding*2){lines.push(line);line=word;}else line=next;}if(line)lines.push(line);return lines;}
+  const heading=wrap(document.querySelector('h1').textContent),context=wrap(exportContext());
+  let y=26;for(const s of heading){add('text',{x:padding,y,style:'font:700 17px system-ui;fill:#1f2937'},s);y+=24;}
+  for(const s of context){add('text',{x:padding,y,style:'font:14px system-ui;fill:#4b5563'},s);y+=20;}
+  const diagramTop=y+8;clone.setAttribute('x',0);clone.setAttribute('y',diagramTop);clone.setAttribute('width',width);clone.setAttribute('height',vb.height);clone.style.width=width+'px';clone.style.height=vb.height+'px';out.append(clone);
+  y=diagramTop+vb.height+22;
+  const keys=[...main.querySelectorAll('.legend,.curve-key,.area-key,.surplus-key')].filter(visible).map(n=>n.textContent.replace(/\s+/g,' ').trim()).filter(Boolean);
+  for(const s of wrap([...new Set(keys)].join(' · '))){add('text',{x:padding,y,style:'font:13px system-ui;fill:#374151'},s);y+=19;}
+  const gray=style?.value==='grayscale';
+  if(gray) {
+   const defs=add('defs',{},undefined,out);
+   for(const kind of ['social','other','policy','cs','ps','price','quantity']){
+    const pattern=add('pattern',{id:'ui-hatch-'+kind,width:8,height:8,patternUnits:'userSpaceOnUse'},undefined,defs);
+    add('rect',{width:8,height:8,fill:'#fff'},undefined,pattern);
+    add('path',{d:['social','cs','price'].includes(kind)?'M-2,2 L2,-2 M0,8 L8,0 M6,10 L10,6':kind==='policy'?'M0,0 L8,8 M0,8 L8,0':'M0,4 L8,4',stroke:'#777','stroke-width':1,fill:'none'},undefined,pattern);
+   }
+   const ids={'dwl':'social','area-dwl':'social','ban-loss-area':'social','free-policy-loss':'social','ban-free-area':'other','free-market-loss':'other','area-tax-rev':'policy','subsidy-cost-rect':'policy','cs-area':'cs','ps-area':'ps'};
+   for(const n of clone.querySelectorAll('*')){
+    for(const p of ['fill','stroke']){
+     const raw=n.style.getPropertyValue(p)||n.getAttribute(p)||'',rgb=raw.match(/^rgba?\(([^)]+)\)$/),hex=raw.match(/^#([0-9a-f]{6})$/i);
+     const c=rgb?rgb[1].split(/[, ]+/).filter(Boolean).map(Number):hex?[0,2,4].map(i=>parseInt(hex[1].slice(i,i+2),16)):null;
+     if(c){const g=Math.round(.2126*c[0]+.7152*c[1]+.0722*c[2]);n.style.setProperty(p,`rgba(${g},${g},${g},${c[3]??1})`);}
+    }
+    let kind=ids[n.id]||n.dataset.area;
+    if(kind==='g')kind='policy';if(kind==='dwl')kind='social';
+    if(!kind&&n.matches('.subsidy-rect,.tax-poly'))kind='policy';
+    if(kind&&['social','other','policy','cs','ps','price','quantity'].includes(kind)){n.style.fill='url(#ui-hatch-'+kind+')';n.style.fillOpacity='1';}
+    if(n.matches('.curve,.line-mpb,.line-mpc,.line-msb,.line-msc,.line-policy,.line-tax,.line-quota,.line-qpoll,.line-rd,.line-edu')){n.style.stroke='#333';n.style.strokeDasharray='none';}
+   }
+  }
+  const height=y+12;out.setAttribute('xmlns',ns);out.setAttribute('viewBox',`0 0 ${width} ${height}`);out.setAttribute('width',width*2);out.setAttribute('height',height*2);
+  const background=add('rect',{width,height,fill:'#fff'});out.prepend(background);
+  const url=URL.createObjectURL(new Blob([new XMLSerializer().serializeToString(out)],{type:'image/svg+xml'}));
+  try {const image=new Image();await new Promise((ok,bad)=>{image.onload=ok;image.onerror=bad;image.src=url;});canvas.width=width*2;canvas.height=Math.ceil(height*2);canvas.getContext('2d').drawImage(image,0,0);return await new Promise((ok,bad)=>canvas.toBlob(b=>b?ok(b):bad(Error('Image Export Failed')),'image/png'));}
+  finally{URL.revokeObjectURL(url);}
+ }
+ if(download)download.onclick=async()=>{
+  try{const blob=await exportPNG(),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=location.pathname.split('/').at(-1).replace(/\.html$/i,'')+(style?.value==='grayscale'?'_Grayscale':'')+'.png';a.click();setTimeout(()=>URL.revokeObjectURL(url),30000);status.textContent='Diagram Downloaded.';exportMenu.open=false;}
+  catch(e){status.textContent='Unable To Export. Open The Widget In Its Own Browser Tab And Try Again.';}
+ };
+ if(copy)copy.onclick=async()=>{
+  try{if(!navigator.clipboard?.write||!window.ClipboardItem)throw Error('Unavailable');await navigator.clipboard.write([new ClipboardItem({'image/png':exportPNG()})]);status.textContent='Diagram Copied.';exportMenu.open=false;}
+  catch(e){status.textContent='Copying Is Unavailable In This Browser Or Embed. Use Download Diagram.';}
+ };
+ function prepareExplanationTargets(){
+  for(const target of svg.querySelectorAll('[data-tip],[data-tooltip-target],.has-tooltip')){
+   if(target.matches('.draggable,.touch-target')||target.getAttribute('role')==='slider')continue;
+   target.setAttribute('role','button');target.setAttribute('tabindex','0');
+   if(!target.hasAttribute('aria-label')&&target.dataset.tip)target.setAttribute('aria-label',target.dataset.tip);
+  }
+ }
+ const refresh=()=>{normalise();stabiliseGlossary();updateCurveKey();updateFocusOutcome();prepareExplanationTargets();};
+ refresh();
+ let pending=false;
+ new MutationObserver(()=>{if(!pending){pending=true;queueMicrotask(()=>{pending=false;refresh();});}}).observe(document.body,{childList:true,subtree:true,characterData:true});
+ window.WidgetInterface={closeExplanation:closeTip,exportPNG,exitFocus};
+})();
+
+</script>
 </body>
 </html>
