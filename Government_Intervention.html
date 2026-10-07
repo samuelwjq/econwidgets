@@ -351,8 +351,11 @@ function render(){
  const k=$('policy-select').value,v=values[k],p=policies[k],m=current=calculate(k,v),lab=k==='wage';
  const taxSub=['specific','advalorem','indirect','direct'].includes(k),showPrices=taxSub&&$('show-prices').checked,p1=k==='direct'?m.pp:m.pc;
  $('slider-value').textContent=policyLevel(k,v);$('policy-slider').setAttribute('aria-valuetext',p.label+': '+policyLevel(k,v));
- $('axis-help').textContent=lab?'W₀ and L₀ mark the initial outcome; W₁ and L₁ mark the outcome after intervention. Red arrows show changes along the axes.':'P₀ and Q₀ mark the initial outcome; P₁ and Q₁ mark the outcome after intervention. Red arrows show changes along the axes.';
- if(taxSub)$('axis-help').textContent+=' P₁ is the price at the intersection of the policy-adjusted curves. The consumer / producer prices toggle reveals the two sides of the price wedge.';
+ const axisHelp=$('axis-help');
+ if(axisHelp){
+ axisHelp.textContent=lab?'W₀ and L₀ mark the initial outcome; W₁ and L₁ mark the outcome after intervention. Red arrows show changes along the axes.':'P₀ and Q₀ mark the initial outcome; P₁ and Q₁ mark the outcome after intervention. Red arrows show changes along the axes.';
+ if(taxSub)axisHelp.textContent+=' P₁ is the price at the intersection of the policy-adjusted curves. The consumer / producer prices toggle reveals the two sides of the price wedge.';
+ }
  $('prices-toggle').hidden=!taxSub;
  for(const id of ['cs-control','ps-control'])$(id).hidden=lab;
  $('adjustment-control').hidden=['ceiling','floor','wage'].includes(k);
@@ -739,7 +742,8 @@ configure();
  // Remove Small Interface Instructions; Preserve Status Messages And Model Notes.
  for(const help of main.querySelectorAll('.diagram-help,.case-help')){
   if(help.id==='export-status'||help.getAttribute('role')==='status')continue;
-  help.remove();
+  // Retain Model-Referenced Nodes While Removing Their Visible Descriptors.
+  if(help.id)help.hidden=true;else help.remove();
  }
  function normaliseAccessibleLabels(){for(const input of document.querySelectorAll('[aria-label]')){
   const text=input.getAttribute('aria-label');if(/magnitude/i.test(text))input.setAttribute('aria-label',text.replace(/shift magnitude/gi,'Size Of Shift').replace(/magnitude/gi,'Size'));
