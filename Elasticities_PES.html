@@ -134,34 +134,13 @@ svg#diagram path[data-tip]:not([fill]) { stroke-width:2.5; }
 .ui-curve-key { display:flex; flex-wrap:wrap; gap:6px 16px; margin:8px 0; }
 .ui-curve-key span { display:inline-flex; align-items:center; gap:6px; }
 .ui-curve-key i { display:inline-block; width:20px; border-top:2.5px solid; }
-.ui-focus-outcome { display:none; }
 .tooltip.ui-tooltip { display:none!important; pointer-events:auto; font-size:14px; line-height:1.55; width:auto; max-width:min(360px,calc(100vw - 24px)); }
 .tooltip.ui-tooltip[data-open="true"] { display:block!important; }
 .tooltip.ui-tooltip .tooltip-close { min-width:40px; min-height:40px; top:0; right:0; }
 .tooltip.ui-tooltip .ui-tooltip-state { display:block; margin-top:8px; font-size:12px; color:var(--muted); }
 .tooltip.ui-tooltip[hidden] { display:none!important; }
-body.ui-focus { overflow:hidden; }
-body.ui-focus .sidebar,body.ui-focus>.widget-header,body.ui-focus>.widget-nav { display:none!important; }
-body.ui-focus .main-content { position:fixed; inset:0; z-index:1000; background:#fff; padding:16px; overflow:auto; display:grid; grid-template-columns:240px minmax(0,1fr); gap:12px 18px; align-content:start; }
-body.ui-focus .main-content>.ui-actionbar { grid-column:1/-1; margin:0; position:sticky; top:-16px; padding:8px 0; background:#fff; z-index:140; }
-body.ui-focus .main-content>.controls { grid-column:1; grid-row:2; margin:0; }
-body.ui-focus .main-content>.diagram-frame { grid-column:2; grid-row:2; align-self:start; }
-body.ui-focus .main-content>.legend,body.ui-focus .main-content>.curve-key,body.ui-focus .main-content>.area-key,body.ui-focus .main-content>.surplus-key { grid-column:2; margin:0; }
-body.ui-focus .main-content>.summary-wrap,body.ui-focus .main-content>.table-wrap,body.ui-focus .main-content>.mechanism,body.ui-focus .main-content>.model-note,body.ui-focus .main-content>.diagram-help,body.ui-focus .main-content>.related-widget { display:none!important; }
-body.ui-focus .main-content>.policy-note,body.ui-focus .main-content>.result-banner { grid-column:2; }
-body.ui-focus .main-content>.ui-focus-outcome { display:block; grid-column:2; font-size:14px; background:#f0f4ff; border:1px solid #cbd7fa; border-radius:8px; padding:10px 12px; }
-body.ui-focus .main-content>.tabs { grid-column:1/-1; grid-row:2; }
-body.ui-focus .main-content:has(>.tabs)>.controls,body.ui-focus .main-content:has(>.tabs)>.diagram-frame { grid-row:3; }
-body.ui-focus .main-content>.tooltip { z-index:1100; grid-column:2; }
-body.ui-focus .main-content>.ui-walk-panel { grid-column:1; }
-body.ui-focus .diagram-frame.zoomed svg { min-width:0!important; }
-body.ui-focus .controls .toggle-grid,body.ui-focus .controls .option-row,body.ui-focus .controls .checkbox-group { display:none; }
 @media(max-width:900px) {
  .tooltip.ui-tooltip { position:relative; left:auto!important; top:auto!important; width:100%; max-width:none!important; margin:10px 0; }
- body.ui-focus .main-content { display:block; padding:12px; }
- body.ui-focus .main-content>.controls { margin-bottom:12px; }
- body.ui-focus .main-content>.ui-actionbar { top:-12px; margin-bottom:12px; }
- body.ui-focus .main-content>.tabs { margin-bottom:12px; }
 }
 @media(max-width:480px) {
  .widget-header h1 { font-size:21px; }
@@ -200,8 +179,6 @@ body.widget-page { padding:12px; }
 .widget-page .summary-table th,.widget-page .summary-table td,.widget-page .outcomes th,.widget-page .outcomes td { padding:8px 10px; }
 .widget-page .mechanism,.widget-page .policy-note { padding:10px; margin-top:8px; }
 /* Focus View Remains Available At A Larger Size Than The Normal Page. */
-body.widget-page.ui-focus svg#diagram { max-width:none; }
-body.widget-page.ui-focus .main-content>.ui-actionbar { margin:0; }
 /* Index: The Same Spacing Principles, With All Topic Groups Retained. */
 body.index-page main { width:min(100% - 24px,1060px); padding:24px 0; }
 .index-page header { padding:0 0 12px; margin-bottom:20px; border-bottom-width:3px; }
@@ -225,9 +202,43 @@ body.index-page main { width:min(100% - 24px,1060px); padding:24px 0; }
  body.index-page main { padding:18px 0; }
  .index-page .card { min-height:64px; padding:12px; }
 }
+/* Approved Diagram-First Compact Collection. */
+.widget-page .layout { grid-template-columns:minmax(0,calc(var(--diagram-max-width) + 2px)) clamp(260px,25vw,300px); max-width:calc(var(--diagram-max-width) + 316px); margin-inline:auto; }
+.widget-page .diagram-frame { width:100%; max-width:calc(var(--diagram-max-width) + 2px); margin-inline:auto; }
+.widget-page .controls { flex-direction:row; flex-wrap:wrap; padding:6px 10px; gap:4px 10px; }
+.widget-page .controls>.slider-card { flex:1 1 230px; }
+.widget-page .controls>.slider-card>label { flex-basis:100%; }
+.widget-page .controls>.shift-choice { display:flex; flex-wrap:wrap; align-items:center; gap:6px; }
+.widget-page .controls>.guided-top,.widget-page .controls>.case-panel,.widget-page .controls>.tab-panel,.widget-page .controls>[role="tabpanel"] { width:100%; }
+.widget-page .tab-panel { gap:8px; }
+.widget-page .ui-diagram-settings { width:100%; margin:0; padding:0; background:transparent; border:0; }
+.widget-page .ui-diagram-settings>summary { min-height:44px; padding:3px 0; justify-content:flex-start; gap:10px; }
+.widget-page .ui-diagram-settings .toggle-grid,.widget-page .ui-diagram-settings .option-row,.widget-page .ui-diagram-settings .checkbox-group { padding-top:2px; }
+.widget-page .ui-diagram-legends { padding:6px 10px 8px; }
+.widget-page .ui-diagram-legends>.legend,.widget-page .ui-diagram-legends>.curve-key,.widget-page .ui-diagram-legends>.area-key,.widget-page .ui-diagram-legends>.surplus-key,.widget-page .ui-diagram-legends>.ban-legend { margin:0; font-size:13px; gap:6px 14px; }
+.widget-page .ui-diagram-legends>*+* { margin-top:5px!important; }
+.widget-page .ui-teaching-panels { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:8px; align-items:start; margin-top:6px; }
+.widget-page .ui-teaching-disclosure { min-width:0; margin:0; padding:0 10px; }
+.widget-page .ui-teaching-disclosure>summary { min-height:64px; padding:6px 0; flex-wrap:wrap; gap:4px 10px; align-content:center; }
+.widget-page .ui-expand-hint { color:var(--muted); font-size:13px; font-weight:400; flex-basis:100%; }
+.widget-page .ui-teaching-disclosure[open] .ui-expand-hint { display:none; }
+.widget-page .ui-teaching-disclosure .summary-wrap,.widget-page .ui-teaching-disclosure .table-wrap { margin:0 0 8px; }
+.widget-page .ui-teaching-disclosure>.mechanism,.widget-page .ui-teaching-disclosure>.policy-note { padding:8px; margin:0 0 8px; }
+.widget-page .ui-teaching-disclosure>.mechanism>h2 { display:none; }
+.widget-page .ui-teaching-disclosure>.model-note { margin:0 0 8px; }
+.widget-page .ui-teaching-disclosure>.outcomes { display:block; overflow-x:auto; max-width:100%; margin-bottom:8px; }
+.widget-page .ui-teaching-disclosure .summary-table { min-width:340px; }
+.widget-page .diagram-help:empty { display:none; }
+.widget-page svg#diagram text { font-size:17.5px; }
+.widget-page svg#diagram text[font-size="11"],.widget-page svg#diagram text[font-size="12"] { font-size:15px; }
+.widget-page svg#diagram text[style*="font-size:11px"],.widget-page svg#diagram text[style*="font-size: 11px"] { font-size:15px!important; }
+.widget-page svg#diagram tspan[baseline-shift="sub"] { font-size:12.5px; }
+.widget-page [hidden] { display:none!important; }
+@media(max-width:900px) { .widget-page .layout { grid-template-columns:minmax(0,1fr); max-width:calc(var(--diagram-max-width) + 2px); } }
+@media(max-width:480px) { .widget-page .ui-teaching-panels { grid-template-columns:minmax(0,1fr); } }
 
 </style>
-</head><body class="widget-page" style="--diagram-max-width:700px">
+</head><body class="widget-page" style="--diagram-max-width:560px">
 <header class="widget-header"><h1>Price Elasticity Of Supply</h1><p>Topic 3 · A-Level Economics · Interactive Diagrams</p></header>
 <div class="layout"><main class="main-content">
 <div class="controls">
@@ -342,7 +353,8 @@ render();
     if(n.parentElement?.closest('tspan[baseline-shift="sub"],script,style,.tooltip'))continue;
     // Preserve Curve Symbols, Mathematical Subscripts And Coordinates.
     if(el.closest('svg')&&/^[QPESWL][a-z0-9₀-₉]+(?:\s*=.*)?$/.test(n.nodeValue.trim()))continue;
-    const next=titleCase(n.nodeValue); if(next!==n.nodeValue)n.nodeValue=next;
+    const wording=n.nodeValue.replace(/shift magnitude/gi,'Size Of Shift').replace(/magnitude of ([a-z ]+)/gi,(_,x)=>'Size Of '+x).replace(/magnitude/gi,'Size');
+    const next=titleCase(wording); if(next!==n.nodeValue)n.nodeValue=next;
    }
   }
   normalising=false;
@@ -408,7 +420,7 @@ render();
  bar.className='toolbar ui-actionbar';bar.setAttribute('aria-label','Diagram Actions');
  if(oldZoom){oldZoom.classList.add('ui-legacy-zoom');oldZoom.tabIndex=-1;oldZoom.setAttribute('aria-hidden','true');bar.append(oldZoom);}
  if(reset){reset.textContent='Reset Diagram';bar.append(reset);}
- const focus=document.createElement('button');focus.type='button';focus.textContent='Focus View';focus.setAttribute('aria-pressed','false');bar.append(focus);
+
  const exportMenu=document.createElement('details');exportMenu.className='ui-export';exportMenu.innerHTML='<summary>Export Diagram</summary><div class="ui-export-panel"></div>';
  const exportPanel=exportMenu.querySelector('div');
  if(exportLabel)exportPanel.append(exportLabel);if(download)exportPanel.append(download);if(copy)exportPanel.append(copy);
@@ -417,7 +429,7 @@ render();
  let status=main.querySelector('#export-status,[role="status"]');
  if(!status){status=document.createElement('p');status.className='diagram-help';status.setAttribute('role','status');bar.after(status);}
  if(bar.contains(status)){status.classList.add('diagram-help');bar.after(status);}
- for(const help of main.querySelectorAll('.diagram-help'))if(/Use Enlarge Diagram/i.test(help.textContent))help.textContent='Use Focus View For A Closer View On Smaller Screens.';
+
  document.addEventListener('click',e=>{if(!exportMenu.contains(e.target))exportMenu.open=false;});
 
  // Compact Curve Keys For Multi-Curve Externality Policy Diagrams.
@@ -501,41 +513,6 @@ render();
  document.addEventListener('keydown',e=>{if(e.key==='Escape'&&tip.dataset.open==='true'){e.stopImmediatePropagation();e.preventDefault();closeTip(true);}},true);
  window.addEventListener('resize',()=>closeTip());
 
- // Focus View Leaves The Economic Scenario And Existing Reset Rules Intact.
- const focusOutcome=document.createElement('div');focusOutcome.className='ui-focus-outcome';focusOutcome.setAttribute('aria-live','polite');bar.after(focusOutcome);
- function updateFocusOutcome(){
-  const lines=[...main.querySelectorAll('.summary-table tbody tr,.outcomes tbody tr')].filter(row=>/Price|Quantity|Wage|Labour Employed/i.test(row.querySelector('th')?.textContent||'')).slice(0,2).map(row=>(row.querySelector('th')?.textContent||'').trim()+': '+row.lastElementChild.textContent.trim());
-  const text=lines.join(' · ');focusOutcome.hidden=!text;if(focusOutcome.textContent!==text)focusOutcome.textContent=text;
- }
- let focusPlaceholder=null,walkPlaceholder=null,focusBefore=null,oldRole=null,oldModal=null;
- function exitFocus(){
-  if(!document.body.classList.contains('ui-focus'))return;
-  closeTip();document.body.classList.remove('ui-focus');focus.textContent='Focus View';focus.setAttribute('aria-pressed','false');
-  if(focusPlaceholder){focusPlaceholder.replaceWith(bar);focusPlaceholder=null;}
-  const walk=document.getElementById('walk-panel');if(walkPlaceholder&&walk){walkPlaceholder.replaceWith(walk);walk.classList.remove('ui-walk-panel');walkPlaceholder=null;}
-  if(oldRole===null)main.removeAttribute('role');else main.setAttribute('role',oldRole);
-  if(oldModal===null)main.removeAttribute('aria-modal');else main.setAttribute('aria-modal',oldModal);
-  main.removeAttribute('aria-label');focusBefore?.focus();
- }
- focus.onclick=()=>{
-  if(document.body.classList.contains('ui-focus'))return exitFocus();
-  closeTip();focusBefore=document.activeElement;oldRole=main.getAttribute('role');oldModal=main.getAttribute('aria-modal');
-  focusPlaceholder=document.createComment('Action Bar Position');bar.before(focusPlaceholder);main.prepend(bar);
-  const walk=document.getElementById('walk-panel');if(walk){walkPlaceholder=document.createComment('Walkthrough Position');walk.before(walkPlaceholder);walk.classList.add('ui-walk-panel');main.append(walk);}
-  document.body.classList.add('ui-focus');main.setAttribute('role','dialog');main.setAttribute('aria-modal','true');main.setAttribute('aria-label','Diagram Focus View');
-  focus.textContent='Exit Focus View';focus.setAttribute('aria-pressed','true');main.scrollTop=0;focus.focus();
- };
- document.addEventListener('keydown',e=>{
-  if(!document.body.classList.contains('ui-focus'))return;
-  if(e.key==='Escape'){e.preventDefault();exitFocus();return;}
-  if(e.key==='Tab') {
-   const targets=[...main.querySelectorAll('button,input,select,summary,a,[tabindex="0"]')].filter(n=>visible(n)&&!n.disabled&&n.tabIndex>=0);
-   const first=targets[0],last=targets.at(-1);
-   if(e.shiftKey&&document.activeElement===first){e.preventDefault();last?.focus();}
-   else if(!e.shiftKey&&document.activeElement===last){e.preventDefault();first?.focus();}
-  }
- });
-
  // One Export Frame: Heading, Current Context, Diagram And Visible Legends.
  function exportContext() {
   const items=[];
@@ -609,11 +586,71 @@ render();
    if(!target.hasAttribute('aria-label')&&target.dataset.tip)target.setAttribute('aria-label',target.dataset.tip);
   }
  }
- const refresh=()=>{normalise();stabiliseGlossary();updateCurveKey();updateFocusOutcome();prepareExplanationTargets();};
+
+ // Compact Controls: Keep Scenario Controls Visible; Group Display Options.
+ if(options){
+  const settings=document.createElement('details');settings.className='ui-diagram-settings';
+  settings.innerHTML='<summary>Diagram Options</summary>';options.before(settings);settings.append(options);
+ }
+ // Legends Live Inside The Diagram Card. Exclude Descriptive Styling Notes.
+ const legends=[...main.querySelectorAll('.legend,.curve-key,.area-key,.surplus-key,.ban-legend')];
+ const legendBox=document.createElement('div');legendBox.className='ui-diagram-legends';frame.append(legendBox);
+ for(const legend of legends)legendBox.append(legend);
+ function cleanLegends(){
+  for(const legend of legends){
+   for(const span of [...legend.children]){
+    if(span.matches('span')&&!span.querySelector('i')&&/lighter|all curves|coordinates:|drag |arrow keys|hollow circles|direction of change:/i.test(span.textContent))span.remove();
+   }
+  }
+  const any=legends.some(n=>!n.hidden&&getComputedStyle(n).display!=='none'&&n.textContent.trim());
+  if(legendBox.hidden===any)legendBox.hidden=!any;
+ }
+ // Remove Small Interface Instructions; Preserve Status Messages And Model Notes.
+ for(const help of main.querySelectorAll('.diagram-help,.case-help')){
+  if(help.id==='export-status'||help.getAttribute('role')==='status')continue;
+  help.remove();
+ }
+ function normaliseAccessibleLabels(){for(const input of document.querySelectorAll('[aria-label]')){
+  const text=input.getAttribute('aria-label');if(/magnitude/i.test(text))input.setAttribute('aria-label',text.replace(/shift magnitude/gi,'Size Of Shift').replace(/magnitude/gi,'Size'));
+ }
+ }
+ normaliseAccessibleLabels();
+ // Side-By-Side Disclosures For Summaries And Teaching Explanations.
+ const panels=document.createElement('div');panels.className='ui-teaching-panels';
+ bar.after(panels);
+ const disclosurePairs=[];
+ function wrapTeaching(node,title){
+  if(!node||node.closest('.controls,.sidebar,.ui-teaching-panels'))return null;
+  const disclosure=document.createElement('details');disclosure.className='ui-teaching-disclosure';
+  const heading=document.createElement('summary');heading.innerHTML='<span></span><span class="ui-expand-hint">Click To Expand</span>';
+  heading.firstElementChild.textContent=title;disclosure.append(heading);panels.append(disclosure);disclosure.append(node);
+  disclosurePairs.push([disclosure,node]);return disclosure;
+ }
+ const summaryNode=main.querySelector('.summary-wrap,.table-wrap')||main.querySelector('table.outcomes');
+ const summaryHeading=summaryNode?.querySelector('caption')?.textContent||summaryNode?.closest('section')?.querySelector('h2')?.textContent;
+ wrapTeaching(summaryNode,/Equilibrium/i.test(summaryHeading||'')?'Equilibrium Summary':summaryHeading||'Outcome Summary');
+ const mechanism=main.querySelector('#mechanism');
+ const explanation=wrapTeaching(mechanism,mechanism?.querySelector('h2')?.textContent||'Detailed Explanation');
+ const modelNote=main.querySelector('.model-note');
+ if(modelNote){if(explanation)explanation.append(modelNote);else wrapTeaching(modelNote,'Detailed Explanation');}
+ // Policy Limitations And Conditional Policy Results Remain Available In Their Own Panels.
+ for(const node of [...main.querySelectorAll(':scope>.policy-note')])wrapTeaching(node,node.querySelector('h2,h3')?.textContent||'Policy Explanation');
+ if(!panels.children.length)panels.remove();
+ function syncTeachingPanels(){
+  for(const [disclosure,node] of disclosurePairs){
+   const hidden=node.hidden||node.style.display==='none';
+   if(disclosure.hidden!==hidden)disclosure.hidden=hidden;
+   if(node===mechanism&&explanation){const heading=node.querySelector('h2');if(heading&&explanation.querySelector('summary span').textContent!==heading.textContent)explanation.querySelector('summary span').textContent=heading.textContent;}
+  }
+  if(panels.isConnected){const hidden=[...panels.children].every(n=>n.hidden);if(panels.hidden!==hidden)panels.hidden=hidden;}
+ }
+ for(const [,node] of disclosurePairs)new MutationObserver(syncTeachingPanels).observe(node,{attributes:true,attributeFilter:['hidden','style']});
+ cleanLegends();syncTeachingPanels();
+ const refresh=()=>{normalise();normaliseAccessibleLabels();stabiliseGlossary();updateCurveKey();prepareExplanationTargets();cleanLegends();syncTeachingPanels();};
  refresh();
  let pending=false;
  new MutationObserver(()=>{if(!pending){pending=true;queueMicrotask(()=>{pending=false;refresh();});}}).observe(document.body,{childList:true,subtree:true,characterData:true});
- window.WidgetInterface={closeExplanation:closeTip,exportPNG,exitFocus};
+ window.WidgetInterface={closeExplanation:closeTip,exportPNG};
 })();
 
 </script>
