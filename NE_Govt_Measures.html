@@ -291,7 +291,7 @@ body.index-page main { width:min(100% - 24px,1060px); padding:24px 0; }
         <div class="control-group">
           <label for="quota-slider"><strong>Output Quota Limit:</strong></label>
           <span class="scale-label">Strict</span>
-          <input type="range" id="quota-slider" min="30" max="75" value="75" step="1">
+          <input type="range" id="quota-slider" min="30" max="75" value="75" step="0.5">
           <span class="scale-label">Relaxed</span>
         </div>
       </div>
@@ -350,12 +350,12 @@ body.index-page main { width:min(100% - 24px,1060px); padding:24px 0; }
       <text id="label-dwl-text" class="has-tooltip" fill="#7f1d1d" font-weight="bold" text-anchor="middle" dominant-baseline="central" font-size="11">DWL</text>
 
       <!-- Axes -->
-      <line x1="70" y1="380" x2="590" y2="380" class="axis" marker-end="url(#arrow)" />
+      <line x1="70" y1="380" x2="425" y2="380" class="axis" marker-end="url(#arrow)" />
       <line x1="70" y1="380" x2="70" y2="25" class="axis" marker-end="url(#arrow)" />
 
       <!-- Axis Headers -->
       <text class="axis-title" x="64" y="12" text-anchor="end" font-weight="bold" style="font-size:12px"><tspan x="64">Price /</tspan><tspan x="64" dy="14">Costs /</tspan><tspan x="64" dy="14">Benefits</tspan></text>
-      <text class="axis-title" x="600" y="385" font-weight="bold">Quantity</text>
+      <text class="axis-title" x="435" y="385" font-weight="bold">Quantity</text>
       
 
       <!-- Baseline Market Curves -->
@@ -397,42 +397,25 @@ body.index-page main { width:min(100% - 24px,1060px); padding:24px 0; }
 
   <!-- Key Terms Sidebar -->
   <div class="sidebar">
-    <h3 class="glossary-title">Government Policies</h3>
-<details><summary>Diagram assumptions &amp; definitions</summary><p>This diagram illustrates negative externalities in production: MSC = MPC + MEC, with no external benefits (MSB = MPB).</p><p><strong>MPB:</strong> the additional benefit to the consumer from consuming an additional unit. <strong>MPC:</strong> the additional cost to the producer of producing an additional unit.</p></details>
+    <section class="diagram-assumptions" aria-label="Diagram Assumptions"><details><summary>Diagram Assumptions</summary><p>This diagram illustrates negative externalities in production: MSC = MPC + MEC. External benefits are assumed absent (MEB = 0), so MSB = MPB.</p></details></section><h3 class="glossary-title">Government Policies</h3><details><summary>MPB (Marginal Private Benefit)</summary><p>The additional benefit enjoyed by the private consumer from consuming an extra unit of a good or service.</p></details><details><summary>MPC (Marginal Private Cost)</summary><p>The additional cost incurred by the private producer from producing an extra unit of a good or service.</p></details><details><summary>MSC (Marginal Social Cost)</summary><p>The total additional cost to society of producing an extra unit of output: MSC = MPC + MEC.</p></details><details><summary>MSB (Marginal Social Benefit)</summary><p>The total additional benefit to society of consuming an extra unit of output: MSB = MPB + MEB.</p></details><details><summary>MEC (Marginal External Cost)</summary><p>The additional uncompensated cost inflicted on third parties outside the market transaction from producing one extra unit.</p></details><details><summary>Externality</summary><p>An uncompensated cost or benefit affecting third parties outside a market transaction, arising from production or consumption.</p></details><details><summary>Market Failure</summary><p>A situation in which the free market fails to allocate resources efficiently, so net social benefit is not maximised.</p></details><details><summary>Allocative Efficiency</summary><p>An allocation of resources that maximises net social benefit. At an interior socially optimal output, marginal social benefit equals marginal social cost (MSB = MSC).</p></details><details><summary>Internalisation Of Externalities</summary><p>Bringing external costs or benefits into the incentives faced by decision makers, so their production or consumption decisions take account of these effects on third parties.</p></details>
 
-    <details>
-      <summary>Tax</summary>
-      <p>A per-unit tax placed on a good generating negative externalities. It increases private costs (shifting <strong>MPC</strong> upward to <strong>MPC + Tax</strong>). When correctly calibrated, internalises the external cost and reduces production to <strong>Q<sub>s</sub></strong>.</p>
-    </details>
+
+    <details><summary>Tax</summary><p>A per-unit tax on a good generating negative externalities. It raises the effective marginal cost faced by producers, shifting MPC upward to MPC + Tax. In this model, a corrective tax equal to MEC at the socially optimal output aligns private incentives with social costs.</p></details>
 
     <details>
       <summary>Quota on Output</summary>
       <p>A legally binding restriction capping output at a maximum quantity. It prevents market over-production beyond the specified limit.</p>
     </details>
 
-<details><summary>Ban (a quota of zero)</summary><p>A complete ban prevents production and consumption: <strong>no output</strong>. Its welfare effect depends on the external cost. A ban can remove harmful units but also prevent units for which MSB exceeds MSC.</p><p>Compare its DWL with the free-market DWL at the same MEC. Zero output is efficient when <strong>MSC ≥ MSB for every feasible positive quantity</strong>; this can be a boundary optimum without an intersection in the positive quadrant.</p></details><details><summary>Quota on Pollutant</summary>
-      <p>A mandatory legal ceiling placed directly on emissions. Restricting allowable pollutants reduces the marginal external cost (<strong>MEC</strong>). A strict zero-pollutant quota removes external costs entirely (<strong>no external cost</strong>).</p>
-    </details>
+<details><summary>Ban (a quota of zero)</summary><p>A complete ban prevents production and consumption: <strong>no output</strong>. Its welfare effect depends on the external cost. A ban can remove harmful units but also prevent units for which MSB exceeds MSC.</p><p>Compare its DWL with the free-market DWL at the same MEC. Zero output is efficient when <strong>MSC ≥ MSB for every feasible positive quantity</strong>; this can be a boundary optimum without an intersection in the positive quadrant.</p></details><details><summary>Quota On Pollutant</summary><p>A legally imposed maximum level of emissions. This widget represents compliance as a reduction in external harm per unit of output (MEC). A zero-pollutant setting is assumed to remove the modelled external cost. In practice, compliance may also involve abatement costs or reduced output; those mechanisms are distinct from the MEC reduction shown here.</p></details>
 
-    <details>
-      <summary>Research &amp; Development (R&amp;D)</summary>
-      <p>Government funding for cleaner technologies reduces <strong>MEC</strong> directly. This shifts the <strong>MSC</strong> curve downward closer to MPC, creating a new social optimum at higher output (<strong>Q<sub>s</sub>'</strong>).</p>
-    </details>
+    <details><summary>Research &amp; Development (R&amp;D) For Cleaner Technology</summary><p>Government support for research and development of cleaner technology. Successful adoption is assumed in this widget to reduce external harm per unit of output (MEC), shifting MSC towards MPC. Funding alone does not guarantee this effect.</p></details>
 
-    <details>
-      <summary>Education &amp; Campaigns</summary>
-      <p>Initiatives forcing producers or consumers to adopt mitigation practices, raising private costs (<strong>MPC</strong>) closer to social costs.</p>
-    </details>
+    <details><summary>Education &amp; Campaigns</summary><p>Information and persuasion intended to encourage voluntary adoption of less harmful practices. In this widget, adoption is assumed to raise private costs. Compulsory requirements are a form of regulation.</p></details>
 
-    <details>
-      <summary>Social Optimum (Qs / Qs')</summary>
-      <p>The allocatively efficient point where social welfare is maximized (<strong>MSB = MSC</strong>).</p>
-    </details>
+    <details><summary>Socially Optimal Output (Qs)</summary><p>The output that maximises net social benefit. At an interior optimum, MSB = MSC. If MSC is at least MSB at every feasible positive quantity, zero output can be a boundary optimum without an intersection in the positive quadrant.</p></details>
 
-    <details>
-      <summary>Deadweight Loss (DWL)</summary>
-      <p>The loss of net social benefit caused when production exceeds or falls short of the socially optimal level (shaded red triangle).</p>
-    </details>
+    <details><summary>Deadweight Loss (DWL)</summary><p>The loss of net social benefit relative to the socially optimal output.</p><p>The shaded area in this diagram shows the net social benefits forgone or net social costs incurred because output differs from the socially optimal level.</p></details>
   </div>
 </div>
 
@@ -509,7 +492,7 @@ body.index-page main { width:min(100% - 24px,1060px); padding:24px 0; }
   };
 
   // Coordinate Converters
-  function toSvgX(q) { return 70 + 3.9 * q; }
+  function toSvgX(q) { return 70 + 3.4 * q; }
   function toSvgY(p) { return 380 - 3.4 * p; }
 
   function createSvgLine(x1, y1, x2, y2, className, strokeColor) {
@@ -659,8 +642,8 @@ body.index-page main { width:min(100% - 24px,1060px); padding:24px 0; }
     dynamicCurveLabels.innerHTML = '';
 
     // Baseline Curve Coordinates
-    const mpbX1 = toSvgX(0), mpbY1 = toSvgY(90);
-    const mpbX2 = toSvgX(85), mpbY2 = toSvgY(90 - 0.7 * 85);
+    const mpbX1 = toSvgX(0), mpbY1 = toSvgY(100);
+    const mpbX2 = toSvgX(85), mpbY2 = toSvgY(100 -  85);
     document.getElementById('curve-mpb').setAttribute('x1', mpbX1);
     document.getElementById('curve-mpb').setAttribute('y1', mpbY1);
     document.getElementById('curve-mpb').setAttribute('x2', mpbX2);
@@ -670,25 +653,25 @@ body.index-page main { width:min(100% - 24px,1060px); padding:24px 0; }
     labelMpb.setAttribute('x', Math.min(580, mpbX2 + 6));
     labelMpb.setAttribute('y', mpbY2 + 4);
 
-    const mpcX1 = toSvgX(0), mpcY1 = toSvgY(10);
-    const mpcX2 = toSvgX(80), mpcY2 = toSvgY(10 + 0.5 * 80);
+    const mpcX1 = toSvgX(0), mpcY1 = toSvgY(0);
+    const mpcX2 = toSvgX(60), mpcY2 = toSvgY( 60);
     document.getElementById('curve-mpc').setAttribute('x1', mpcX1);
     document.getElementById('curve-mpc').setAttribute('y1', mpcY1);
     document.getElementById('curve-mpc').setAttribute('x2', mpcX2);
     document.getElementById('curve-mpc').setAttribute('y2', mpcY2);
 
-    const mscX1 = toSvgX(0), mscY1 = toSvgY(10 + FIXED_MEC);
-    const mscX2 = toSvgX(80), mscY2 = toSvgY(10 + FIXED_MEC + 0.5 * 80);
+    const mscX1 = toSvgX(0), mscY1 = toSvgY(FIXED_MEC);
+    const mscX2 = toSvgX(60), mscY2 = toSvgY(FIXED_MEC +  60);
     document.getElementById('curve-msc').setAttribute('x1', mscX1);
     document.getElementById('curve-msc').setAttribute('y1', mscY1);
     document.getElementById('curve-msc').setAttribute('x2', mscX2);
     document.getElementById('curve-msc').setAttribute('y2', mscY2);
 
     // Free Market Math
-    const qe = 80 / 1.2;
-    const pe = 90 - 0.7 * qe;
-    const qs = (80 - FIXED_MEC) / 1.2;
-    const ps = 90 - 0.7 * qs;
+    const qe = 100 / 2;
+    const pe = 100 -  qe;
+    const qs = (100 - FIXED_MEC) / 2;
+    const ps = 100 -  qs;
 
     const curveTax = document.getElementById('curve-tax');
     const lineQuota = document.getElementById('line-quota');
@@ -710,12 +693,12 @@ body.index-page main { width:min(100% - 24px,1060px); padding:24px 0; }
     let effectiveMec = FIXED_MEC;
 
     if (activePolicy === 'tax') {
-      currentQ = Math.max(0, (80 - taxVal) / 1.2);
-      pc = 90 - 0.7 * currentQ;
-      pp = 10 + 0.5 * currentQ;
+      currentQ = Math.max(0, (100 - taxVal) / 2);
+      pc = 100 -  currentQ;
+      pp =  currentQ;
 
-      const taxX1 = toSvgX(0), taxY1 = toSvgY(10 + taxVal);
-      const taxX2 = toSvgX(80), taxY2 = toSvgY(10 + taxVal + 0.5 * 80);
+      const taxX1 = toSvgX(0), taxY1 = toSvgY(taxVal);
+      const taxX2 = toSvgX(60), taxY2 = toSvgY(taxVal +  60);
       curveTax.setAttribute('x1', taxX1); curveTax.setAttribute('y1', taxY1);
       curveTax.setAttribute('x2', taxX2); curveTax.setAttribute('y2', taxY2);
       curveTax.style.display = 'block';
@@ -734,12 +717,12 @@ body.index-page main { width:min(100% - 24px,1060px); padding:24px 0; }
 
     } else if (activePolicy === 'quota') {
       currentQ = Math.min(qe, quotaVal);
-      pc = 90 - 0.7 * currentQ;
-      pp = 10 + 0.5 * currentQ;
+      pc = 100 -  currentQ;
+      pp =  currentQ;
 
       const qCapX = toSvgX(quotaVal);
       lineQuota.setAttribute('x1', qCapX); lineQuota.setAttribute('y1', 380);
-      lineQuota.setAttribute('x2', qCapX); lineQuota.setAttribute('y2', toSvgY(90));
+      lineQuota.setAttribute('x2', qCapX); lineQuota.setAttribute('y2', toSvgY(100));
       lineQuota.style.display = 'block';
 
     } else if (activePolicy === 'qpoll') {
@@ -748,8 +731,8 @@ body.index-page main { width:min(100% - 24px,1060px); padding:24px 0; }
       pc = pe;
       pp = pe;
 
-      const qpX1 = toSvgX(0), qpY1 = toSvgY(10 + effectiveMec);
-      const qpX2 = toSvgX(80), qpY2 = toSvgY(10 + effectiveMec + 0.5 * 80);
+      const qpX1 = toSvgX(0), qpY1 = toSvgY(effectiveMec);
+      const qpX2 = toSvgX(60), qpY2 = toSvgY(effectiveMec +  60);
       curveQpoll.setAttribute('x1', qpX1); curveQpoll.setAttribute('y1', qpY1);
       curveQpoll.setAttribute('x2', qpX2); curveQpoll.setAttribute('y2', qpY2);
       curveQpoll.style.display = 'block';
@@ -760,34 +743,34 @@ body.index-page main { width:min(100% - 24px,1060px); padding:24px 0; }
       pc = pe;
       pp = pe;
 
-      const rdX1 = toSvgX(0), rdY1 = toSvgY(10 + effectiveMec);
-      const rdX2 = toSvgX(80), rdY2 = toSvgY(10 + effectiveMec + 0.5 * 80);
+      const rdX1 = toSvgX(0), rdY1 = toSvgY(effectiveMec);
+      const rdX2 = toSvgX(60), rdY2 = toSvgY(effectiveMec +  60);
       curveRd.setAttribute('x1', rdX1); curveRd.setAttribute('y1', rdY1);
       curveRd.setAttribute('x2', rdX2); curveRd.setAttribute('y2', rdY2);
       curveRd.style.display = 'block';
 
     } else if (activePolicy === 'edu') {
-      currentQ = Math.max(0, (80 - eduVal) / 1.2);
-      pc = 90 - 0.7 * currentQ;
+      currentQ = Math.max(0, (100 - eduVal) / 2);
+      pc = 100 -  currentQ;
       pp = pc;
 
-      const eduX1 = toSvgX(0), eduY1 = toSvgY(10 + eduVal);
-      const eduX2 = toSvgX(80), eduY2 = toSvgY(10 + eduVal + 0.5 * 80);
+      const eduX1 = toSvgX(0), eduY1 = toSvgY(eduVal);
+      const eduX2 = toSvgX(60), eduY2 = toSvgY(eduVal +  60);
       curveEdu.setAttribute('x1', eduX1); curveEdu.setAttribute('y1', eduY1);
       curveEdu.setAttribute('x2', eduX2); curveEdu.setAttribute('y2', eduY2);
       curveEdu.style.display = 'block';
     }
 
-    const activeQs = (80 - effectiveMec) / 1.2;
-    const activePs = 90 - 0.7 * activeQs;
+    const activeQs = (100 - effectiveMec) / 2;
+    const activePs = 100 -  activeQs;
 
     // --- Render MEC Arrow ---
     const groupMec = document.getElementById('group-mec');
     if (mecCheck.checked && effectiveMec > 1) {
       const mecQ = 22;
       const mecX = toSvgX(mecQ);
-      const yBottom = toSvgY(10 + 0.5 * mecQ);
-      const yTop = toSvgY(10 + effectiveMec + 0.5 * mecQ);
+      const yBottom = toSvgY( mecQ);
+      const yTop = toSvgY(effectiveMec +  mecQ);
       renderTwoSidedVerticalArrow(groupMec, mecX, yBottom, yTop, "MEC", "#dc2626");
       groupMec.style.display = 'block';
     } else {
@@ -798,8 +781,8 @@ body.index-page main { width:min(100% - 24px,1060px); padding:24px 0; }
     const groupTaxSize = document.getElementById('group-tax-size');
     if (activePolicy === 'tax' && taxVal > 0 && taxSizeCheck.checked) {
       const taxX = toSvgX(currentQ);
-      const yBottom = toSvgY(10 + 0.5 * currentQ);
-      const yTop = toSvgY(10 + taxVal + 0.5 * currentQ);
+      const yBottom = toSvgY( currentQ);
+      const yTop = toSvgY(taxVal +  currentQ);
       renderTwoSidedVerticalArrow(groupTaxSize, taxX, yBottom, yTop, "Tax", "#4169e1");
       groupTaxSize.style.display = 'block';
     } else {
@@ -934,18 +917,18 @@ body.index-page main { width:min(100% - 24px,1060px); padding:24px 0; }
 
     // Dynamic Curve Labels
     let activeCurves = [
-      { yEnd: 50, label: 'MPC', color: '#16a34a' },
-      { yEnd: 75, label: 'MSC = MPC + MEC', color: '#dc2626' }
+      { yEnd: 60, label: 'MPC', color: '#16a34a' },
+      { yEnd: 60 + FIXED_MEC, label: 'MSC = MPC + MEC', color: '#dc2626' }
     ];
 
     if (activePolicy === 'tax') {
-      activeCurves.push({ yEnd: 50 + taxVal, label: 'MPC + Tax', color: '#4169e1' });
+      activeCurves.push({ yEnd: 60 + taxVal, label: 'MPC + Tax', color: '#4169e1' });
     } else if (activePolicy === 'qpoll') {
-      activeCurves.push({ yEnd: 50 + effectiveMec, label: 'New MSC', color: '#4169e1' });
+      activeCurves.push({ yEnd: 60 + effectiveMec, label: 'New MSC', color: '#4169e1' });
     } else if (activePolicy === 'rd') {
-      activeCurves.push({ yEnd: 50 + effectiveMec, label: 'New MSC', color: '#4169e1' });
+      activeCurves.push({ yEnd: 60 + effectiveMec, label: 'New MSC', color: '#4169e1' });
     } else if (activePolicy === 'edu') {
-      activeCurves.push({ yEnd: 50 + eduVal, label: 'MPC* (Education)', color: '#4169e1' });
+      activeCurves.push({ yEnd: 60 + eduVal, label: 'MPC* (Education)', color: '#4169e1' });
     }
 
     let curveGroups = [];
@@ -977,7 +960,7 @@ body.index-page main { width:min(100% - 24px,1060px); padding:24px 0; }
       }
       const color = g.items[g.items.length - 1].color;
 
-      const labelX = Math.min(500, toSvgX(80) + 6);
+      const labelX = Math.min(500, toSvgX(60) + 6);
       const text = createSvgText(labelX, ySvg + 4, combinedLabel, {
         fontWeight: 'bold',
         fill: color
@@ -1075,8 +1058,8 @@ body.index-page main { width:min(100% - 24px,1060px); padding:24px 0; }
       areaDwl.style.display = 'block';
 
       const qActX = toSvgX(currentQ);
-      const pMscCurrentQ = 10 + effectiveMec + 0.5 * currentQ;
-      const pMpbCurrentQ = 90 - 0.7 * currentQ;
+      const pMscCurrentQ = effectiveMec +  currentQ;
+      const pMpbCurrentQ = 100 -  currentQ;
 
       areaDwl.setAttribute('points', 
         `${activeQsX},${activePsY} ${qActX},${toSvgY(pMscCurrentQ)} ${qActX},${toSvgY(pMpbCurrentQ)}`
@@ -1141,9 +1124,9 @@ body.index-page main { width:min(100% - 24px,1060px); padding:24px 0; }
   toggleTooltips.addEventListener('change', hideTooltip);
 
 
-  // W(Q) = integral_0^Q [MSB-MSC] dq = (80-MEC)Q - 0.6Q^2.
+  // W(Q) = integral_0^Q [MSB-MSC] dq = (100-MEC)Q - Q^2.
   function banModel(mec){
-    const qe=80/1.2,qs=Math.max(0,(80-mec)/1.2),welfare=q=>(80-mec)*q-.6*q*q;
+    const qe=100/2,qs=Math.max(0,(100-mec)/2),welfare=q=>(100-mec)*q-q*q;
     const best=welfare(qs),freeDwl=Math.max(0,best-welfare(qe)),banDwl=Math.max(0,best);
     return {mec,qe,qs,freeDwl,banDwl,gain:freeDwl-banDwl};
   }
@@ -1158,7 +1141,7 @@ body.index-page main { width:min(100% - 24px,1060px); padding:24px 0; }
   function renderBan(){
     const mec=+document.getElementById('ban-mec-slider').value,b=banModel(mec);window.currentBanModel=b;
     document.getElementById('ban-scene').replaceChildren();
-    const x=q=>70+3.9*q,y=p=>380-1.95*p,mpb=q=>90-.7*q,mpc=q=>10+.5*q,msc=q=>mpc(q)+mec;
+    const scale=Math.min(3.4,340/(100+mec)),x=q=>70+scale*q,y=p=>380-scale*p,mpb=q=>100 - q,mpc=q=>q,msc=q=>mpc(q)+mec;
     const line=(q1,p1,q2,p2,attrs={})=>banEl('line',{x1:x(q1),y1:y(p1),x2:x(q2),y2:y(p2),...attrs});
     const txt=(xx,yy,text,attrs={})=>banEl('text',{x:xx,y:yy,'font-weight':'bold',...attrs},text);
     const pts=arr=>arr.map(([q,p])=>`${x(q)},${y(p)}`).join(' '),fmt=v=>v.toLocaleString('en-SG',{minimumFractionDigits:2,maximumFractionDigits:2});
@@ -1168,8 +1151,8 @@ body.index-page main { width:min(100% - 24px,1060px); padding:24px 0; }
     if(dwlCheck.checked&&b.banDwl>ECON_EPS){const a=banEl('polygon',{id:'ban-loss-area',class:'dwl-poly',points:pts([[0,mpb(0)],[0,msc(0)],[b.qs,mpb(b.qs)]])});explainBan(a,banExplanation,'Explain deadweight loss under the ban');}
     banEl('line',{x1:70,y1:380,x2:590,y2:380,class:'axis','marker-end':'url(#arrow)'});banEl('line',{x1:70,y1:380,x2:70,y2:25,class:'axis','marker-end':'url(#arrow)'});
     const axisTitle=txt(64,12,'',{'text-anchor':'end',class:'axis-title',style:'font-size:12px'});['Price /','Costs /','Benefits'].forEach((word,i)=>{const span=document.createElementNS('http://www.w3.org/2000/svg','tspan');span.setAttribute('x','64');if(i)span.setAttribute('dy','14');span.textContent=word;axisTitle.append(span);});txt(600,385,'Quantity',{class:'axis-title'});
-    line(0,mpb(0),85,mpb(85),{class:'line-mpb'});line(0,mpc(0),80,mpc(80),{class:'line-mpc'});if(mec>ECON_EPS)line(0,msc(0),80,msc(80),{class:'line-msc'});
-    txt(x(85)+6,y(mpb(85))+5,'MPB = MSB',{fill:'#2563eb'});txt(x(80)+6,y(mpc(80))+5,mec===0?'MPC = MSC':'MPC',{fill:'#16a34a'});if(mec>ECON_EPS)txt(x(80)+6,y(msc(80))-12,'MSC = MPC + MEC',{fill:'#dc2626'});
+    line(0,mpb(0),85,mpb(85),{class:'line-mpb'});line(0,mpc(0),60,mpc(60),{class:'line-mpc'});if(mec>ECON_EPS)line(0,msc(0),60,msc(60),{class:'line-msc'});
+    txt(x(85)+6,y(mpb(85))+5,'MPB = MSB',{fill:'#2563eb'});txt(x(60)+6,y(mpc(60))+5,mec===0?'MPC = MSC':'MPC',{fill:'#16a34a'});if(mec>ECON_EPS)txt(x(60)+6,y(msc(60))-12,'MSC = MPC + MEC',{fill:'#dc2626'});
     banEl('line',{x1:70,y1:380,x2:70,y2:40,stroke:'#4169e1','stroke-width':3,'stroke-dasharray':'6,4'});txt(82,48,'Ban: no output',{fill:'#4169e1'});
     line(b.qe,0,b.qe,mpb(b.qe),{class:'guide-line'});
     const ee=banEl('circle',{cx:x(b.qe),cy:y(mpb(b.qe)),r:4.5,fill:'#1f2937'});explainBan(ee,'<strong>Unregulated market</strong><br>MPB = MPC. Qe remains unchanged as MEC varies because the external cost is not borne by these producers.','Explain unregulated market equilibrium');
@@ -1384,7 +1367,7 @@ body.index-page main { width:min(100% - 24px,1060px); padding:24px 0; }
   // Approved UX: contextual area key, selected-policy glossary, main-index navigation.
   const areaKey=document.createElement('div');areaKey.className='area-key';areaKey.setAttribute('aria-label','Shaded area colour and grayscale key');widgetFrame.after(areaKey);
   const glossaryItems=[...document.querySelectorAll('.sidebar > details')];
-  const glossaryPolicyNames={indirect_subsidy:'Indirect Subsidy',direct_subsidy:'Direct Subsidy',free_provision:'Free Provision',joint_provision:'Joint Provision',education:'Education & Campaigns',tax:'Tax',quota:'Quota on Output',ban:'Ban (a quota of zero)',qpoll:'Quota on Pollutant',rd:'Research & Development (R&D)',edu:'Education & Campaigns'};
+  const glossaryPolicyNames={indirect_subsidy:'Indirect Subsidy',direct_subsidy:'Direct Subsidy',free_provision:'Free Provision',joint_provision:'Joint Provision',education:'Education & Campaigns',tax:'Tax',quota:'Quota on Output',ban:'Ban (a quota of zero)',qpoll:'Quota on Pollutant',rd:'Research & Development (R&D) For Cleaner Technology',edu:'Education & Campaigns'};
   const normalise=s=>s.replace(/\s+/g,' ').trim();
   const nameOf=el=>normalise(el.querySelector('summary')?.textContent||'');
   const policyNames=new Set(Object.values(glossaryPolicyNames));policyNames.add('Direct Government Provision');policyNames.add('Legislation (Compulsory Consumption)');
@@ -1481,7 +1464,7 @@ body.index-page main { width:min(100% - 24px,1060px); padding:24px 0; }
  if(sidebar)sidebar.querySelector('.glossary-title').textContent='Glossary';
  const policySelect=document.getElementById('policy-select');
  let currentPolicy=null;
- const policyNames={ceiling:'ceiling',floor:'floor',wage:'wage',quota:'Quota On Output',tax:'Tax',ban:'Ban (A Quota Of Zero)',qpoll:'Quota On Pollutant',rd:'Research & Development (R&D)',edu:'Education & Campaigns',indirect_subsidy:'Indirect Subsidy',direct_subsidy:'Direct Subsidy',free_provision:'Free Provision',joint_provision:'Joint Provision',education:'Education & Campaigns'};
+ const policyNames={ceiling:'ceiling',floor:'floor',wage:'wage',quota:'Quota On Output',tax:'Tax',ban:'Ban (A Quota Of Zero)',qpoll:'Quota On Pollutant',rd:'Research & Development (R&D) For Cleaner Technology',edu:'Education & Campaigns',indirect_subsidy:'Indirect Subsidy',direct_subsidy:'Direct Subsidy',free_provision:'Free Provision',joint_provision:'Joint Provision',education:'Education & Campaigns'};
  if(policySelect&&sidebar) {
   // Disable Only The Old Reordering Pass. Preserve Its Area-Key Updates.
   if(typeof approvedUX==='function') {

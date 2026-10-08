@@ -256,7 +256,7 @@ body.index-page main { width:min(100% - 24px,1060px); padding:24px 0; }
 <div class="summary-wrap"><table class="summary-table"><caption>Summary Of Changes</caption><thead><tr><th scope="col">Variable</th><th scope="col">Initial</th><th scope="col">New</th><th scope="col">Change</th></tr></thead><tbody id="summary-body"></tbody></table></div>
 <div id="mechanism" class="mechanism" aria-live="polite"></div><p class="model-note" id="model-note"></p>
 <nav class="related-widget" aria-label="Widget navigation"><a href="index.html">Back to main index</a></nav></main>
-<aside class="sidebar"><h2 class="glossary-title">Glossary</h2><details><summary>Cross-Price Elasticity Of Demand</summary><div class="skeleton"><!-- Add definition here. --></div></details><details><summary>Strong Complements</summary><div class="skeleton"><!-- Add definition here. --></div></details><details><summary>Weak Complements</summary><div class="skeleton"><!-- Add definition here. --></div></details><details><summary>Unrelated Goods</summary><div class="skeleton"><!-- Add definition here. --></div></details><details><summary>Weak Substitutes</summary><div class="skeleton"><!-- Add definition here. --></div></details><details><summary>Strong Substitutes</summary><div class="skeleton"><!-- Add definition here. --></div></details><details><summary>Demand</summary><div class="skeleton"><!-- Add definition here. --></div></details><details><summary>Supply</summary><div class="skeleton"><!-- Add definition here. --></div></details><details><summary>Market Equilibrium</summary><div class="skeleton"><!-- Add definition here. --></div></details></aside></div>
+<aside class="sidebar"><h2 class="glossary-title">Glossary</h2><details><summary>Cross-Price Elasticity Of Demand</summary><p>Cross-price elasticity of demand (XED) measures the degree of responsiveness of demand for one good to a change in the price of another good, <em>ceteris paribus</em>.</p></details><details><summary>Complementary Goods</summary><p>Goods where a negative XED means that a rise (fall) in the price of one good will lead to a fall (rise) in the demand for another good, <em>ceteris paribus</em>.</p><p>A larger absolute XED indicates greater responsiveness and a stronger complementary relationship. This widget’s weak and strong cases use an absolute XED of one as a diagram convention.</p></details><details><summary>Unrelated Goods</summary><p>Goods with zero XED: a change in the price of one good does not lead to a change in demand for the other good, <em>ceteris paribus</em>.</p></details><details><summary>Substitute Goods</summary><p>Goods where a positive XED means that a rise in the price of one good will lead to a rise in the demand for another good, <em>ceteris paribus</em>.</p><p>A larger absolute XED indicates greater responsiveness and a stronger substitute relationship. This widget’s weak and strong cases use an absolute XED of one as a diagram convention.</p></details><details><summary>Demand</summary><p>Refers to the entire relationship between price and quantity demanded, as represented by the entire demand curve (or the quantity of a good or service which consumers are willing and able to buy at different price levels, over a specific time period, <em>ceteris paribus</em>).</p></details><details><summary>Supply</summary><p>Refers to the entire relationship between price and quantity supplied, as represented by the entire supply curve.</p></details><details><summary>Market Equilibrium</summary><p>Occurs when quantity demanded equals quantity supplied (Q<sub>dd</sub> = Q<sub>ss</sub>), resulting in a situation where there is no tendency for consumers and producers to change their willingness to buy and sell.</p></details></aside></div>
 <script>const KIND='XED', TITLE='Cross-Price Elasticity Of Demand';
 // Topic calculations use initial-equilibrium point elasticity and linear curves.
 const $=id=>document.getElementById(id),NS='http://www.w3.org/2000/svg',priceTopic=['PED','PES'].includes(KIND);
@@ -275,7 +275,36 @@ function add(tag,attrs={},html=''){const n=document.createElementNS(NS,tag);for(
 function text(x,y,html,c='#374151',attrs={}){return add('text',{x,y,fill:c,'text-anchor':'middle',...attrs},html);}
 function line(x1,y1,x2,y2,c='#374151',attrs={}){return add('line',{x1,y1,x2,y2,stroke:c,'stroke-width':2,...attrs});}
 function tip(n,message){n.dataset.tip=message;n.setAttribute('tabindex','0');n.setAttribute('role','img');n.setAttribute('aria-label',message);return n;}
-function curve(fn,name,c){if(elasticity()===Infinity&&((KIND==='PED'&&name==='D')||(KIND==='PES'&&name==='S'))){line(X(0),Y(50),X(110),Y(50),c);tip(text(X(110)+10,Y(50)-8,name,c), 'Perfectly price elastic '+(KIND==='PED'?'demand':'supply')+' at P₀.');return;}const pts=[];for(let p=0;p<=110;p+=.25){const q=fn(p);if(q>=0&&q<=110)pts.push([X(q),Y(p)]);}if(pts.length<2)return;add('polyline',{points:pts.map(p=>p.join(',')).join(' '),stroke:c,'stroke-width':2.5,fill:'none','clip-path':'url(#plot)'});const pt=pts[Math.max(0,Math.floor(pts.length*.92))];tip(text(pt[0]+12,pt[1]-9,name,c,{'text-anchor':'start'}),'The '+name.replace(/<[^>]*>/g,'')+' curve.');}
+function labelCurveEndpoint(pt,name,c,description){
+ const label=tip(text(pt[0]+14,pt[1]+4,name,c,{'text-anchor':'start','font-weight':'600','data-curve-label':'true'}),description);
+ label.dataset.endpointX=pt[0];label.dataset.endpointY=pt[1];return label;
+}
+function curve(fn,name,c){
+ if(elasticity()===Infinity&&((KIND==='PED'&&name==='D')||(KIND==='PES'&&name==='S'))){
+  line(X(0),Y(50),X(110),Y(50),c,{'stroke-width':2.5});
+  labelCurveEndpoint([X(110),Y(50)],name,c,'Perfectly price elastic '+(KIND==='PED'?'demand':'supply')+' at P₀.');return;
+ }
+ const pts=[];for(let p=0;p<=110;p+=.25){const q=fn(p);if(q>=0&&q<=110)pts.push([X(q),Y(p)]);}
+ if(pts.length<2)return;
+ add('polyline',{points:pts.map(p=>p.join(',')).join(' '),stroke:c,'stroke-width':2.5,fill:'none','clip-path':'url(#plot)'});
+ // Use The Rightmost Visible Endpoint; Vertical Curves Use Their Upper Endpoint.
+ const endpoint=pts.reduce((best,pt)=>pt[0]>best[0]+.01||Math.abs(pt[0]-best[0])<=.01&&pt[1]<best[1]?pt:best,pts[0]);
+ labelCurveEndpoint(endpoint,name,c,'The '+name.replace(/<[^>]*>/g,'')+' curve.');
+}
+function placeCurveLabels(){
+ const placed=[];
+ for(const label of [...layer.querySelectorAll('[data-curve-label]')].sort((a,b)=>+a.dataset.endpointY-+b.dataset.endpointY)){
+  const x=+label.dataset.endpointX+14,base=+label.dataset.endpointY+4;
+  let y=base;
+  for(const offset of [0,-22,22,-44,44,-66,66]){
+   const candidate=base+offset;
+   if(candidate>=22&&candidate<=418&&!placed.some(p=>Math.abs(p.x-x)<55&&Math.abs(p.y-candidate)<21)){y=candidate;break;}
+  }
+  label.setAttribute('y',y);placed.push({x,y});
+  if(Math.abs(y-base)>1)line(+label.dataset.endpointX,+label.dataset.endpointY,x-4,y-4,label.getAttribute('fill'),{'stroke-width':1});
+ }
+}
+
 function guides(q,p){line(90,Y(p),X(q),Y(p),'#9ca3af',{'stroke-width':1,'stroke-dasharray':'4 4'});line(X(q),Y(p),X(q),410,'#9ca3af',{'stroke-width':1,'stroke-dasharray':'4 4'});}
 function labels(q,p){if(eq(p,50))text(78,Y(p)+4,sub('P',0)+' = '+sub('P',1),'#374151',{'text-anchor':'end'});else{const close=Math.abs(Y(p)-Y(50))<24,offset=close?12:0;const a=Y(50)+(p>50?offset:-offset),b=Y(p)+(p>50?-offset:offset);text(78,a+4,sub('P',0),'#374151',{'text-anchor':'end'});text(78,b+4,sub('P',1),'#4169e1',{'text-anchor':'end'});if(close){line(80,a,89,Y(50),'#9ca3af',{'stroke-width':1});line(80,b,89,Y(p),'#9ca3af',{'stroke-width':1});}}
 const values=[{v:50,l:sub('Q',0),c:'#374151'},{v:q,l:sub('Q',1),c:'#4169e1'}];if($('adjustment').checked&&!eq(p,50)){const st=state();values.push({v:st.qd(50),l:sub('Q','d'),c:'#2563eb'},{v:st.qs(50),l:sub('Q','s'),c:'#16a34a'});}values.sort((a,b)=>a.v-b.v);let groups=[];for(const a of values){let g=groups.find(g=>eq(g.v,a.v));if(g)g.labels.push(a.l);else groups.push({v:a.v,labels:[a.l],c:a.c});}let previous=-Infinity,lane=434;for(const g of groups){lane=X(g.v)-previous<45?lane+16:434;text(X(g.v),lane,g.labels.join(' = '),g.c);if(lane>434)line(X(g.v),414,X(g.v),lane-12,'#9ca3af',{'stroke-width':1});previous=X(g.v);}}
@@ -289,7 +318,7 @@ if(priceTopic&&$('tr').checked&&changed){for(const [type,a,b,c,d,value,fill]of [
 line(90,410,628,410,'#374151',{'marker-end':'url(#arrow)'});line(90,410,90,20,'#374151',{'marker-end':'url(#arrow)'});text(652,415,'Quantity');text(66,28,'Price');
 const oldD=p0=>50-(KIND==='PED'?e:1)*(p0-50),oldS=p0=>50+(KIND==='PES'?e:1)*(p0-50);
 if(changed)curve(KIND==='PED'?oldS:oldD,sub(KIND==='PED'?'S':'D',0),KIND==='PED'?'#8fcea3':'#93b4f2');
-curve(s.qd,changed&&KIND!=='PED'?sub('D',1):'D','#2563eb');curve(s.qs,changed&&KIND==='PED'?sub('S',1):'S','#16a34a');
+curve(s.qd,changed&&KIND!=='PED'?sub('D',1):'D','#2563eb');curve(s.qs,changed&&KIND==='PED'?sub('S',1):'S','#16a34a');placeCurveLabels();
 guides(50,50);if(changed)guides(q,p);labels(q,p);
 function arrow(x1,y1,x2,y2,label,attrs={}){if(Math.hypot(x2-x1,y2-y1)<.1)return;const n=line(x1,y1,x2,y2,'#dc2626',{'stroke-width':1.3,'marker-end':'url(#change-arrow)',...attrs});if(label)tip(n,label);return n;}
 add('defs',{},'<marker id="change-arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M1 1.5 L9 5 L1 8.5Z" fill="#dc2626"/></marker>');

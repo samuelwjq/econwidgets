@@ -304,7 +304,7 @@ body.index-page main { width:min(100% - 24px,1060px); padding:24px 0; }
       <polygon id="dwl" class="dwl-poly" points="" />
       <text id="label-dwl-text" fill="#7f1d1d" font-weight="bold" text-anchor="middle" dominant-baseline="central" font-size="11" style="pointer-events: none;">DWL</text>
 
-      <line x1="70" y1="380" x2="590" y2="380" class="axis" marker-end="url(#arrow)" />
+      <line x1="70" y1="380" x2="425" y2="380" class="axis" marker-end="url(#arrow)" />
       <line x1="70" y1="380" x2="70" y2="25" class="axis" marker-end="url(#arrow)" />
 
       <line id="line-policy-curve" class="line-policy" style="display: none;" />
@@ -313,7 +313,7 @@ body.index-page main { width:min(100% - 24px,1060px); padding:24px 0; }
       <text id="label-policy-arrow" fill="#4169e1" font-weight="bold" font-size="11" style="display: none;">Subsidy</text>
 
       <text class="axis-title" x="64" y="12" text-anchor="end" font-weight="bold" style="font-size:12px"><tspan x="64">Price /</tspan><tspan x="64" dy="14">Costs /</tspan><tspan x="64" dy="14">Benefits</tspan></text>
-      <text class="axis-title" x="600" y="385" font-weight="bold">Quantity</text>
+      <text class="axis-title" x="435" y="385" font-weight="bold">Quantity</text>
       
 
       <line id="arrow-meb" stroke="#2563eb" stroke-width="2" marker-start="url(#arrow-start-blue)" marker-end="url(#arrow-end-blue)" style="display: none;" />
@@ -367,33 +367,24 @@ body.index-page main { width:min(100% - 24px,1060px); padding:24px 0; }
   </div>
 
   <div class="sidebar">
-    <h3 class="glossary-title">Glossary</h3>
-<details><summary>Diagram assumptions &amp; definitions</summary><p>This diagram illustrates positive externalities in consumption: MSB = MPB + MEB, with no external costs (MSC = MPC).</p><p><strong>MPB:</strong> the additional benefit to the consumer from consuming an additional unit. <strong>MPC:</strong> the additional cost to the producer of producing an additional unit.</p></details>
+    <section class="diagram-assumptions" aria-label="Diagram Assumptions"><details><summary>Diagram Assumptions</summary><p>This diagram illustrates positive externalities in consumption: MSB = MPB + MEB. External costs are assumed absent (MEC = 0), so MSC = MPC.</p></details></section><h3 class="glossary-title">Glossary</h3><details><summary>MPB (Marginal Private Benefit)</summary><p>The additional benefit enjoyed by the private consumer from consuming an extra unit of a good or service.</p></details><details><summary>MPC (Marginal Private Cost)</summary><p>The additional cost incurred by the private producer from producing an extra unit of a good or service.</p></details><details><summary>MSC (Marginal Social Cost)</summary><p>The total additional cost to society of producing an extra unit of output: MSC = MPC + MEC.</p></details><details><summary>MSB (Marginal Social Benefit)</summary><p>The total additional benefit to society of consuming an extra unit of output: MSB = MPB + MEB.</p></details><details><summary>MEB (Marginal External Benefit)</summary><p>The additional uncompensated benefit enjoyed by third parties outside the market transaction from consuming one extra unit.</p></details><details><summary>Externality</summary><p>An uncompensated cost or benefit affecting third parties outside a market transaction, arising from production or consumption.</p></details><details><summary>Market Failure</summary><p>A situation in which the free market fails to allocate resources efficiently, so net social benefit is not maximised.</p></details><details><summary>Allocative Efficiency</summary><p>An allocation of resources that maximises net social benefit. At an interior socially optimal output, marginal social benefit equals marginal social cost (MSB = MSC).</p></details><details><summary>Internalisation Of Externalities</summary><p>Bringing external costs or benefits into the incentives faced by decision makers, so their production or consumption decisions take account of these effects on third parties.</p></details>
 
-    <details>
-      <summary>Deadweight Loss (DWL)</summary>
-      <p><b>DWL</b> is the reduction in <b>net benefit to society</b> because output is not at the <b>socially optimal level</b> where <b>MSB = MSC</b>.</p>
-    </details>
+
+    <details><summary>Deadweight Loss (DWL)</summary><p>The loss of net social benefit relative to the socially optimal output.</p><p>The shaded area in this diagram shows the net social benefits forgone or net social costs incurred because output differs from the socially optimal level.</p></details>
 
     <details>
       <summary>Market Equilibrium (Ee / Qe, Pe)</summary>
       <p>The output level (<b>Qe</b>) and price level (<b>Pe</b>) determined purely by private market forces, where <b>MPB = MPC</b> without government intervention.</p>
     </details>
 
-    <details>
-      <summary>Socially Optimal Equilibrium (Es / Qs, Ps)</summary>
-      <p>The ideal production and consumption level (<b>Qs</b>) where total social welfare is maximized because <b>MSB = MSC</b>, achieving <b>allocative efficiency</b>.</p>
-    </details>
+    <details><summary>Socially Optimal Output (Qs)</summary><p>The output that maximises net social benefit. At an interior optimum, MSB = MSC. If MSC is at least MSB at every feasible positive quantity, zero output can be a boundary optimum without an intersection in the positive quadrant.</p></details>
 
     <details>
       <summary>Indirect Subsidy</summary>
       <p>A payment made by the government to <b>producers or firms</b> when producing a good or service, which lowers their <b>marginal private cost</b> of production.</p>
     </details>
 
-    <details>
-      <summary>Direct Subsidy</summary>
-      <p>A subsidy, grant, or voucher given directly to <b>consumers or households</b> to purchase specific goods and services, which increases their <b>marginal private benefit</b>.</p>
-    </details>
+    <details><summary>Direct Subsidy</summary><p>A payment to consumers linked to purchasing the good. In this widget, it raises the effective willingness to pay received by producers by the subsidy amount; it does not itself change the underlying benefit from consumption.</p></details>
 
     <details>
       <summary>Free Provision</summary>
@@ -405,20 +396,14 @@ body.index-page main { width:min(100% - 24px,1060px); padding:24px 0; }
       <p>Occurs when the government engages in the <b>provision of a good directly</b> (which does not necessarily mean the government produces the good itself, nor is it strictly free of charge).</p>
     </details>
 
-    <details>
-      <summary>Joint Provision</summary>
-      <p>The government supplies a fixed quantity alongside private producers. Total supply is the <b>horizontal sum</b> of public and private supply. MPC* is drawn as a parallel shift of MPC = MSC, using a constant horizontal addition over the displayed range. A lower market price can reduce private output, so the increase in total output is smaller than public output.<br><br>This branch isolates the market-supply effect. Public output is sold at the market price; public production costs are not specified. The original Qs is a reference only: a new social optimum and DWL require a model of public resource costs.</p>
-    </details>
+    <details><summary>Joint Provision</summary><p><strong>Definition:</strong> The government supplies a quantity of the good alongside private producers.</p><p><strong>Effect In This Diagram:</strong> Total supply is the horizontal sum of public and private supply. A fixed public quantity shifts MPC* horizontally relative to MPC = MSC over the displayed range. A lower market price can reduce private output, so the increase in total output is smaller than public output.</p><p><strong>Welfare Limitation:</strong> This branch isolates the market-supply effect. Public output is sold at the market price; public production costs are not specified. The original Qs is a reference only: a new social optimum and DWL require a model of public resource costs.</p></details>
 
-    <details>
+    <section class="glossary-other"><details><summary>Other Measures</summary><details>
       <summary>Legislation (Compulsory Consumption)</summary>
       <p>Rules or laws set by the government to <b>force or ensure</b> that a certain amount of goods with positive externalities are consumed or produced, backed by <b>penalties or punitive measures</b>.</p>
-    </details>
+    </details></details></section>
 
-    <details>
-      <summary>Education & Campaigns</summary>
-      <p>Government measures used to <b>persuade consumers</b> to voluntarily consume more of a good generating positive externalities by encouraging them to <b>internalise the external benefits</b>.</p>
-    </details>
+    <details><summary>Education &amp; Campaigns</summary><p>Information and persuasion intended to encourage consumption. This widget represents the response as an increase in perceived private benefit or willingness to pay.</p></details>
   </div>
 </div>
 
@@ -470,11 +455,11 @@ body.index-page main { width:min(100% - 24px,1060px); padding:24px 0; }
   const labelQpol = document.getElementById('label-qpol');
   const labelPpol = document.getElementById('label-ppol');
 
-  let globalCurrentQ = 60;
-  const globalQs = 75;
+  let globalCurrentQ = 50;
+  const globalQs = 57.5;
 
-  function toSvgX(q) { return 70 + 4.333333333333333 * q; }
-  function toSvgY(p) { return 380 - 3.4 * p; }
+  function toSvgX(q) { return 70 + 2.6 * q; }
+  function toSvgY(p) { return 380 - 2.6 * p; }
 
   function renderDiagram() {
     const policy = policySelect.value;
@@ -487,10 +472,10 @@ body.index-page main { width:min(100% - 24px,1060px); padding:24px 0; }
     const meb = 15;
     const sliderVal = parseFloat(policySlider.value);
 
-    const qe = 60;
-    const pe = 15 + 0.45 * qe;
-    const qs = 75;
-    const ps = 15 + 0.45 * qs;
+    const qe = 50;
+    const pe = qe;
+    const qs = 57.5;
+    const ps = qs;
     const pmsb_qe = pe + meb;
 
     const qeX = toSvgX(qe), peY = toSvgY(pe);
@@ -502,8 +487,8 @@ body.index-page main { width:min(100% - 24px,1060px); padding:24px 0; }
     document.getElementById('label-es').innerHTML='E<tspan baseline-shift="sub" font-size="9">s</tspan>';
     document.getElementById('dot-a').style.display='inline';document.getElementById('label-a').style.display='inline';
 
-    const mpcX1 = toSvgX(0), mpcY1 = toSvgY(15);
-    const mpcX2 = toSvgX(95), mpcY2 = toSvgY(15 + 0.45 * 95);
+    const mpcX1 = toSvgX(0), mpcY1 = toSvgY(0);
+    const mpcX2 = toSvgX(95), mpcY2 = toSvgY(95);
     document.getElementById('curve-mpc').setAttribute('x1', mpcX1);
     document.getElementById('curve-mpc').setAttribute('y1', mpcY1);
     document.getElementById('curve-mpc').setAttribute('x2', mpcX2);
@@ -511,8 +496,8 @@ body.index-page main { width:min(100% - 24px,1060px); padding:24px 0; }
     document.getElementById('label-mpc').setAttribute('x', mpcX2 + 6);
     document.getElementById('label-mpc').setAttribute('y', mpcY2 + 4);
 
-    const mpbX1 = toSvgX(0), mpbY1 = toSvgY(75);
-    const mpbX2 = toSvgX(95), mpbY2 = toSvgY(75 - 0.55 * 95);
+    const mpbX1 = toSvgX(0), mpbY1 = toSvgY(100);
+    const mpbX2 = toSvgX(95), mpbY2 = toSvgY(100 -  95);
     document.getElementById('curve-mpb').setAttribute('x1', mpbX1);
     document.getElementById('curve-mpb').setAttribute('y1', mpbY1);
     document.getElementById('curve-mpb').setAttribute('x2', mpbX2);
@@ -520,8 +505,8 @@ body.index-page main { width:min(100% - 24px,1060px); padding:24px 0; }
     document.getElementById('label-mpb').setAttribute('x', mpbX2 + 6);
     document.getElementById('label-mpb').setAttribute('y', mpbY2 + 4);
 
-    const msbX1 = toSvgX(0), msbY1 = toSvgY(90);
-    const msbX2 = toSvgX(95), msbY2 = toSvgY(90 - 0.55 * 95);
+    const msbX1 = toSvgX(0), msbY1 = toSvgY(115);
+    const msbX2 = toSvgX(95), msbY2 = toSvgY(115 -  95);
     document.getElementById('curve-msb').setAttribute('x1', msbX1);
     document.getElementById('curve-msb').setAttribute('y1', msbY1);
     document.getElementById('curve-msb').setAttribute('x2', msbX2);
@@ -628,18 +613,18 @@ body.index-page main { width:min(100% - 24px,1060px); padding:24px 0; }
       sliderLabel.innerHTML = '<strong>Subsidy Level:</strong>';
 
       const s = sliderVal;
-      currentQ = 60 + s;
-      const psub = 15 - s + 0.45 * currentQ;
+      currentQ = 50 + s / 2;
+      const psub = 0 - s + 1 * currentQ;
       const qsubX = toSvgX(currentQ), psubY = toSvgY(psub);
 
       let subStartQ = 0;
-      if (15 - s < 0) {
-        subStartQ = (s - 15) / 0.45;
+      if (0 - s < 0) {
+        subStartQ = s;
       }
       const subX1 = toSvgX(subStartQ);
-      const subY1 = toSvgY(Math.max(0, 15 - s));
+      const subY1 = toSvgY(Math.max(0, 0 - s));
       const subX2 = toSvgX(95);
-      const subY2 = toSvgY(15 - s + 0.45 * 95);
+      const subY2 = toSvgY(0 - s + 1 * 95);
       linePolicyCurve.setAttribute('x1', subX1);
       linePolicyCurve.setAttribute('y1', subY1);
       linePolicyCurve.setAttribute('x2', subX2);
@@ -660,8 +645,8 @@ body.index-page main { width:min(100% - 24px,1060px); padding:24px 0; }
       if (s > 0) {
         const qShift = 35;
         const qShiftX = toSvgX(qShift);
-        const yOld = toSvgY(15 + 0.45 * qShift);
-        const yNew = toSvgY(15 - s + 0.45 * qShift);
+        const yOld = toSvgY(qShift);
+        const yNew = toSvgY(0 - s + 1 * qShift);
         arrowPolicy.setAttribute('x1', qShiftX);
         arrowPolicy.setAttribute('y1', yOld - 2);
         arrowPolicy.setAttribute('x2', qShiftX);
@@ -702,12 +687,12 @@ body.index-page main { width:min(100% - 24px,1060px); padding:24px 0; }
       sliderLabel.innerHTML = '<strong>Subsidy Level:</strong>';
 
       const s = sliderVal;
-      currentQ = 60 + s;
-      const psub = 75 + s - 0.55 * currentQ;
+      currentQ = 50 + s / 2;
+      const psub = 100 + s - 1 * currentQ;
       const qsubX = toSvgX(currentQ), psubY = toSvgY(psub);
 
-      const subX1 = toSvgX(0), subY1 = toSvgY(75 + s);
-      const subX2 = toSvgX(95), subY2 = toSvgY(75 + s - 0.55 * 95);
+      const subX1 = toSvgX(0), subY1 = toSvgY(100 + s);
+      const subX2 = toSvgX(95), subY2 = toSvgY(100 + s - 1 * 95);
       linePolicyCurve.setAttribute('x1', subX1);
       linePolicyCurve.setAttribute('y1', subY1);
       linePolicyCurve.setAttribute('x2', subX2);
@@ -732,8 +717,8 @@ body.index-page main { width:min(100% - 24px,1060px); padding:24px 0; }
       if (s > 0) {
         const qShift = 35;
         const qShiftX = toSvgX(qShift);
-        const yOld = toSvgY(75 - 0.55 * qShift);
-        const yNew = toSvgY(75 + s - 0.55 * qShift);
+        const yOld = toSvgY(100 -  qShift);
+        const yNew = toSvgY(100 + s - 1 * qShift);
         arrowPolicy.setAttribute('x1', qShiftX);
         arrowPolicy.setAttribute('y1', yOld + 2);
         arrowPolicy.setAttribute('x2', qShiftX);
@@ -771,12 +756,12 @@ body.index-page main { width:min(100% - 24px,1060px); padding:24px 0; }
     } 
     else if (policy === 'joint_provision') {
       sliderContainer.style.display='flex';sliderLabel.innerHTML='<strong>Government Output (Qg):</strong>';
-      const qg=sliderVal;currentQ=60+.45*qg;const qp=currentQ-qg,price=75-.55*currentQ,qx=toSvgX(currentQ),px=toSvgX(qp),py=toSvgY(price);
+      const qg=sliderVal;currentQ=50+qg/2;const qp=currentQ-qg,price=100-currentQ,qx=toSvgX(currentQ),px=toSvgX(qp),py=toSvgY(price);
       const el=(tag,attrs,text)=>{const e=document.createElementNS('http://www.w3.org/2000/svg',tag);Object.entries(attrs).forEach(([k,v])=>e.setAttribute(k,v));e.classList.add('joint-only');if(text!==undefined)e.textContent=text;document.getElementById('diagram').append(e);return e;};
       document.getElementById('label-mpc').textContent='MPC = MSC';document.getElementById('label-es').textContent='Es';labelQs.textContent='Qs';document.getElementById('dot-a').style.display='none';document.getElementById('label-a').style.display='none';
-      linePolicyCurve.setAttribute('x1',toSvgX(Math.max(0,qg-15/.45)));linePolicyCurve.setAttribute('y1',toSvgY(Math.max(0,15-.45*qg)));linePolicyCurve.setAttribute('x2',toSvgX(95));linePolicyCurve.setAttribute('y2',toSvgY(15+.45*(95-qg)));linePolicyCurve.style.display=qg>0?'inline':'none';
+      linePolicyCurve.setAttribute('x1',toSvgX(Math.max(0,qg)));linePolicyCurve.setAttribute('y1',toSvgY(0));linePolicyCurve.setAttribute('x2',toSvgX(95));linePolicyCurve.setAttribute('y2',toSvgY((95-qg)));linePolicyCurve.style.display=qg>0?'inline':'none';
       
-      labelPolicyCurve.textContent='MPC*';labelPolicyCurve.setAttribute('x',toSvgX(95)+6);labelPolicyCurve.setAttribute('y',toSvgY(15+.45*(95-qg))+4);labelPolicyCurve.style.display=qg>0?'inline':'none';
+      labelPolicyCurve.textContent='MPC*';labelPolicyCurve.setAttribute('x',toSvgX(95)+6);labelPolicyCurve.setAttribute('y',toSvgY((95-qg))+4);labelPolicyCurve.style.display=qg>0?'inline':'none';
       if(qg>0){dotPol.setAttribute('cx',qx);dotPol.setAttribute('cy',py);dotPol.style.display='block';lineQpol.setAttribute('x1',qx);lineQpol.setAttribute('x2',qx);lineQpol.setAttribute('y1',py);lineQpol.setAttribute('y2',380);lineQpol.style.display='inline';labelQpol.textContent='Qtotal';labelQpol.setAttribute('x',qx);labelQpol.setAttribute('y',418);labelQpol.style.display='inline';
         el('line',{x1:px,y1:py,x2:px,y2:380,class:'guide-line'});el('circle',{cx:px,cy:py,r:3.5,fill:'#16a34a'});el('text',{id:'joint-private-label',x:px,y:418,'text-anchor':'middle','font-weight':'bold',fill:'#16a34a'},'Qprivate');
         arrowPolicy.setAttribute('x1',px);arrowPolicy.setAttribute('x2',qx);arrowPolicy.setAttribute('y1',335);arrowPolicy.setAttribute('y2',335);arrowPolicy.style.display='block';labelPolicyArrow.setAttribute('x',(px+qx)/2);labelPolicyArrow.setAttribute('y',322);labelPolicyArrow.setAttribute('dominant-baseline','auto');labelPolicyArrow.setAttribute('text-anchor','middle');labelPolicyArrow.textContent='Government output (Qg)';labelPolicyArrow.style.display='inline';
@@ -788,12 +773,12 @@ body.index-page main { width:min(100% - 24px,1060px); padding:24px 0; }
       sliderLabel.innerHTML = '<strong>Campaign Intensity:</strong>';
 
       const c = sliderVal;
-      currentQ = 60 + c;
-      const pedu = 75 + c - 0.55 * currentQ;
+      currentQ = 50 + c / 2;
+      const pedu = 100 + c - 1 * currentQ;
       const qeduX = toSvgX(currentQ), peduY = toSvgY(pedu);
 
-      const eduX1 = toSvgX(0), eduY1 = toSvgY(75 + c);
-      const eduX2 = toSvgX(95), eduY2 = toSvgY(75 + c - 0.55 * 95);
+      const eduX1 = toSvgX(0), eduY1 = toSvgY(100 + c);
+      const eduX2 = toSvgX(95), eduY2 = toSvgY(100 + c - 1 * 95);
       linePolicyCurve.setAttribute('x1', eduX1);
       linePolicyCurve.setAttribute('y1', eduY1);
       linePolicyCurve.setAttribute('x2', eduX2);
@@ -841,8 +826,8 @@ body.index-page main { width:min(100% - 24px,1060px); padding:24px 0; }
     }
 
     if ((policy === 'indirect_subsidy' || policy === 'direct_subsidy') && toggleSubsidyCost.checked && sliderVal > 0) {
-      const pProd = 15 + 0.45 * currentQ;
-      const pCons = 75 - 0.55 * currentQ;
+      const pProd = currentQ;
+      const pCons = 100 -  currentQ;
       const yProd = toSvgY(pProd);
       const yCons = toSvgY(pCons);
       const x0 = 70;
@@ -866,8 +851,8 @@ body.index-page main { width:min(100% - 24px,1060px); padding:24px 0; }
       labelDwlText.style.display = 'block';
 
       const curX = toSvgX(currentQ);
-      const pMsc = 15 + 0.45 * currentQ;
-      const pMsb = 90 - 0.55 * currentQ;
+      const pMsc = currentQ;
+      const pMsb = 115 -  currentQ;
       const yMsc = toSvgY(pMsc);
       const yMsb = toSvgY(pMsb);
 
@@ -1046,9 +1031,9 @@ body.index-page main { width:min(100% - 24px,1060px); padding:24px 0; }
     [...svg.children].filter(el=>el.tagName!=='defs').forEach(el=>{freeHidden.push([el,el.style.display]);el.style.display='none';});
     const scene=document.createElementNS(ns,'g');scene.id='free-scene';svg.append(scene);
     const add=(tag,attrs={},text)=>{const el=document.createElementNS(ns,tag);Object.entries(attrs).forEach(([k,v])=>el.setAttribute(k,v));if(text!==undefined)el.textContent=text;scene.append(el);return el;};
-    const txt=(x,y,t,attrs={})=>add('text',{x,y,'font-weight':'bold',...attrs},t),x=q=>70+2.65*q,y=p=>380-1.75*p;
-    const demand=q=>75-.55*q,cost=q=>15+.45*q,qf=75/.55,qe=60,meb=(qf-qe)*Number(freeSlider.value)/80,qs=qe+meb,pp=cost(qf),social=q=>demand(q)+meb;
-    const freeLoss=.5*(qf-qs)**2,marketLoss=.5*(qe-qs)**2,epsilon=1e-7;
+    const txt=(x,y,t,attrs={})=>add('text',{x,y,'font-weight':'bold',...attrs},t),scale=1.5,x=q=>70+scale*q,y=p=>380-scale*p;
+    const demand=q=>100-q,cost=q=>q,qf=100,qe=50,meb=Number(freeSlider.value),qs=(100+meb)/2,pp=cost(qf),social=q=>demand(q)+meb;
+    const freeLoss=(qf-qs)**2,marketLoss=(qe-qs)**2,epsilon=1e-7;
     window.currentFreeModel={qf,qe,qs,meb,pp,pc:0,subsidy:pp,freeLoss,marketLoss};
     const tooltip=(el,html,label)=>{el.classList.add('has-tooltip');el.setAttribute('aria-label',label);el.onmousemove=e=>showTooltip(html,e);el.onmouseleave=hideTooltip;el.onclick=e=>showTooltip(html,e);};
     const line=(a,b,c,d,attrs={})=>add('line',{x1:x(a),y1:y(b),x2:x(c),y2:y(d),...attrs});
@@ -1060,7 +1045,7 @@ body.index-page main { width:min(100% - 24px,1060px); padding:24px 0; }
     const heading=txt(64,12,'',{'text-anchor':'end',class:'axis-title',style:'font-size:12px'});['Price /','Costs /','Benefits'].forEach((word,i)=>{const span=document.createElementNS(ns,'tspan');span.setAttribute('x',64);if(i)span.setAttribute('dy',14);span.textContent=word;heading.append(span);});txt(x(190)+9,385,'Quantity',{class:'axis-title'});
     line(0,demand(0),qf,0,{class:'line-mpb'});txt(x(qf)-8,y(0)-17,'MPB',{fill:'#2563eb','text-anchor':'end'});
     line(0,cost(0),190,cost(190),{class:'line-mpc'});txt(x(190)+6,y(cost(190))+4,'MPC = MSC',{fill:'#16a34a'});
-    line(0,social(0),Math.min(190,(75+meb)/.55),Math.max(0,social(190)),{class:'line-msb'});txt(x(190)+6,y(Math.max(0,social(190)))+4,meb>epsilon?'MSB':'MPB = MSB',{fill:'#dc2626'});
+    const socialEnd=Math.min(190,100+meb);line(0,social(0),socialEnd,social(socialEnd),{class:'line-msb'});txt(x(socialEnd)+6,y(social(socialEnd))+4,meb>epsilon?'MSB':'MPB = MSB',{fill:'#dc2626'});
     line(qf,0,190,cost(190)-pp,{class:'line-policy',style:'stroke-dasharray:none'});txt(x(190)+6,y(cost(190)-pp)+4,'MPC*',{fill:'#4169e1'});
     line(qf,0,qf,pp,{class:'guide-line'});line(0,pp,qf,pp,{class:'guide-line'});txt(60,y(pp)+4,'Pp',{'text-anchor':'end',fill:'#4169e1'});txt(60,379,'Pc (free)',{'text-anchor':'end',fill:'#4169e1',style:'font-size:11px'});
     const point=(q,p,t,color,label)=>{const e=add('circle',{cx:x(q),cy:y(p),r:4.5,fill:color});txt(x(q)+8,y(p)-9,t,{fill:color});tooltip(e,label,'Explain '+t);};

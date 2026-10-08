@@ -256,7 +256,7 @@ body.index-page main { width:min(100% - 24px,1060px); padding:24px 0; }
 const $=id=>document.getElementById(id),svg=$('diagram'),layer=$('drawing');
 let step=1,selectedCase=null;
 const cases={di:{d:20,s:0,label:'Increase In Demand'},dd:{d:-20,s:0,label:'Decrease In Demand'},si:{d:0,s:20,label:'Increase In Supply'},sd:{d:0,s:-20,label:'Decrease In Supply'}};
-const X=q=>90+5*q,Y=p=>410-3.5*p, sub=(letter,i)=>`${letter}<tspan baseline-shift="sub" font-size="9">${i}</tspan>`;
+const X=q=>90+3.5*q,Y=p=>410-3.5*p, sub=(letter,i)=>`${letter}<tspan baseline-shift="sub" font-size="9">${i}</tspan>`;
 const colour={d:'#2563eb',s:'#16a34a',oldD:'#93b4f2',oldS:'#8fcea3',ink:'#374151',accent:'#4169e1',gap:'#dc2626'};
 function el(tag,attrs={},html=''){let n=document.createElementNS(NS,tag);for(let [k,v] of Object.entries(attrs))n.setAttribute(k,v);n.innerHTML=html;layer.append(n);return n;}
 function line(x1,y1,x2,y2,c=colour.ink,w=2,extra={}){return el('line',{x1,y1,x2,y2,stroke:c,'stroke-width':w,...extra});}
@@ -264,13 +264,13 @@ function text(x,y,html,c=colour.ink,extra={}){return el('text',{x,y,fill:c,'text
 function tip(n,description){n.dataset.tip=description.replace(/<[^>]*>/g,'');if(description.includes('<strong>'))n.dataset.tipHtml=description;n.setAttribute('tabindex','0');n.setAttribute('role','img');n.setAttribute('aria-label',n.dataset.tip);n.classList.add('has-tooltip');return n;}
 function arrow(x1,y1,x2,y2,c,id,both=false){let len=Math.hypot(x2-x1,y2-y1);if(len<.01)return;let marker='marker-'+id;if(len<18){marker='small-'+layer.children.length;let size=Math.min(6,len/(both?4:2));el('marker',{id:marker,viewBox:'0 0 10 10',refX:9,refY:5,markerWidth:size,markerHeight:size,markerUnits:'userSpaceOnUse',orient:'auto-start-reverse'},`<path d="M 1 1.5 L 9 5 L 1 8.5 z" fill="${c}"/>`);}let a={'marker-end':`url(#${marker})`};if(both)a['marker-start']=`url(#${marker})`;return line(x1,y1,x2,y2,c,2.2,a);}
 
-function curve(kind,shift,label,old=false){let a=kind==='d'?75+.5*shift:25-.5*shift,b=kind==='d'?-.5:.5,c=old?colour[kind==='d'?'oldD':'oldS']:colour[kind];
- let qEnd=100;line(X(0),Y(a),X(qEnd),Y(a+b*qEnd),c,2.5);
+function curve(kind,shift,label,old=false){let a=kind==='d'?100+shift:-shift,b=kind==='d'?-1:1,c=old?colour[kind==='d'?'oldD':'oldS']:colour[kind];
+ let qStart=Math.max(0,b>0?-a: a-105),qEnd=Math.min(105,b<0?a:105-a);line(X(qStart),Y(a+b*qStart),X(qEnd),Y(a+b*qEnd),c,2.5);
  let close=Math.abs(shift)<8; let offset=close?(old? -11:11):0; if(old){let st=state();close=Math.abs(kind==='d'?st.d:st.s)<8;offset=close?-11:0;} if(offset)line(X(qEnd),Y(a+b*qEnd),X(qEnd)+10,Y(a+b*qEnd)+offset,c,1); tip(text(X(qEnd)+14,Y(a+b*qEnd)+4+offset,label,c,{'text-anchor':'start','font-weight':'600'}),`${old?'Initial':'Current'} ${kind==='d'?'demand':'supply'} curve.`);
 }
 function guides(q,p,c){line(90,Y(p),X(q),Y(p),'#9ca3af',1.2,{'stroke-dasharray':'4 4'});line(X(q),Y(p),X(q),410,'#9ca3af',1.2,{'stroke-dasharray':'4 4'});}
 
-function state(){let {d,s}=step>=2&&selectedCase?cases[selectedCase]:{d:0,s:0};return {d,s,q:50+(d+s)/2,p:50+(d-s)/4,qd:50+d,qs:50+s};}
+function state(){let {d,s}=step>=2&&selectedCase?cases[selectedCase]:{d:0,s:0};return {d,s,q:50+(d+s)/2,p:50+(d-s)/2,qd:50+d,qs:50+s};}
 function direction(v){return Math.abs(v)<1e-8?'Unchanged':v>0?'Increases':'Decreases';}
 function shiftDescription(v){return v===0?'No shift':v>0?'Increase':'Decrease';}
 function wrapSince(index,name){let nodes=[...layer.children].slice(index),g=el('g',{'data-part':name});for(let n of nodes)g.append(n);return g;}
@@ -283,12 +283,12 @@ function axisLabels(v0,v1,letter,isP){let same=Math.abs(v1-v0)<1e-8;
 }
 
 function render(){hideTip();let {d,s,q,p,qd,qs}=state(),changed=d!==0||s!==0,sameP=Math.abs(p-50)<1e-8,sameQ=Math.abs(q-50)<1e-8;layer.replaceChildren();
-part('axes',()=>{line(90,410,610,410,colour.ink,2,{'marker-end':'url(#marker-ink)'});line(90,410,90,38,colour.ink,2,{'marker-end':'url(#marker-ink)'});text(76,32,'Price',colour.ink,{'font-weight':'600'});text(620,416,'Quantity',colour.ink,{'font-weight':'600','text-anchor':'start'});});
+part('axes',()=>{line(90,410,475,410,colour.ink,2,{'marker-end':'url(#marker-ink)'});line(90,410,90,38,colour.ink,2,{'marker-end':'url(#marker-ink)'});text(76,32,'Price',colour.ink,{'font-weight':'600'});text(485,416,'Quantity',colour.ink,{'font-weight':'600','text-anchor':'start'});});
 part('initial-guides',()=>guides(50,50));if(step>=5&&changed)part('new-guides',()=>guides(q,p));
 if(d!==0)part('old-curves',()=>curve('d',0,sub('D',0),true));if(s!==0)part('old-curves',()=>curve('s',0,sub('S',0),true));
 part('current-d',()=>curve('d',d,d!==0?sub('D',1):step>=5?sub('D',0)+' = '+sub('D',1):sub('D',0)));
 part('current-s',()=>curve('s',s,s!==0?sub('S',1):step>=5?sub('S',0)+' = '+sub('S',1):sub('S',0)));
-if(step===2&&changed){part('shift',()=>{let amount=d||s,price=d!==0?60:40;arrow(X(30),Y(price),X(30+amount),Y(price),colour.gap,'gap');text(X(30+amount/2),Y(price)-14,(amount>0?'Increase':'Decrease')+' In '+(d!==0?'Demand':'Supply'),colour.gap,{'font-weight':'600'});});}
+if(step===2&&changed){part('shift',()=>{let amount=d||s,price=d!==0?70:30;arrow(X(30),Y(price),X(30+amount),Y(price),colour.gap,'gap');text(X(30+amount/2),Y(price)-14,(amount>0?'Increase':'Decrease')+' In '+(d!==0?'Demand':'Supply'),colour.gap,{'font-weight':'600'});});}
 part('adjustment',()=>{
  if(step>=4&&!sameP){for(let [k,start] of [['d',qd],['s',qs]]){let dx=X(q)-X(start),dy=Y(p)-Y(50),c=colour.gap;
  let desc=`As price ${p>50?'rises':'falls'}, quantity ${k==='d'?'demanded':'supplied'} ${q>start?'increases':'decreases'} along the current ${k==='d'?'demand':'supply'} curve towards the new equilibrium.`;

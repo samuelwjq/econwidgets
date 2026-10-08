@@ -271,23 +271,23 @@ indirect:{name:'Indirect Subsidy (specific)',label:'Subsidy per unit paid to pro
 direct:{name:'Direct Subsidy',label:'Subsidy per unit paid to consumers',min:0,max:30,value:20,glossary:'direct'}
 };
 const values=Object.fromEntries(Object.entries(policies).map(([k,p])=>[k,p.value??0]));
-const D=q=>100-q,S=q=>20+q;const baseline={q:40,pc:60,pp:60,cs:800,ps:800,g:0,tw:1600,dwl:0};
+const D=q=>100-q,S=q=>q;const baseline={q:50,pc:50,pp:50,cs:1250,ps:1250,g:0,tw:2500,dwl:0};
 // Prices are inverse demand/supply values; ad-valorem tax is a percentage of the pre-tax producer price.
 function calculate(policy,v){
- let q=40,pc=60,pp=60,qd=40,qs=40,g=0,binding=false,fiscal='';
- if(policy==='ceiling'&&v<60){binding=true;pc=pp=v;qd=100-v;qs=v-20;q=qs;}
- if((policy==='floor'||policy==='wage')&&v>60){binding=true;pc=pp=v;qd=100-v;qs=v-20;q=qd;}
- if(policy==='quota'&&v<40){binding=true;q=v;pc=pp=D(q);qd=qs=q;}
- if(policy==='specific'){q=(80-v)/2;pc=D(q);pp=S(q);g=v*q;fiscal='revenue';}
- if(policy==='advalorem'){const r=v/100;q=(100-20*(1+r))/(2+r);pc=D(q);pp=S(q);g=(pc-pp)*q;fiscal='revenue';}
- if(policy==='indirect'||policy==='direct'){q=(80+v)/2;pc=D(q);pp=S(q);g=-v*q;fiscal='expenditure';}
+ let q=50,pc=50,pp=50,qd=50,qs=50,g=0,binding=false,fiscal='';
+ if(policy==='ceiling'&&v<50){binding=true;pc=pp=v;qd=100-v;qs=v;q=qs;}
+ if((policy==='floor'||policy==='wage')&&v>50){binding=true;pc=pp=v;qd=100-v;qs=v;q=qd;}
+ if(policy==='quota'&&v<50){binding=true;q=v;pc=pp=D(q);qd=qs=q;}
+ if(policy==='specific'){q=(100-v)/2;pc=D(q);pp=S(q);g=v*q;fiscal='revenue';}
+ if(policy==='advalorem'){const r=v/100;q=100/(2+r);pc=D(q);pp=S(q);g=(pc-pp)*q;fiscal='revenue';}
+ if(policy==='indirect'||policy==='direct'){q=(100+v)/2;pc=D(q);pp=S(q);g=-v*q;fiscal='expenditure';}
  if(!['ceiling','floor','wage'].includes(policy))qd=qs=q;
- const cs=(100-pc)*q-q*q/2,ps=(pp-20)*q-q*q/2,tw=cs+ps+g;
- return {policy,v,q,pc,pp,qd,qs,cs,ps,g,tw,dwl:Math.max(0,1600-tw),binding,fiscal};
+ const cs=(100-pc)*q-q*q/2,ps=pp*q-q*q/2,tw=cs+ps+g;
+ return {policy,v,q,pc,pp,qd,qs,cs,ps,g,tw,dwl:Math.max(0,2500-tw),binding,fiscal};
 }
 const direction=n=>Math.abs(n)<1e-7?'Unchanged':n>0?'Increases':'Decreases';
 const level=n=>Math.abs(n)<1e-7?'Unchanged':n>0?'Higher':'Lower';
-function policyLevel(k,v){const p=policies[k];if(k==='none')return 'No policy';if(k==='ceiling')return v<60?'Effective ceiling':'Not effective ceiling';if(k==='floor'||k==='wage')return v>60?'Effective '+(k==='wage'?'minimum wage':'floor'):'Not effective '+(k==='wage'?'minimum wage':'floor');if(k==='quota')return v===0?'No output':v<40?'Effective quota':'Not effective quota';if(v===0)return k.includes('subsidy')||['indirect','direct'].includes(k)?'No subsidy':'No tax';const t=(v-p.min)/(p.max-p.min);return t<.34?'Low':t<.67?'Moderate':'High';}
+function policyLevel(k,v){const p=policies[k];if(k==='none')return 'No policy';if(k==='ceiling')return v<50?'Effective ceiling':'Not effective ceiling';if(k==='floor'||k==='wage')return v>50?'Effective '+(k==='wage'?'minimum wage':'floor'):'Not effective '+(k==='wage'?'minimum wage':'floor');if(k==='quota')return v===0?'No output':v<50?'Effective quota':'Not effective quota';if(v===0)return k.includes('subsidy')||['indirect','direct'].includes(k)?'No subsidy':'No tax';const t=(v-p.min)/(p.max-p.min);return t<.34?'Low':t<.67?'Moderate':'High';}
 function formatNotation(value){return String(value).replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;').replace(/\b([PWQL])_([a-z]+)/g,'$1<sub>$2</sub>').replace(/\b([QL])(dd|ss|quota)\b/g,'$1<sub>$2</sub>');}
 const contextualGlossary={
  quantityTraded:['none','ceiling','floor','wage','quota','specific','advalorem','indirect','direct'],
@@ -326,7 +326,7 @@ glossary.forEach(([id,name,text])=>{const el=document.createElement('details');e
 let current=calculate('none',0);
 function configure(){for(const id of ['show-cs','show-ps','show-g'])$(id).checked=false;const k=$('policy-select').value,p=policies[k];$('slider-card').hidden=k==='none';if(k!=='none'){Object.assign($('policy-slider'),{min:p.min,max:p.max,value:values[k]});$('slider-label').textContent=p.label;$('slider-min').textContent=k==='quota'?'Smaller quota':'Lower';$('slider-max').textContent=k==='quota'?'Larger quota':'Higher';}$('tooltip').hidden=true;render();}
 const palette={cs:'#2563eb',ps:'#16a34a',g:'#8b5cf6',dwl:'#dc2626'};
-const X=q=>112+q/100*600,Y=p=>432-p/120*360;
+const X=q=>112+3*q,Y=p=>432-p/120*360;
 function add(tag,attrs={},parent=$('diagram')){const e=document.createElementNS(NS,tag);for(const [k,v] of Object.entries(attrs))e.setAttribute(k,v);parent.append(e);return e;}
 function text(x,y,str,attrs={},tip){str=str.replace(/\b([QL])(dd|ss|quota)\b/g,'$1_$2');const e=add('text',{x,y,...attrs});str.split(/([PWQLE]_[a-z]+)/g).forEach(part=>{const m=part.match(/^([PWQLE])_([a-z]+)$/);if(m){e.append(document.createTextNode(m[1]));const sub=add('tspan',{'baseline-shift':'sub','font-size':9},e);sub.textContent=m[2];}else e.append(document.createTextNode(part));});if(tip)target(e,tip);return e;}
 function line(q1,p1,q2,p2,attrs={}){return add('line',{x1:X(q1),y1:Y(p1),x2:X(q2),y2:Y(p2),...attrs});}
@@ -345,8 +345,25 @@ function labelAreas(parent){
   let fits=false;for(let font=13;font>=10;font-=.5){label.style.setProperty('font-size',font+'px');const b=label.getBBox(),pad=font*.12;if([[b.x-pad,b.y-pad],[b.x+b.width+pad,b.y-pad],[b.x-pad,b.y+b.height+pad],[b.x+b.width+pad,b.y+b.height+pad]].every(([x,y])=>inside(x,y))){fits=true;break;}}if(!fits)label.remove();
  }
 }
-function curve(points,colour,tip){const e=add('polyline',{points:points.map(([q,p])=>X(q)+','+Y(p)).join(' '),stroke:colour,class:'curve'});target(e,tip);return e;}
-function defs(){const d=add('defs');const c=add('clipPath',{id:'plot-clip'},d);add('rect',{x:112,y:72,width:600,height:360},c);for(const [id,reverse] of [['arrow',false],['arrow-start',true],['arrow-red',false]]){const m=add('marker',{id,viewBox:'0 0 10 10',refX:reverse?1:9,refY:5,markerWidth:6,markerHeight:6,orient:'auto-start-reverse'},d);add('path',{d:'M0,0 L10,5 L0,10 Z',fill:id==='arrow-red'?'#dc2626':'#6b7280'},m);} }
+function curve(points,colour,tip){
+ // Reserve A Right-Hand Label Gutter. Clip The Displayed Segment Only;
+ // Equilibrium And Welfare Calculations Continue To Use The Original Curves.
+ const [a,b]=points,dx=b[0]-a[0],dy=b[1]-a[1];let lo=0,hi=1;
+ for(const [start,delta,min,max] of [[a[0],dx,0,100],[a[1],dy,0,120]]){
+  if(Math.abs(delta)<1e-9){if(start<min||start>max)return null;continue;}
+  const t1=(min-start)/delta,t2=(max-start)/delta;lo=Math.max(lo,Math.min(t1,t2));hi=Math.min(hi,Math.max(t1,t2));
+ }
+ if(lo>hi)return null;
+ const clipped=[[a[0]+lo*dx,a[1]+lo*dy],[a[0]+hi*dx,a[1]+hi*dy]];
+ const e=add('polyline',{points:clipped.map(([q,p])=>X(q)+','+Y(p)).join(' '),stroke:colour,class:'curve'});
+ e.curveEndpoint=clipped.reduce((best,pt)=>pt[0]>best[0]?pt:best,clipped[0]);target(e,tip);return e;
+}
+function labelCurve(e,label,colour){
+ if(!e)return;const [q,p]=e.curveEndpoint;
+ return text(X(q)+14,Y(p)+4,label,{fill:colour,'text-anchor':'start','font-weight':600,'data-movable':'true','data-curve-label':'true'});
+}
+
+function defs(){const d=add('defs');const c=add('clipPath',{id:'plot-clip'},d);add('rect',{x:112,y:72,width:360,height:360},c);for(const [id,reverse] of [['arrow',false],['arrow-start',true],['arrow-red',false]]){const m=add('marker',{id,viewBox:'0 0 10 10',refX:reverse?1:9,refY:5,markerWidth:6,markerHeight:6,orient:'auto-start-reverse'},d);add('path',{d:'M0,0 L10,5 L0,10 Z',fill:id==='arrow-red'?'#dc2626':'#6b7280'},m);} }
 function render(){
  const k=$('policy-select').value,v=values[k],p=policies[k],m=current=calculate(k,v),lab=k==='wage';
  const taxSub=['specific','advalorem','indirect','direct'].includes(k),showPrices=taxSub&&$('show-prices').checked,p1=k==='direct'?m.pp:m.pc;
@@ -371,49 +388,49 @@ function render(){
  if(k==='indirect')note=v>0?'The subsidy shifts supply downwards. P₁ is the price paid by consumers; producers receive a higher price including the subsidy. Quantity traded rises.':'No subsidy is applied, so the market remains at E₀.';
  if(k==='direct'){note=v>0?'The consumer subsidy shifts demand upwards. P₁ is the price received by producers; consumers pay a lower effective price after deducting the subsidy. Quantity traded rises.':'No subsidy is applied, so the market remains at E₀.';assumption='The subsidy is tied to each unit purchased. The direct and indirect subsidies produce the same final consumer price, producer price, quantity and welfare for the same per-unit amount.';}
  $('policy-note').innerHTML=formatNotation(note);$('assumption-note').innerHTML=formatNotation(assumption);$('assumption-note').hidden=!assumption;
- const rows=[[lab?'Labour employed':'Quantity traded','q',lab?'L₀':'Q₀',(lab?'L₁':'Q₁')+' · '+direction(m.q-40)],[lab?'Wage after intervention':'Price after intervention','p1',lab?'W₀':'P₀',(lab?'W₁':'P₁')+' · '+direction(p1-60)]];
- if(showPrices)rows.push(['Price paid by consumers','pc','P₀','P_c · '+direction(m.pc-60)],['Price received by producers','pp','P₀','Pₚ · '+direction(m.pp-60)]);
- if(['ceiling','floor','wage'].includes(k))rows.push([lab?'Labour demanded':'Quantity demanded','qd','Initial level',direction(m.qd-40)],[lab?'Labour supplied':'Quantity supplied','qs','Initial level',direction(m.qs-40)]);
- if(!lab)rows.push([lab?'Consumer Surplus · employers':'Consumer Surplus','cs','Initial level',level(m.cs-800)],[lab?'Producer Surplus · workers':'Producer Surplus','ps','Initial level',level(m.ps-800)]);
+ const rows=[[lab?'Labour employed':'Quantity traded','q',lab?'L₀':'Q₀',(lab?'L₁':'Q₁')+' · '+direction(m.q-50)],[lab?'Wage after intervention':'Price after intervention','p1',lab?'W₀':'P₀',(lab?'W₁':'P₁')+' · '+direction(p1-50)]];
+ if(showPrices)rows.push(['Price paid by consumers','pc','P₀','P_c · '+direction(m.pc-50)],['Price received by producers','pp','P₀','Pₚ · '+direction(m.pp-50)]);
+ if(['ceiling','floor','wage'].includes(k))rows.push([lab?'Labour demanded':'Quantity demanded','qd','Initial level',direction(m.qd-50)],[lab?'Labour supplied':'Quantity supplied','qs','Initial level',direction(m.qs-50)]);
+ if(!lab)rows.push([lab?'Consumer Surplus · employers':'Consumer Surplus','cs','Initial level',level(m.cs-1250)],[lab?'Producer Surplus · workers':'Producer Surplus','ps','Initial level',level(m.ps-1250)]);
  if(m.fiscal)rows.push(['Government '+m.fiscal,'g','None',Math.abs(m.g)>1e-7?(m.g>0?'Revenue collected':'Expenditure incurred'):'None']);
- rows.push(['Deadweight Loss','dwl','None',m.dwl>1e-7?'Present':'None'],['Total Welfare','tw','Maximum',level(m.tw-1600)]);
+ rows.push(['Deadweight Loss','dwl','None',m.dwl>1e-7?'Present':'None'],['Total Welfare','tw','Maximum',level(m.tw-2500)]);
  $('outcomes-body').innerHTML=rows.map(([name,key,initial,after])=>'<tr data-metric="'+key+'"><th scope="row">'+formatNotation(name)+'</th><td>'+formatNotation(initial)+'</td><td>'+formatNotation(after)+'</td></tr>').join('');
  [...$('glossary').children].forEach(e=>{const relevant=glossaryRelevant(e.id.replace('glossary-',''),k);e.hidden=!relevant;if(!relevant)e.open=false;e.classList.toggle('glossary-highlight',e.id==='glossary-'+p.glossary);});if(p.glossary)$('glossary').prepend($('glossary-'+p.glossary));
  const svg=$('diagram');svg.replaceChildren();const title=add('title',{id:'diagram-title'});title.textContent=p.name+' — '+(lab?'labour market':'demand and supply');const desc=add('desc',{id:'diagram-desc'});desc.textContent=note+' '+$('welfare-formula').textContent;defs();
  const clip=add('g',{'clip-path':'url(#plot-clip)'});const areaList=[];
  if(!lab&&$('show-cs').checked&&m.q>0){shade('cs',[[0,100],[m.q,D(m.q)],[m.q,m.pc],[0,m.pc]],'Consumer Surplus: willingness to pay minus the effective price paid, summed over the units actually traded. How to identify the area: below the original demand curve and above '+(taxSub?'P_c, the effective price paid by consumers':'P₁')+', from the quantity origin to Q₁.'+(k==='direct'?' The consumer price is net of the direct subsidy.':''));areaList.push('cs');}
- if(!lab&&$('show-ps').checked&&m.q>0){shade('ps',[[0,20],[m.q,S(m.q)],[m.q,m.pp],[0,m.pp]],'Producer Surplus: revenue received minus minimum acceptable revenue, summed over the units actually traded. How to identify the area: above the original supply curve and below '+(taxSub?'Pₚ, the price received by producers':'P₁')+', from the quantity origin to Q₁.'+(k==='indirect'?' The producer price includes the subsidy.':m.fiscal==='revenue'?' The producer price is after paying the tax.':'')+(k==='quota'?' This includes quota rent retained by producers.':''));areaList.push('ps');}
+ if(!lab&&$('show-ps').checked&&m.q>0){shade('ps',[[0,0],[m.q,S(m.q)],[m.q,m.pp],[0,m.pp]],'Producer Surplus: revenue received minus minimum acceptable revenue, summed over the units actually traded. How to identify the area: above the original supply curve and below '+(taxSub?'Pₚ, the price received by producers':'P₁')+', from the quantity origin to Q₁.'+(k==='indirect'?' The producer price includes the subsidy.':m.fiscal==='revenue'?' The producer price is after paying the tax.':'')+(k==='quota'?' This includes quota rent retained by producers.':''));areaList.push('ps');}
  if(m.fiscal&&$('show-g').checked&&Math.abs(m.g)>1e-7){shade('g',[[0,m.pc],[m.q,m.pc],[m.q,m.pp],[0,m.pp]],'Government '+m.fiscal+': '+(m.fiscal==='revenue'?'tax':'subsidy')+' per unit × quantity traded. '+(m.g>0?'Added to':'Subtracted from')+' CS + PS when calculating Total Welfare.'+(m.g<0?' The expenditure area overlaps parts of CS and PS; subtract it once.':''));areaList.push('g');}
- if($('show-dwl').checked&&m.dwl>1e-7){shade('dwl',[[40,60],[m.q,D(m.q)],[m.q,S(m.q)]],'Deadweight Loss: '+(lab?'Gains from employment forgone as employment falls. How to identify the area: between the original Demand for Labour and Supply of Labour curves, over the reduction in employment from L₀ to L₁.':m.q<40?'Gains from trade forgone because too few units are traded. How to identify the area: between the original demand and supply curves, over the units between Q₁ and Q₀ that are no longer traded.':'For units beyond Q₀, marginal cost exceeds marginal benefit. How to identify the area: between the original demand and supply curves, over the additional units between Q₀ and Q₁.'));areaList.push('dwl');}
+ if($('show-dwl').checked&&m.dwl>1e-7){shade('dwl',[[50,50],[m.q,D(m.q)],[m.q,S(m.q)]],'Deadweight Loss: '+(lab?'Gains from employment forgone as employment falls. How to identify the area: between the original Demand for Labour and Supply of Labour curves, over the reduction in employment from L₀ to L₁.':m.q<50?'Gains from trade forgone because too few units are traded. How to identify the area: between the original demand and supply curves, over the units between Q₁ and Q₀ that are no longer traded.':'For units beyond Q₀, marginal cost exceeds marginal benefit. How to identify the area: between the original demand and supply curves, over the additional units between Q₀ and Q₁.'));areaList.push('dwl');}
  [...svg.querySelectorAll('.areas')].forEach(e=>clip.append(e));
- line(0,0,100,0,{class:'axis','marker-end':'url(#arrow)'});line(0,0,0,120,{class:'axis','marker-end':'url(#arrow)'});
- text(112,40,lab?'Wage':'Price',{'text-anchor':'middle','font-weight':700});text(718,460,lab?'Quantity Of Labour':'Quantity',{'text-anchor':'end','font-weight':700});
+ line(0,0,120,0,{class:'axis','marker-end':'url(#arrow)'});line(0,0,0,120,{class:'axis','marker-end':'url(#arrow)'});
+ text(112,40,lab?'Wage':'Price',{'text-anchor':'middle','font-weight':700});text(478,460,lab?'Quantity Of Labour':'Quantity',{'text-anchor':'end','font-weight':700});
  const supplyColor='#16a34a',demandColor='#2563eb',policyColor='#4169e1';
  const lines=add('g',{'clip-path':'url(#plot-clip)'});
  const demand=curve([[0,100],[100,0]],demandColor,lab?'Demand for Labour: employers are willing to hire more labour at lower wages.':'Demand: the relationship between price and quantity demanded.');lines.append(demand);
- const supply=curve([[0,20],[100,120]],supplyColor,lab?'Supply of Labour: workers are willing to supply more labour at higher wages.':'Supply: the relationship between price and quantity supplied.');lines.append(supply);
- text(X(81),Y(19)-7,lab?'Demand for Labour':'D', {fill:demandColor,'text-anchor':lab?'middle':'start','data-movable':'true'});
- text(X(75),Y(95)-12,lab?'Supply of Labour':'S',{fill:supplyColor,'text-anchor':lab?'middle':'start','data-movable':'true'});
- if(v>0&&(k==='specific'||k==='indirect')){const sign=k==='specific'?1:-1,pl=curve([[0,20+sign*v],[100,120+sign*v]],policyColor,k==='specific'?'Supply after specific tax. The vertical gap from S equals the tax per unit.':'Supply after indirect subsidy. The vertical gap below S equals the subsidy per unit.');lines.append(pl);const qlab=k==='specific'?Math.min(48,88-v):75;text(X(qlab),Y(S(qlab)+sign*v)-10,k==='specific'?'S + tax':'S − subsidy',{fill:policyColor,'data-movable':'true'});}
- if(k==='advalorem'&&v>0){const r=v/100,pl=curve([[0,20*(1+r)],[100,120*(1+r)]],policyColor,'Supply after ad-valorem tax. Each original supply price is raised in proportion to the tax rate.');lines.append(pl);const qlab=18;text(X(qlab),Y(S(qlab)*(1+r))-10,'S + ad-valorem tax',{fill:policyColor,'data-movable':'true'});}
- if(k==='direct'&&v>0){const pl=curve([[0,100+v],[100,v]],policyColor,'Demand after the direct consumer subsidy. Consumers can offer their willingness to pay plus the subsidy to producers.');lines.append(pl);text(X(71),Y(D(71)+v)-12,'D + subsidy',{fill:policyColor,'data-movable':'true'});}
- if(['ceiling','floor','wage'].includes(k)){line(0,v,100,v,{stroke:policyColor,'stroke-width':2.2});text(X(88),Y(v)-10,lab?'Minimum wage':k==='ceiling'?'Ceiling':'Floor',{fill:policyColor,'text-anchor':'end'});}
- if(k==='quota'){line(v,0,v,113,{stroke:policyColor,'stroke-width':2.2});text(X(v)+8,Y(110),'Quota',{fill:policyColor});}
- const priceLabels=[{value:60,label:lab?'W₀':'P₀',tip:'Price or wage at the initial no-policy equilibrium.'},{value:p1,label:lab?'W₁':'P₁',tip:k==='quota'?'Producers set P₁ at the demand curve for Qquota: this is the highest market-clearing price at which consumers buy the restricted quantity. An ineffective quota leaves price at P₀.':taxSub?(k==='direct'?'P₁ is the price received by producers at the intersection of subsidised demand and supply.':'P₁ is the price paid by consumers at the intersection of demand and policy-adjusted supply.'):'Price or wage after intervention. An effective control does not clear the market.'}];
+ const supply=curve([[0,0],[100,100]],supplyColor,lab?'Supply of Labour: workers are willing to supply more labour at higher wages.':'Supply: the relationship between price and quantity supplied.');lines.append(supply);
+ labelCurve(demand,lab?'Demand for Labour':'D',demandColor);
+ labelCurve(supply,lab?'Supply of Labour':'S',supplyColor);
+ if(v>0&&(k==='specific'||k==='indirect')){const sign=k==='specific'?1:-1,pl=curve([[0,sign*v],[100,100+sign*v]],policyColor,k==='specific'?'Supply after specific tax. The vertical gap from S equals the tax per unit.':'Supply after indirect subsidy. The vertical gap below S equals the subsidy per unit.');lines.append(pl);const qlab=k==='specific'?Math.min(48,88-v):75;labelCurve(pl,k==='specific'?'S + tax':'S − subsidy',policyColor);}
+ if(k==='advalorem'&&v>0){const r=v/100,pl=curve([[0,0],[100,100*(1+r)]],policyColor,'Supply after ad-valorem tax. Each original supply price is raised in proportion to the tax rate.');lines.append(pl);const qlab=18;labelCurve(pl,'S + ad-valorem tax',policyColor);}
+ if(k==='direct'&&v>0){const pl=curve([[0,100+v],[100,v]],policyColor,'Demand after the direct consumer subsidy. Consumers can offer their willingness to pay plus the subsidy to producers.');lines.append(pl);labelCurve(pl,'D + subsidy',policyColor);}
+ if(['ceiling','floor','wage'].includes(k)){line(0,v,100,v,{stroke:policyColor,'stroke-width':2.5});text(X(88),Y(v)-10,lab?'Minimum wage':k==='ceiling'?'Ceiling':'Floor',{fill:policyColor,'text-anchor':'end'});}
+ if(k==='quota'){line(v,0,v,113,{stroke:policyColor,'stroke-width':2.5});text(X(v)+8,Y(110),'Quota',{fill:policyColor});}
+ const priceLabels=[{value:50,label:lab?'W₀':'P₀',tip:'Price or wage at the initial no-policy equilibrium.'},{value:p1,label:lab?'W₁':'P₁',tip:k==='quota'?'Producers set P₁ at the demand curve for Qquota: this is the highest market-clearing price at which consumers buy the restricted quantity. An ineffective quota leaves price at P₀.':taxSub?(k==='direct'?'P₁ is the price received by producers at the intersection of subsidised demand and supply.':'P₁ is the price paid by consumers at the intersection of demand and policy-adjusted supply.'):'Price or wage after intervention. An effective control does not clear the market.'}];
  if(showPrices)priceLabels.push({value:m.pc,label:'P_c',tip:'Price paid by consumers per unit, after deducting any direct consumer subsidy.'},{value:m.pp,label:'Pₚ',tip:'Price received by producers per unit, after paying any tax or including any producer subsidy.'});
  if(k==='ceiling'&&m.binding)priceLabels.push({value:D(m.q),label:'P_bm',tip:'Potential black market price: the demand-curve price at the quantity available under the ceiling. It is what buyers would pay if that restricted supply were resold at a market-clearing price. Actual illegal-market prices may differ. Legal-market welfare is still evaluated at P₁.'});
  const groups=[];priceLabels.forEach(a=>{const g=groups.find(g=>Math.abs(g.value-a.value)<1e-7);if(g){g.labels.push(a.label);g.tips.push(a.tip);}else groups.push({value:a.value,labels:[a.label],tips:[a.tip]});});groups.sort((a,b)=>b.value-a.value);
- let lastY=-100;groups.forEach(g=>{const actual=Y(g.value),ly=Math.max(actual,lastY+20),labels=g.labels.length>2?[g.labels.slice(0,2).join(' = '),g.labels.slice(2).join(' = ')]:[g.labels.join(' = ')];lastY=ly+(labels.length-1)*16;const endQ=Math.abs(g.value-60)<1e-7?40:m.q;line(0,g.value,endQ,g.value,{class:'guide-line'});if(Math.abs(ly-actual)>2)add('path',{d:'M112,'+actual+' L100,'+ly+' L90,'+ly,fill:'none',stroke:'#9ca3af','stroke-width':1});labels.forEach((label,i)=>text(88,ly+4+i*16,label,{'text-anchor':'end'},g.tips.join(' ')));});
- const qlabels=[{value:40,label:lab?'L₀':'Q₀'},{value:m.q,label:lab?'L₁':'Q₁'}];if(k==='quota')qlabels.push({value:v,label:'Q_quota'});if(['ceiling','floor','wage'].includes(k)&&m.binding)qlabels.push({value:m.qd,label:lab?'Ldd':'Qdd'},{value:m.qs,label:lab?'Lss':'Qss'});
+ let lastY=-100;groups.forEach(g=>{const actual=Y(g.value),ly=Math.max(actual,lastY+20),labels=g.labels.length>2?[g.labels.slice(0,2).join(' = '),g.labels.slice(2).join(' = ')]:[g.labels.join(' = ')];lastY=ly+(labels.length-1)*16;const endQ=Math.abs(g.value-50)<1e-7?50:m.q;line(0,g.value,endQ,g.value,{class:'guide-line'});if(Math.abs(ly-actual)>2)add('path',{d:'M112,'+actual+' L100,'+ly+' L90,'+ly,fill:'none',stroke:'#9ca3af','stroke-width':1});labels.forEach((label,i)=>text(88,ly+4+i*16,label,{'text-anchor':'end'},g.tips.join(' ')));});
+ const qlabels=[{value:50,label:lab?'L₀':'Q₀'},{value:m.q,label:lab?'L₁':'Q₁'}];if(k==='quota')qlabels.push({value:v,label:'Q_quota'});if(['ceiling','floor','wage'].includes(k)&&m.binding)qlabels.push({value:m.qd,label:lab?'Ldd':'Qdd'},{value:m.qs,label:lab?'Lss':'Qss'});
  const qgroups=[];qlabels.forEach(a=>{const g=qgroups.find(g=>Math.abs(g.value-a.value)<1e-7);if(g)g.labels.push(a.label);else qgroups.push({value:a.value,labels:[a.label]});});qgroups.sort((a,b)=>a.value-b.value);let previousX=-200,previousWidth=0,previousRow=0;
  qgroups.forEach(g=>{const xp=X(g.value),label=g.labels.join(' = '),width=label.length*7,row=(xp-previousX<(width+previousWidth)/2+8)?1-previousRow:0;line(g.value,0,g.value,Math.max(D(g.value),S(g.value),['ceiling','floor','wage'].includes(k)?v:0),{class:'guide-line'});text(xp,452+row*19,label,{'text-anchor':'middle'},'Quantity label: '+label+'. '+(Math.abs(g.value-m.q)<1e-7?'This is the quantity actually traded.':''));previousX=xp;previousWidth=width;previousRow=row;});
  function point(q,p,label,tip,color='#1f2937'){target(add('circle',{cx:X(q),cy:Y(p),r:4,fill:color,stroke:'white','stroke-width':1}),tip);text(X(q)+7,Y(p)-10,label,{fill:color,'data-movable':'true'});}
- if(Math.abs(m.q-40)<1e-7&&Math.abs(m.pc-60)<1e-7)point(40,60,'E₀ = E₁','Initial and selected-policy outcomes coincide.');
- else {point(40,60,'E₀','No-policy equilibrium, where demand equals supply.');const ppPoint=k==='direct';point(m.q,ppPoint?m.pp:m.pc,['ceiling','floor','wage'].includes(k)?'A₁':'E₁',(['ceiling','floor','wage'].includes(k)?'Policy trading outcome; a effective price control does not clear the market.':'Selected-policy equilibrium.')+' Q₁ is the quantity actually traded.',policyColor);if(showPrices&&Math.abs(m.pc-m.pp)>1e-7)target(add('circle',{cx:X(m.q),cy:Y(ppPoint?m.pc:m.pp),r:4,fill:policyColor}),'The other side of the tax or subsidy price wedge.');}
+ if(Math.abs(m.q-50)<1e-7&&Math.abs(m.pc-50)<1e-7)point(50,50,'E₀ = E₁','Initial and selected-policy outcomes coincide.');
+ else {point(50,50,'E₀','No-policy equilibrium, where demand equals supply.');const ppPoint=k==='direct';point(m.q,ppPoint?m.pp:m.pc,['ceiling','floor','wage'].includes(k)?'A₁':'E₁',(['ceiling','floor','wage'].includes(k)?'Policy trading outcome; a effective price control does not clear the market.':'Selected-policy equilibrium.')+' Q₁ is the quantity actually traded.',policyColor);if(showPrices&&Math.abs(m.pc-m.pp)>1e-7)target(add('circle',{cx:X(m.q),cy:Y(ppPoint?m.pc:m.pp),r:4,fill:policyColor}),'The other side of the tax or subsidy price wedge.');}
  // Always show changes as red arrows along the axes; no numerical changes are displayed.
  function changeArrow(x1,y1,x2,y2,kind){const length=Math.hypot(x2-x1,y2-y1);if(length<.01)return;const marker=add('marker',{id:'change-'+kind,viewBox:'0 0 10 10',refX:9,refY:5,markerWidth:Math.min(6,length/2),markerHeight:Math.min(6,length/2),markerUnits:'userSpaceOnUse',orient:'auto'},svg.querySelector('defs'));add('path',{d:'M0,0 L10,5 L0,10 Z',fill:'#dc2626'},marker);target(add('line',{x1,y1,x2,y2,stroke:'#dc2626','stroke-width':1.2,'marker-end':'url(#change-'+kind+')','data-axis-change':kind}),kind==='price'?'Change from the initial price or wage to the outcome after intervention.':lab?'Retrenchment: these are the units of labour (workers) that will be retrenched from their jobs if the minimum wage is implemented. The reduction in employment is from L₀ to L₁.':'Change from the initial quantity to the quantity actually traded after intervention.');}
- changeArrow(17,Y(60),17,Y(p1),'price');changeArrow(X(40),lab?380:485,X(m.q),lab?380:485,'quantity');
- if(lab&&m.binding)text((X(40)+X(m.q))/2,365,'Retrenchment',{'text-anchor':'middle',fill:'#dc2626','font-weight':600,'data-wage-label':'retrenchment'},'Retrenchment: these are the units of labour (workers) that will be retrenched from their jobs if the minimum wage is implemented. The reduction in employment is from L₀ to L₁.');
+ changeArrow(17,Y(50),17,Y(p1),'price');changeArrow(X(50),lab?380:485,X(m.q),lab?380:485,'quantity');
+ if(lab&&m.binding)text((X(50)+X(m.q))/2,365,'Retrenchment',{'text-anchor':'middle',fill:'#dc2626','font-weight':600,'data-wage-label':'retrenchment'},'Retrenchment: these are the units of labour (workers) that will be retrenched from their jobs if the minimum wage is implemented. The reduction in employment is from L₀ to L₁.');
  if(m.binding&&['ceiling','floor','wage'].includes(k)){
  const left=Math.min(m.qd,m.qs),right=Math.max(m.qd,m.qs),yp=419;
  const gapTip=lab?'Unemployment: these are the units of labour (workers) that are willing to work at the minimum wage but are not employed. It is the difference between labour supplied and labour demanded at W₁.':'Persistent '+(k==='ceiling'?'shortage: quantity demanded exceeds quantity supplied.':'surplus: quantity supplied exceeds quantity demanded.')+' The gap is measured at the controlled price and placed near the quantity axis for clarity.';
@@ -422,19 +439,19 @@ function render(){
 
 
  }
- if($('show-adjustment').checked&&!['ceiling','floor','wage'].includes(k)&&Math.abs(m.q-40)>1e-7){
- let oldQd=40,oldQs=40;
- if(k==='specific')oldQs=Math.max(0,40-v);
- if(k==='advalorem')oldQs=Math.max(0,60/(1+v/100)-20);
- if(k==='indirect')oldQs=40+v;
- if(k==='direct')oldQd=40+v;
- if(k==='quota')oldQs=Math.min(40,v);
+ if($('show-adjustment').checked&&!['ceiling','floor','wage'].includes(k)&&Math.abs(m.q-50)>1e-7){
+ let oldQd=50,oldQs=50;
+ if(k==='specific')oldQs=Math.max(0,50-v);
+ if(k==='advalorem')oldQs=Math.max(0,50/(1+v/100));
+ if(k==='indirect')oldQs=50+v;
+ if(k==='direct')oldQd=50+v;
+ if(k==='quota')oldQs=Math.min(50,v);
  const shortage=oldQd>oldQs,yp=419;
  const a=add('line',{x1:X(Math.min(oldQd,oldQs)),y1:yp,x2:X(Math.max(oldQd,oldQs)),y2:yp,stroke:'#dc2626','stroke-width':1.5,'marker-start':'url(#arrow-red)','marker-end':'url(#arrow-red)'});
  target(a,'Immediately after the policy, at P₀, '+(shortage?'quantity demanded exceeds quantity supplied':'quantity supplied exceeds quantity demanded')+'. This temporary imbalance causes price adjustment.');
  text((X(oldQd)+X(oldQs))/2,404,(shortage?'Shortage':'Surplus')+' at P₀',{'text-anchor':'middle',fill:'#dc2626','font-weight':600},'The temporary shortage or surplus is measured at P₀ on the policy-adjusted curves. The red arrow is placed near the quantity axis for clarity.');
  const nextPrice=k==='direct'?m.pp:m.pc;
- if(k!=='quota')target(add('line',{x1:746,y1:Y(60),x2:746,y2:Y(nextPrice),stroke:'#6b7280','stroke-width':1.5,'marker-end':'url(#arrow)'}),(shortage?'Shortage puts upward':'Excess supply puts downward')+' pressure on the market price until the new equilibrium is reached.');
+ if(k!=='quota')target(add('line',{x1:746,y1:Y(50),x2:746,y2:Y(nextPrice),stroke:'#6b7280','stroke-width':1.5,'marker-end':'url(#arrow)'}),(shortage?'Shortage puts upward':'Excess supply puts downward')+' pressure on the market price until the new equilibrium is reached.');
 
  }
  resolveLabels();
@@ -444,7 +461,7 @@ function render(){
 function resolveLabels(){
  const svg=$('diagram'),movable=[...svg.querySelectorAll('text[data-movable]')],fixed=[...svg.querySelectorAll('text:not([data-movable])')].map(e=>e.getBBox());
  const overlap=(a,b)=>a.x<b.x+b.width+4&&a.x+a.width+4>b.x&&a.y<b.y+b.height+3&&a.y+a.height+3>b.y;
- for(const el of movable){const x=+el.getAttribute('x'),y=+el.getAttribute('y');let placed=false;for(const [dx,dy] of [[0,0],[0,-18],[0,18],[18,-18],[-18,-18],[0,-36],[0,36],[30,18],[-30,18],[45,-18],[-45,-18]]){el.setAttribute('x',x+dx);el.setAttribute('y',y+dy);const b=el.getBBox();if(b.x<116||b.x+b.width>708||b.y<60||b.y+b.height>425||fixed.some(a=>overlap(a,b)))continue;fixed.push(b);placed=true;if(Math.abs(dx)+Math.abs(dy)>20){const leader=add('line',{x1:x,y1:y+3,x2:x+dx,y2:y+dy+3,stroke:'#9ca3af','stroke-width':.8});svg.insertBefore(leader,el);}break;}if(!placed){el.setAttribute('x',x);el.setAttribute('y',y);fixed.push(el.getBBox());}}
+ for(const el of movable){const x=+el.getAttribute('x'),y=+el.getAttribute('y');let placed=false;for(const [dx,dy] of [[0,0],[0,-18],[0,18],[18,-18],[-18,-18],[0,-36],[0,36],[30,18],[-30,18],[45,-18],[-45,-18]]){el.setAttribute('x',x+dx);el.setAttribute('y',y+dy);const b=el.getBBox();if(b.x<116||b.x+b.width>(el.hasAttribute('data-curve-label')?792:708)||b.y<60||b.y+b.height>(el.hasAttribute('data-curve-label')?460:425)||fixed.some(a=>overlap(a,b)))continue;fixed.push(b);placed=true;if(Math.abs(dx)+Math.abs(dy)>20){const leader=add('line',{x1:x,y1:y+3,x2:x+dx,y2:y+dy+3,stroke:'#9ca3af','stroke-width':.8});svg.insertBefore(leader,el);}break;}if(!placed){el.setAttribute('x',x);el.setAttribute('y',y);fixed.push(el.getBBox());}}
 }
 $('policy-select').addEventListener('change',configure);$('policy-slider').addEventListener('input',()=>{values[$('policy-select').value]=+$('policy-slider').value;$('tooltip').hidden=true;render();});
 document.querySelectorAll('.toggle-grid input').forEach(e=>e.addEventListener('change',()=>{$('tooltip').hidden=true;render();}));

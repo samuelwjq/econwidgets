@@ -291,7 +291,7 @@ body.index-page main { width:min(100% - 24px,1060px); padding:24px 0; }
       <text id="label-dwl-text" fill="#7f1d1d" font-weight="bold" text-anchor="middle" dominant-baseline="central" font-size="11">DWL</text>
 
       <!-- Axes -->
-      <line x1="70" y1="380" x2="590" y2="380" class="axis" marker-end="url(#arrow)" />
+      <line x1="70" y1="380" x2="425" y2="380" class="axis" marker-end="url(#arrow)" />
       <line x1="70" y1="380" x2="70" y2="25" class="axis" marker-end="url(#arrow)" />
 
       <!-- Over-production / Over-consumption Two-Sided Arrow -->
@@ -304,7 +304,7 @@ body.index-page main { width:min(100% - 24px,1060px); padding:24px 0; }
 
       <!-- Axis Title Labels -->
       <text class="axis-title" x="64" y="12" text-anchor="end" font-weight="bold" style="font-size:12px"><tspan x="64">Price /</tspan><tspan x="64" dy="14">Costs /</tspan><tspan x="64" dy="14">Benefits</tspan></text>
-      <text class="axis-title" x="600" y="385" font-weight="bold">Quantity</text>
+      <text class="axis-title" x="435" y="385" font-weight="bold">Quantity</text>
       
 
       <!-- Guides -->
@@ -346,8 +346,8 @@ body.index-page main { width:min(100% - 24px,1060px); padding:24px 0; }
 
   <!-- Key Terms Sidebar -->
   <div class="sidebar">
-    <h3 class="glossary-title">Glossary</h3>
-<details><summary>Diagram assumptions &amp; definitions</summary><p>This diagram illustrates negative externalities in production: MSC = MPC + MEC, with no external benefits (MSB = MPB).</p><p><strong>MPB:</strong> the additional benefit to the consumer from consuming an additional unit. <strong>MPC:</strong> the additional cost to the producer of producing an additional unit.</p></details>
+    <section class="diagram-assumptions" aria-label="Diagram Assumptions"><details><summary>Diagram Assumptions</summary><p>This diagram illustrates negative externalities in production: MSC = MPC + MEC. External benefits are assumed absent (MEB = 0), so MSB = MPB.</p></details></section><h3 class="glossary-title">Glossary</h3><details><summary>Externality</summary><p>An uncompensated cost or benefit affecting third parties outside a market transaction, arising from production or consumption.</p></details><details><summary>Market Failure</summary><p>A situation in which the free market fails to allocate resources efficiently, so net social benefit is not maximised.</p></details><details><summary>Allocative Efficiency</summary><p>An allocation of resources that maximises net social benefit. At an interior socially optimal output, marginal social benefit equals marginal social cost (MSB = MSC).</p></details><details><summary>Internalisation Of Externalities</summary><p>Bringing external costs or benefits into the incentives faced by decision makers, so their production or consumption decisions take account of these effects on third parties.</p></details>
+
 
     <details>
       <summary>MPB (Marginal Private Benefit)</summary>
@@ -364,10 +364,7 @@ body.index-page main { width:min(100% - 24px,1060px); padding:24px 0; }
       <p>The uncompensated cost inflicted on third parties outside the market transaction from producing one extra unit.</p>
     </details>
 
-    <details>
-      <summary>MEB (Marginal External Benefit)</summary>
-      <p>The uncompensated gain enjoyed by third parties outside the market transaction from producing or consuming one extra unit. <em>(Note: external benefits are assumed absent in this negative-production-externality diagram, so MPB = MSB).</em></p>
-    </details>
+    
 
     <details>
       <summary>MSC (Marginal Social Cost)</summary>
@@ -379,25 +376,16 @@ body.index-page main { width:min(100% - 24px,1060px); padding:24px 0; }
       <p>The total benefit to society of consuming an extra unit of output (<strong>MSB = MPB + MEB</strong>).</p>
     </details>
 
-    <details>
-      <summary>Deadweight Loss (DWL)</summary>
-      <p>The reduction in net benefit to society when output level is not at the social optimum (represented by triangle <strong>AE<sub>s</sub>E<sub>e</sub></strong>).</p>
-    </details>
+    <details><summary>Deadweight Loss (DWL)</summary><p>The loss of net social benefit relative to the socially optimal output.</p><p>The shaded area in this diagram shows the net social benefits forgone or net social costs incurred because output differs from the socially optimal level.</p></details>
 
     <details>
       <summary>Free Market Equilibrium (Pe, Qe)</summary>
       <p>The price and quantity determined solely by private market forces at point <strong>E<sub>e</sub></strong> where private demand equals private supply (MPB = MPC), ignoring external spillover costs.</p>
     </details>
 
-    <details>
-      <summary>Socially Optimal Equilibrium (Ps, Qs)</summary>
-      <p>The allocatively efficient point <strong>E<sub>s</sub></strong> where social welfare is maximized (MSB = MSC).</p>
-    </details>
+    <details><summary>Socially Optimal Output (Qs)</summary><p>The output that maximises net social benefit. At an interior optimum, MSB = MSC. If MSC is at least MSB at every feasible positive quantity, zero output can be a boundary optimum without an intersection in the positive quadrant.</p></details>
 
-    <details>
-      <summary>Over-production / Over-consumption</summary>
-      <p>Occurs when market output exceeds the socially desirable level (<strong>Qe &gt; Qs</strong>). This is driven by negative externalities in production (over-production) or consumption (over-consumption).</p>
-    </details>
+    <details><summary>Overproduction</summary><p>Production exceeds the socially optimal output (Qe &gt; Qs). In this negative-production-externality diagram, producers do not take account of external costs when choosing output.</p></details>
   </div>
 </div>
 
@@ -412,7 +400,7 @@ body.index-page main { width:min(100% - 24px,1060px); padding:24px 0; }
   const mecArrow = document.getElementById('mec-arrow');
   const labelMec = document.getElementById('label-mec');
 
-  function toSvgX(q) { return 70 + 3.9 * q; }
+  function toSvgX(q) { return 70 + 3.4 * q; }
   function toSvgY(p) { return 380 - 3.4 * p; }
 
   function renderDiagram() {
@@ -422,8 +410,8 @@ body.index-page main { width:min(100% - 24px,1060px); padding:24px 0; }
     document.getElementById("label-pe").textContent=isZeroMec?"Pe = Ps":"Pe";
 
     // Render MPB (ends at q = 90)
-    const mpbX1 = toSvgX(0), mpbY1 = toSvgY(90);
-    const mpbX2 = toSvgX(90), mpbY2 = toSvgY(90 - 0.7 * 90);
+    const mpbX1 = toSvgX(0), mpbY1 = toSvgY(100);
+    const mpbX2 = toSvgX(90), mpbY2 = toSvgY(100 -  90);
     document.getElementById('curve-mpb').setAttribute('x1', mpbX1);
     document.getElementById('curve-mpb').setAttribute('y1', mpbY1);
     document.getElementById('curve-mpb').setAttribute('x2', mpbX2);
@@ -432,8 +420,8 @@ body.index-page main { width:min(100% - 24px,1060px); padding:24px 0; }
     document.getElementById('label-mpb').setAttribute('y', mpbY2 + 4);
 
     // Render MPC (ends at q = 80 so labels remain cleanly inside SVG bounds)
-    const mpcX1 = toSvgX(0), mpcY1 = toSvgY(10);
-    const mpcX2 = toSvgX(80), mpcY2 = toSvgY(10 + 0.5 * 80);
+    const mpcX1 = toSvgX(0), mpcY1 = toSvgY(0);
+    const mpcX2 = toSvgX(60), mpcY2 = toSvgY( 60);
     document.getElementById('curve-mpc').setAttribute('x1', mpcX1);
     document.getElementById('curve-mpc').setAttribute('y1', mpcY1);
     document.getElementById('curve-mpc').setAttribute('x2', mpcX2);
@@ -451,8 +439,8 @@ body.index-page main { width:min(100% - 24px,1060px); padding:24px 0; }
       document.getElementById('label-msc').style.display = "inline";
 
       // Render MSC (Aligned vertically with MPC at q = 80)
-      const mscX1 = toSvgX(0), mscY1 = toSvgY(10 + mec);
-      const mscX2 = toSvgX(80), mscY2 = toSvgY(10 + mec + 0.5 * 80);
+      const mscX1 = toSvgX(0), mscY1 = toSvgY(mec);
+      const mscX2 = toSvgX(60), mscY2 = toSvgY(mec +  60);
       document.getElementById('curve-msc').setAttribute('x1', mscX1);
       document.getElementById('curve-msc').setAttribute('y1', mscY1);
       document.getElementById('curve-msc').setAttribute('x2', mscX2);
@@ -464,10 +452,10 @@ body.index-page main { width:min(100% - 24px,1060px); padding:24px 0; }
     }
 
     // Free market & social optimum values
-    const qe = 80 / 1.2;
-    const pe = 90 - 0.7 * qe;
-    const qs = (80 - mec) / 1.2;
-    const ps = 90 - 0.7 * qs;
+    const qe = 100 / 2;
+    const pe = 100 -  qe;
+    const qs = (100 - mec) / 2;
+    const ps = 100 -  qs;
     const pmsc_qe = pe + mec;
 
     const qeX = toSvgX(qe), peY = toSvgY(pe);
@@ -567,8 +555,8 @@ body.index-page main { width:min(100% - 24px,1060px); padding:24px 0; }
       if (mecCheck.checked) {
         const qMec = 22;
         const qMecX = toSvgX(qMec);
-        const mpcY_q = toSvgY(10 + 0.5 * qMec);
-        const mscY_q = toSvgY(10 + mec + 0.5 * qMec);
+        const mpcY_q = toSvgY( qMec);
+        const mscY_q = toSvgY(mec +  qMec);
 
         mecArrow.setAttribute('x1', qMecX);
         mecArrow.setAttribute('y1', mscY_q + 2);
