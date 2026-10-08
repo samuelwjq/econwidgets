@@ -226,7 +226,7 @@ body.index-page main { width:min(100% - 24px,1060px); padding:24px 0; }
 .widget-page .ui-diagram-legends { padding:6px 10px 8px; }
 .widget-page .ui-diagram-legends>.legend,.widget-page .ui-diagram-legends>.curve-key,.widget-page .ui-diagram-legends>.area-key,.widget-page .ui-diagram-legends>.surplus-key,.widget-page .ui-diagram-legends>.ban-legend { margin:0; font-size:13px; gap:6px 14px; }
 .widget-page .ui-diagram-legends>*+* { margin-top:5px!important; }
-.widget-page .ui-teaching-panels { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:8px; align-items:start; margin-top:6px; }
+.widget-page .ui-teaching-panels { display:grid; grid-template-columns:minmax(0,1fr); gap:8px; align-items:start; margin-top:6px; }
 .widget-page .ui-teaching-disclosure { min-width:0; margin:0; padding:0 10px; }
 .widget-page .ui-teaching-disclosure>summary { min-height:64px; padding:6px 0; flex-wrap:wrap; gap:4px 10px; align-content:center; }
 .widget-page .ui-expand-hint { color:var(--muted); font-size:13px; font-weight:400; flex-basis:100%; }
@@ -246,6 +246,13 @@ body.index-page main { width:min(100% - 24px,1060px); padding:24px 0; }
 @media(max-width:900px) { .widget-page .layout { grid-template-columns:minmax(0,1fr); max-width:calc(var(--diagram-max-width) + 2px); } }
 @media(max-width:480px) { .widget-page .ui-teaching-panels { grid-template-columns:minmax(0,1fr); } }
 
+</style>
+<style>
+/* Shared square diagrams, text sizes and full-width teaching sections. */
+.widget-page .ui-teaching-panels { grid-template-columns:minmax(0,1fr); }
+.widget-page .ui-teaching-disclosure { width:100%; box-sizing:border-box; }
+.widget-page svg#diagram text { font-size:17.5px; }
+.widget-page svg#diagram .queue-leader { stroke:#9ca3af; stroke-width:1; pointer-events:none; }
 </style>
 </head>
 <body class="widget-page" style="--diagram-max-width:560px">
@@ -317,7 +324,7 @@ body.index-page main { width:min(100% - 24px,1060px); padding:24px 0; }
       <polygon id="dwl" class="dwl-poly" points="" />
       <text id="label-dwl-text" fill="#7f1d1d" font-weight="bold" text-anchor="middle" dominant-baseline="central" font-size="11" style="pointer-events: none;">DWL</text>
 
-      <line x1="70" y1="380" x2="555.789473684211" y2="380" class="axis" marker-end="url(#arrow)" />
+      <line x1="70" y1="380" x2="425" y2="380" class="axis" marker-end="url(#arrow)" />
       <line x1="70" y1="380" x2="70" y2="25" class="axis" marker-end="url(#arrow)" />
 
       <line id="line-policy-curve" class="line-policy" style="display: none;" />
@@ -326,7 +333,7 @@ body.index-page main { width:min(100% - 24px,1060px); padding:24px 0; }
       <text id="label-policy-arrow" fill="#4169e1" font-weight="bold" font-size="11" style="display: none;">Subsidy</text>
 
       <text class="axis-title" x="64" y="19" text-anchor="end" font-weight="bold" style="font-size:12px"><tspan x="64">Price /</tspan><tspan x="64" dy="14">Costs /</tspan><tspan x="64" dy="14">Benefits</tspan></text>
-      <text class="axis-title" x="565.131578947369" y="385" font-weight="bold">Quantity</text>
+      <text class="axis-title" x="435" y="385" font-weight="bold">Quantity</text>
       
 
       <line id="arrow-meb" stroke="#2563eb" stroke-width="2" marker-start="url(#arrow-start-blue)" marker-end="url(#arrow-end-blue)" style="display: none;" />
@@ -472,8 +479,8 @@ body.index-page main { width:min(100% - 24px,1060px); padding:24px 0; }
   let globalCurrentQ = 50;
   const globalQs = (100 + FIXED_MEB) / 2;
 
-  function toSvgX(q) { return 70 + 2.1 * q; }
-  function toSvgY(p) { return 380 - 2.1 * p; }
+  function toSvgX(q) { return 70 + (355/120) * q; }
+  function toSvgY(p) { return 380 - (355/120) * p; }
 
   function renderDiagram() {
     const policy = policySelect.value;
@@ -1045,7 +1052,7 @@ body.index-page main { width:min(100% - 24px,1060px); padding:24px 0; }
     [...svg.children].filter(el=>el.tagName!=='defs').forEach(el=>{freeHidden.push([el,el.style.display]);el.style.display='none';});
     const scene=document.createElementNS(ns,'g');scene.id='free-scene';svg.append(scene);
     const add=(tag,attrs={},text)=>{const el=document.createElementNS(ns,tag);Object.entries(attrs).forEach(([k,v])=>el.setAttribute(k,v));if(text!==undefined)el.textContent=text;scene.append(el);return el;};
-    const txt=(x,y,t,attrs={})=>add('text',{x,y,'font-weight':'bold',...attrs},t),scale=1.5,x=q=>70+scale*q,y=p=>380-scale*p;
+    const txt=(x,y,t,attrs={})=>add('text',{x,y,'font-weight':'bold',...attrs},t),scale=(355/120),x=q=>70+scale*q,y=p=>380-scale*p;
     const demand=q=>100-q,cost=q=>q,qf=100,qe=50,meb=Number(freeSlider.value),qs=(100+meb)/2,pp=cost(qf),social=q=>demand(q)+meb;
     const freeLoss=(qf-qs)**2,marketLoss=(qe-qs)**2,epsilon=1e-7;
     window.currentFreeModel={qf,qe,qs,meb,pp,pc:0,subsidy:pp,freeLoss,marketLoss};
@@ -1055,8 +1062,8 @@ body.index-page main { width:min(100% - 24px,1060px); padding:24px 0; }
     if(freeCompare.checked&&marketLoss>epsilon)area('free-market-loss',qe,'ban-free-area','<strong>Free-market DWL</strong><br>The unregulated market under-consumes because consumers do not take MEB into account. The area measures social benefits forgone between Qe and Qs.');
     if(toggleDwl.checked&&freeLoss>epsilon)area('free-policy-loss',qf,'dwl-poly',qf>qs?'<strong>DWL under free provision</strong><br>Output exceeds Qs. MSC exceeds MSB on the excess units.':'<strong>DWL under free provision</strong><br>Output is below Qs. Further units would create net social benefits, even though their private benefit is negative in this stylised linear model.');
     if(toggleSubsidyCost.checked){const r=add('rect',{x:x(0),y:y(pp),width:x(qf)-x(0),height:y(0)-y(pp),class:'subsidy-rect'});scene.prepend(r);tooltip(r,'<strong>Government subsidy expenditure</strong><br>The subsidy reimburses producers while consumers pay no price. This payment is a transfer; resource costs are represented by MPC = MSC. Fiscal distortion and administration costs are excluded.','Explain subsidy expenditure');}
-    line(0,0,323.859649122807,0,{class:'axis','marker-end':'url(#arrow)'});add('line',{x1:70,y1:380,x2:70,y2:25,class:'axis','marker-end':'url(#arrow)'});
-    const heading=txt(64,19,'',{'text-anchor':'end',class:'axis-title',style:'font-size:12px'});['Price /','Costs /','Benefits'].forEach((word,i)=>{const span=document.createElementNS(ns,'tspan');span.setAttribute('x',64);if(i)span.setAttribute('dy',14);span.textContent=word;heading.append(span);});txt(565.131578947369,385,'Quantity',{class:'axis-title'});
+    line(0,0,120,0,{class:'axis','marker-end':'url(#arrow)'});add('line',{x1:70,y1:380,x2:70,y2:25,class:'axis','marker-end':'url(#arrow)'});
+    const heading=txt(64,19,'',{'text-anchor':'end',class:'axis-title',style:'font-size:12px'});['Price /','Costs /','Benefits'].forEach((word,i)=>{const span=document.createElementNS(ns,'tspan');span.setAttribute('x',64);if(i)span.setAttribute('dy',14);span.textContent=word;heading.append(span);});txt(435,385,'Quantity',{class:'axis-title'});
     line(0,demand(0),qf,0,{class:'line-mpb'});txt(x(qf)-8,y(0)-17,'MPB',{fill:'#2563eb','text-anchor':'end'});
     line(0,cost(0),190,cost(190),{class:'line-mpc'});txt(x(190)+6,y(cost(190))+4,'MPC = MSC',{fill:'#16a34a'});
     const socialEnd=Math.min(190,100+meb);line(0,social(0),socialEnd,social(socialEnd),{class:'line-msb'});txt(x(socialEnd)+6,y(social(socialEnd))+4,meb>epsilon?'MSB':'MPB = MSB',{fill:'#dc2626'});
@@ -1066,7 +1073,7 @@ body.index-page main { width:min(100% - 24px,1060px); padding:24px 0; }
     line(qe,0,qe,cost(qe),{class:'guide-line'});line(0,cost(qe),qe,cost(qe),{class:'guide-line'});txt(60,y(cost(qe))+4,'Pe',{'text-anchor':'end'});txt(x(qe),402,meb<epsilon?'Qe = Qs':'Qe',{'text-anchor':'middle'});point(qe,cost(qe),meb<epsilon?'Ee = Es':'Ee','#1f2937','<strong>Free-market equilibrium</strong><br>MPB = MPC. Private curves and this output remain fixed as MEB changes.');
     line(qs,0,qs,cost(qs),{class:'guide-line'});if(meb>epsilon)txt(x(qs),402,Math.abs(qs-qf)<epsilon?'Qs = Qf':'Qs',{'text-anchor':'middle',fill:'#dc2626'});if(meb>epsilon)point(qs,cost(qs),'Es','#dc2626','<strong>Social optimum</strong><br>MSB = MSC. The socially optimal output rises as MEB increases.');
     if(Math.abs(qs-qf)>epsilon)txt(x(qf),402,'Qf',{'text-anchor':'middle',fill:'#4169e1'});point(qf,0,'Ef','#4169e1','<strong>Free provision</strong><br>Consumers pay no price. Producers receive Pp, funded by the government. Output stays fixed at Qf while MEB varies.');
-    if(toggleMeb.checked&&meb>epsilon){line(20,demand(20),20,social(20),{class:'free-externality',stroke:'#2563eb','stroke-width':2});txt(x(20)+10,(y(demand(20))+y(social(20)))/2+4,'MEB',{fill:'#2563eb'});}
+    if(toggleMeb.checked&&meb>epsilon){const arrowQ=Math.max(20,meb-20);line(arrowQ,demand(arrowQ),arrowQ,social(arrowQ),{class:'free-externality',stroke:'#2563eb','stroke-width':2});txt(x(arrowQ)+10,(y(demand(arrowQ))+y(social(arrowQ)))/2+4,'MEB',{fill:'#2563eb'});}
     if(toggleGap.checked&&Math.abs(qf-qs)>epsilon){line(Math.min(qf,qs),-27,Math.max(qf,qs),-27,{class:'free-gap-arrow',stroke:'#dc2626','stroke-width':2,'marker-start':'url(#arrow-start-red)','marker-end':'url(#arrow-end-red)'});txt((x(qf)+x(qs))/2,447,qf>qs?'Over-consumption / Over-production':'Under-consumption / Under-production',{class:'free-gap-label','text-anchor':'middle',fill:'#dc2626',style:'font-size:11px'});}
     const state=Math.abs(qf-qs)<epsilon?'Socially optimal provision':qf>qs?'Excessive provision':'Insufficient provision';
     const comparison=freeLoss<epsilon?'Free provision <strong>eliminates DWL</strong>.':Math.abs(freeLoss-marketLoss)<epsilon?'Free provision and the free market have <strong>the same DWL</strong>.':freeLoss<marketLoss?'Free provision <strong>reduces DWL</strong>, but some loss remains.':'Free provision <strong>increases DWL</strong> relative to the free market.';
@@ -1638,6 +1645,80 @@ body.index-page main { width:min(100% - 24px,1060px); padding:24px 0; }
  let pending=false;
  new MutationObserver(()=>{if(!pending){pending=true;queueMicrotask(()=>{pending=false;refresh();});}}).observe(document.body,{childList:true,subtree:true,characterData:true});
  window.WidgetInterface={closeExplanation:closeTip,exportPNG};
+})();
+
+</script>
+<script>
+(()=>{
+ const svg=document.getElementById('diagram');if(!svg)return;
+ const NS='http://www.w3.org/2000/svg',isGov=document.title==='Government Intervention';
+ const stage=document.createElementNS(NS,'g');stage.id='queue-stage';stage.setAttribute('transform','translate(70 0)');for(const e of [...svg.children])if(!['defs','title','desc','style'].includes(e.tagName))stage.append(e);svg.append(stage);
+ const visible=e=>!e.closest('defs')&&getComputedStyle(e).display!=='none'&&e.getClientRects().length>0;
+ let pending=false,running=false;
+ const rootPoint=(e,x,y)=>{const m=svg.getScreenCTM().inverse().multiply(e.getScreenCTM());return new DOMPoint(x,y).matrixTransform(m);};
+ const box=e=>{const b=e.getBBox(),corners=[[b.x,b.y],[b.x+b.width,b.y],[b.x,b.y+b.height],[b.x+b.width,b.y+b.height]].map(([x,y])=>rootPoint(e,x,y));return {x:Math.min(...corners.map(p=>p.x)),y:Math.min(...corners.map(p=>p.y)),r:Math.max(...corners.map(p=>p.x)),b:Math.max(...corners.map(p=>p.y))};};
+ const overlaps=(a,b,pad=3)=>a.x<b.r+pad&&a.r>b.x-pad&&a.y<b.b+pad&&a.b>b.y-pad;
+ const inBox=(p,b,pad=3)=>p.x>=b.x-pad&&p.x<=b.r+pad&&p.y>=b.y-pad&&p.y<=b.b+pad;
+ function extendLine(e){
+  const a={x:+e.getAttribute('x1'),y:+e.getAttribute('y1')},d={x:+e.getAttribute('x2')-a.x,y:+e.getAttribute('y2')-a.y};
+  if(!Number.isFinite(d.x+d.y)||Math.hypot(d.x,d.y)<.01)return;
+  let lo=-1e6,hi=1e6;
+  for(const [v,delta,min,max] of [[a.x,d.x,70,425],[a.y,d.y,25,380]]){if(Math.abs(delta)<1e-8){if(v<min-.01||v>max+.01)return;continue;}const t1=(min-v)/delta,t2=(max-v)/delta;lo=Math.max(lo,Math.min(t1,t2));hi=Math.min(hi,Math.max(t1,t2));}
+  if(lo>hi)return;
+  e.setAttribute('x1',a.x+lo*d.x);e.setAttribute('y1',a.y+lo*d.y);e.setAttribute('x2',a.x+hi*d.x);e.setAttribute('y2',a.y+hi*d.y);
+ }
+ function refresh(){
+  if(running||!svg.getScreenCTM())return;running=true;observer.disconnect();
+  try{
+   svg.querySelectorAll('.queue-leader').forEach(e=>e.remove());
+   // The same economic scale is used on both axes. Extend the social/private
+   // straight curves to the square boundary, while keeping model values intact.
+   const plot=svg.querySelector('#diagram-plot');
+   if(plot&&!plot.querySelector('#queue-square-clip')){const defs=document.createElementNS(NS,'defs'),clip=document.createElementNS(NS,'clipPath'),rect=document.createElementNS(NS,'rect');clip.id='queue-square-clip';for(const [k,v] of Object.entries({x:70,y:25,width:355,height:355}))rect.setAttribute(k,v);clip.append(rect);defs.append(clip);plot.prepend(defs);}
+   if(plot)for(const e of plot.querySelectorAll('polygon.dwl-poly,polygon.ban-free-area,polygon#dwl,polygon#area-dwl,polygon#area-tax-rev'))e.setAttribute('clip-path','url(#queue-square-clip)');
+   for(const e of svg.querySelectorAll('line.line-mpb,line.line-mpc,line.line-msb,line.line-msc,line.line-policy,line.line-tax,line.line-qpoll,line.line-rd,line.line-edu'))if(visible(e))extendLine(e);
+   for(const label of svg.querySelectorAll('#label-mpb,#label-mpc,#label-msb,#label-msc,#label-policy-curve,#group-dynamic-curve-labels text,#free-scene text,#ban-scene text')){
+    if(!visible(label))continue;
+    const id=label.id.replace('label-','curve-'),name=label.textContent.trim();let e=label.id?svg.querySelector('#'+id):null;if(!e&&label.id==='label-policy-curve')e=svg.querySelector('#line-policy-curve');if(!e){const kind=/^MPB/.test(name)?'mpb':/^MSB/.test(name)?'msb':/^MPC/.test(name)?'mpc':/^MSC/.test(name)?'msc':null;if(kind)e=[...svg.querySelectorAll('line.line-'+kind)].find(visible);}
+    if(e?.tagName==='line'&&visible(e)){const a={x:+e.getAttribute('x1'),y:+e.getAttribute('y1')},b={x:+e.getAttribute('x2'),y:+e.getAttribute('y2')},p=a.x>b.x?a:b;label.setAttribute('x',p.x+10);label.setAttribute('y',p.y+4);label.setAttribute('text-anchor','start');}
+   }
+   const texts=[...svg.querySelectorAll('text')].filter(visible);
+   for(const e of texts){
+    if(!e.dataset.queueCategory){const small=!e.matches('.axis-title')&&(e.matches('[font-size="11"],[font-size="12"],.area-label')||/font-size:\s*(?:10|11|12|13)(?:px)?/.test(e.getAttribute('style')||''));e.dataset.queueCategory=small?'small':'main';}
+    const m=e.getScreenCTM(),scale=Math.hypot(m.a,m.b);e.style.setProperty('font-size',((e.dataset.queueCategory==='small'?12:14)/scale)+'px','important');
+    for(const sub of e.querySelectorAll('tspan[baseline-shift="sub"]'))sub.style.setProperty('font-size',(10/scale)+'px','important');
+   }
+   // Check all sampled curve segments and point markers, not only other labels.
+   const curves=[...svg.querySelectorAll('line,polyline,path')].filter(e=>visible(e)&&!e.closest('marker,defs')&&!e.matches('.axis,.guide-line,.label-leader,.collision-leader,.queue-leader')&&((e.matches('.curve,.line-mpb,.line-mpc,.line-msb,.line-msc,.line-policy,.line-tax,.line-qpoll,.line-rd,.line-edu'))||(e.tagName==='polyline'&&getComputedStyle(e).fill==='none')||(e.tagName==='path'&&e.getAttribute('fill')==='none'&&+e.getAttribute('stroke-width')>=2)||(e.tagName==='line'&&+e.getAttribute('stroke-width')>=2.4)));
+   const samples=curves.flatMap(e=>{try{const len=e.getTotalLength(),n=Math.max(2,Math.ceil(len/3)),points=[];for(let i=0;i<=n;i++){const p=e.getPointAtLength(len*i/n);points.push(rootPoint(e,p.x,p.y));}return points;}catch{return [];}});
+   const pointBoxes=[...svg.querySelectorAll('circle')].filter(e=>visible(e)&&+e.getAttribute('r')<=6).map(box);
+   const movable=texts.filter(e=>!e.matches('.area-label,#label-dwl-text,#label-subsidy-cost-text')&& (e.hasAttribute('data-curve-label')||e.hasAttribute('data-movable')||e.hasAttribute('data-policy-label')||/^(?:[DESAB](?:[₀₁₂]|\d|\s|$)|M(?:P|S|E)[BC]|PPC|Ceiling|Floor|Minimum wage|Quota)/.test(e.textContent.trim())));
+   const fixed=texts.filter(e=>!movable.includes(e)).map(box),placed=[...fixed];let unresolved=0;
+   for(const e of movable){
+    let ox=+e.getAttribute('x'),oy=+e.getAttribute('y');
+    // Repeated refreshes start from a stable point; rerenders replace the node
+    // or change its position, so slider changes retain their new anchor.
+    if(e.dataset.queueLastX===String(ox)&&e.dataset.queueLastY===String(oy)){ox=+e.dataset.queueBaseX;oy=+e.dataset.queueBaseY;}
+    e.dataset.queueBaseX=ox;e.dataset.queueBaseY=oy;
+    const candidateGood=b=>b.x>=4&&b.r<=696&&b.y>=4&&b.b<=496&&!placed.some(p=>overlaps(b,p))&&!samples.some(p=>inBox(p,b,3))&&!pointBoxes.some(p=>overlaps(b,p,3));
+    let good=false,chosen;
+    const offsets=[[0,0]];for(let r=10;r<=220;r+=10)offsets.push([0,-r],[r,0],[0,r],[-r,0],[r,-r],[-r,-r],[r,r],[-r,r]);
+    for(const [dx,dy] of offsets){
+     // Keep the four price-control/quota labels at the requested end.
+     if(e.hasAttribute('data-policy-label')&&dx!==0)continue;
+     e.setAttribute('x',ox+dx);e.setAttribute('y',oy+dy);const b=box(e);if(candidateGood(b)){good=true;chosen=b;break;}
+    }
+    if(!good){e.setAttribute('x',ox);e.setAttribute('y',oy);chosen=box(e);unresolved++;}
+    e.dataset.queueLastX=e.getAttribute('x');e.dataset.queueLastY=e.getAttribute('y');placed.push(chosen);
+    if(good&&Math.hypot(+e.getAttribute('x')-ox,+e.getAttribute('y')-oy)>25){const l=document.createElementNS(NS,'line');for(const [k,v] of Object.entries({class:'queue-leader',x1:ox,y1:oy-4,x2:+e.getAttribute('x'),y2:+e.getAttribute('y')-4}))l.setAttribute(k,v);e.parentNode.insertBefore(l,e);}
+   }
+   svg.dataset.queueUnresolved=String(unresolved);svg.dataset.queueCheckedLabels=String(movable.length);
+  }finally{observer.observe(svg,{childList:true,subtree:true});running=false;}
+ }
+ const schedule=()=>{if(!pending){pending=true;requestAnimationFrame(()=>{pending=false;refresh();});}};
+ const observer=new MutationObserver(schedule);observer.observe(svg,{childList:true,subtree:true});
+ document.addEventListener('input',schedule);document.addEventListener('change',schedule);document.addEventListener('click',schedule);window.addEventListener('resize',schedule);
+ window.WidgetDiagramLayout={refresh};refresh();
 })();
 
 </script>

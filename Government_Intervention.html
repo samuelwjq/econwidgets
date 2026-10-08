@@ -223,7 +223,7 @@ body.index-page main { width:min(100% - 24px,1060px); padding:24px 0; }
 .widget-page .ui-diagram-legends { padding:6px 10px 8px; }
 .widget-page .ui-diagram-legends>.legend,.widget-page .ui-diagram-legends>.curve-key,.widget-page .ui-diagram-legends>.area-key,.widget-page .ui-diagram-legends>.surplus-key,.widget-page .ui-diagram-legends>.ban-legend { margin:0; font-size:13px; gap:6px 14px; }
 .widget-page .ui-diagram-legends>*+* { margin-top:5px!important; }
-.widget-page .ui-teaching-panels { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:8px; align-items:start; margin-top:6px; }
+.widget-page .ui-teaching-panels { display:grid; grid-template-columns:minmax(0,1fr); gap:8px; align-items:start; margin-top:6px; }
 .widget-page .ui-teaching-disclosure { min-width:0; margin:0; padding:0 10px; }
 .widget-page .ui-teaching-disclosure>summary { min-height:64px; padding:6px 0; flex-wrap:wrap; gap:4px 10px; align-content:center; }
 .widget-page .ui-expand-hint { color:var(--muted); font-size:13px; font-weight:400; flex-basis:100%; }
@@ -243,6 +243,13 @@ body.index-page main { width:min(100% - 24px,1060px); padding:24px 0; }
 @media(max-width:900px) { .widget-page .layout { grid-template-columns:minmax(0,1fr); max-width:calc(var(--diagram-max-width) + 2px); } }
 @media(max-width:480px) { .widget-page .ui-teaching-panels { grid-template-columns:minmax(0,1fr); } }
 
+</style>
+<style>
+/* Shared square diagrams, text sizes and full-width teaching sections. */
+.widget-page .ui-teaching-panels { grid-template-columns:minmax(0,1fr); }
+.widget-page .ui-teaching-disclosure { width:100%; box-sizing:border-box; }
+.widget-page svg#diagram text { font-size:17.5px; }
+.widget-page svg#diagram .queue-leader { stroke:#9ca3af; stroke-width:1; pointer-events:none; }
 </style>
 </head><body class="widget-page" style="--diagram-max-width:560px">
 <header class="widget-header"><h1>Government Intervention</h1><p>Topic 4 · A-Level Economics · Interactive Diagrams</p></header>
@@ -274,14 +281,14 @@ body.index-page main { width:min(100% - 24px,1060px); padding:24px 0; }
 const $=id=>document.getElementById(id),NS='http://www.w3.org/2000/svg';
 const policies={
 none:{name:'No Policy'},
-ceiling:{name:'Price Ceiling',label:'Maximum price',min:30,max:90,value:45,glossary:'ceiling'},
-floor:{name:'Price Floor',label:'Minimum price',min:30,max:90,value:75,glossary:'floor'},
-wage:{name:'Minimum Wage',label:'Minimum wage',min:30,max:90,value:75,glossary:'wage'},
-quota:{name:'Quota',label:'Maximum quantity',min:0,max:55,value:25,glossary:'quota'},
+ceiling:{name:'Price Ceiling',label:'Maximum price',min:20,max:80,value:45,glossary:'ceiling'},
+floor:{name:'Price Floor',label:'Minimum price',min:20,max:80,value:75,glossary:'floor'},
+wage:{name:'Minimum Wage',label:'Minimum wage',min:20,max:80,value:75,glossary:'wage'},
+quota:{name:'Quota',label:'Maximum quantity',min:0,max:100,value:25,glossary:'quota'},
 specific:{name:'Indirect Specific Tax',label:'Tax per unit',min:0,max:60,value:20,glossary:'specific'},
-advalorem:{name:'Indirect Ad-Valorem Tax',label:'Tax rate (% of pre-tax price)',min:0,max:100,value:30,glossary:'advalorem'},
-indirect:{name:'Indirect Subsidy (specific)',label:'Subsidy per unit paid to producers',min:0,max:30,value:20,glossary:'indirect'},
-direct:{name:'Direct Subsidy',label:'Subsidy per unit paid to consumers',min:0,max:30,value:20,glossary:'direct'}
+advalorem:{name:'Indirect Ad-Valorem Tax',label:'Tax rate (% of pre-tax price)',min:0,max:300,value:30,glossary:'advalorem'},
+indirect:{name:'Indirect Subsidy (specific)',label:'Subsidy per unit paid to producers',min:0,max:60,value:20,glossary:'indirect'},
+direct:{name:'Direct Subsidy',label:'Subsidy per unit paid to consumers',min:0,max:60,value:20,glossary:'direct'}
 };
 const values=Object.fromEntries(Object.entries(policies).map(([k,p])=>[k,p.value??0]));
 const D=q=>100-q,S=q=>q;const baseline={q:50,pc:50,pp:50,cs:1250,ps:1250,g:0,tw:2500,dwl:0};
@@ -355,14 +362,14 @@ function labelAreas(parent){
   const label=text(cx,cy,kind.toUpperCase(),{'text-anchor':'middle','dominant-baseline':'middle',fill:palette[kind],class:'area-label','data-area-label':kind,'aria-hidden':'true'});parent.append(label);
   // Keep every corner of the text box inside the shaded polygon, even for small DWL triangles.
   const inside=(x,y)=>{let sign=0;for(let i=0;i<points.length;i++){const a=points[i],b=points[(i+1)%points.length],cross=(b[0]-a[0])*(y-a[1])-(b[1]-a[1])*(x-a[0]);if(Math.abs(cross)<1e-7)continue;const next=Math.sign(cross);if(sign&&sign!==next)return false;sign=next;}return true;};
-  let fits=false;for(let font=13;font>=10;font-=.5){label.style.setProperty('font-size',font+'px');const b=label.getBBox(),pad=font*.12;if([[b.x-pad,b.y-pad],[b.x+b.width+pad,b.y-pad],[b.x-pad,b.y+b.height+pad],[b.x+b.width+pad,b.y+b.height+pad]].every(([x,y])=>inside(x,y))){fits=true;break;}}if(!fits)label.remove();
+  let fits=false;for(let font=15;font>=15;font-=.5){label.style.setProperty('font-size',font+'px');const b=label.getBBox(),pad=font*.12;if([[b.x-pad,b.y-pad],[b.x+b.width+pad,b.y-pad],[b.x-pad,b.y+b.height+pad],[b.x+b.width+pad,b.y+b.height+pad]].every(([x,y])=>inside(x,y))){fits=true;break;}}if(!fits)label.remove();
  }
 }
 function curve(points,colour,tip){
  // Reserve A Right-Hand Label Gutter. Clip The Displayed Segment Only;
  // Equilibrium And Welfare Calculations Continue To Use The Original Curves.
- const [a,b]=points,dx=b[0]-a[0],dy=b[1]-a[1];let lo=0,hi=1;
- for(const [start,delta,min,max] of [[a[0],dx,0,100],[a[1],dy,0,120]]){
+ const [a,b]=points,dx=b[0]-a[0],dy=b[1]-a[1];let lo=-1000,hi=1000;
+ for(const [start,delta,min,max] of [[a[0],dx,0,120],[a[1],dy,0,120]]){
   if(Math.abs(delta)<1e-9){if(start<min||start>max)return null;continue;}
   const t1=(min-start)/delta,t2=(max-start)/delta;lo=Math.max(lo,Math.min(t1,t2));hi=Math.min(hi,Math.max(t1,t2));
  }
@@ -376,7 +383,7 @@ function labelCurve(e,label,colour){
  return text(X(q)+14,Y(p)+4,label,{fill:colour,'text-anchor':'start','font-weight':600,'data-movable':'true','data-curve-label':'true'});
 }
 
-function defs(){const d=add('defs');const c=add('clipPath',{id:'plot-clip'},d);add('rect',{x:112,y:72,width:492.631578947368,height:360},c);for(const [id,reverse] of [['arrow',false],['arrow-start',true],['arrow-red',false]]){const m=add('marker',{id,viewBox:'0 0 10 10',refX:reverse?1:9,refY:5,markerWidth:6,markerHeight:6,orient:'auto-start-reverse'},d);add('path',{d:'M0,0 L10,5 L0,10 Z',fill:id==='arrow-red'?'#dc2626':'#6b7280'},m);} }
+function defs(){const d=add('defs');const c=add('clipPath',{id:'plot-clip'},d);add('rect',{x:112,y:72,width:360,height:360},c);for(const [id,reverse] of [['arrow',false],['arrow-start',true],['arrow-red',false]]){const m=add('marker',{id,viewBox:'0 0 10 10',refX:reverse?1:9,refY:5,markerWidth:6,markerHeight:6,orient:'auto-start-reverse'},d);add('path',{d:'M0,0 L10,5 L0,10 Z',fill:id==='arrow-red'?'#dc2626':'#6b7280'},m);} }
 function render(){
  const k=$('policy-select').value,v=values[k],p=policies[k],m=current=calculate(k,v),lab=k==='wage';
  const taxSub=['specific','advalorem','indirect','direct'].includes(k),showPrices=taxSub&&$('show-prices').checked,p1=k==='direct'?m.pp:m.pc;
@@ -416,9 +423,9 @@ function render(){
  if(m.fiscal&&$('show-g').checked&&Math.abs(m.g)>1e-7){shade('g',[[0,m.pc],[m.q,m.pc],[m.q,m.pp],[0,m.pp]],'Government '+m.fiscal+': '+(m.fiscal==='revenue'?'tax':'subsidy')+' per unit × quantity traded. '+(m.g>0?'Added to':'Subtracted from')+' CS + PS when calculating Total Welfare.'+(m.g<0?' The expenditure area overlaps parts of CS and PS; subtract it once.':''));areaList.push('g');}
  if($('show-dwl').checked&&m.dwl>1e-7){shade('dwl',[[50,50],[m.q,D(m.q)],[m.q,S(m.q)]],'Deadweight Loss: '+(lab?'Gains from employment forgone as employment falls. How to identify the area: between the original Demand for Labour and Supply of Labour curves, over the reduction in employment from L₀ to L₁.':m.q<50?'Gains from trade forgone because too few units are traded. How to identify the area: between the original demand and supply curves, over the units between Q₁ and Q₀ that are no longer traded.':'For units beyond Q₀, marginal cost exceeds marginal benefit. How to identify the area: between the original demand and supply curves, over the additional units between Q₀ and Q₁.'));areaList.push('dwl');}
  [...svg.querySelectorAll('.areas')].forEach(e=>clip.append(e));
- line(0,0,164.210526315789,0,{class:'axis','marker-end':'url(#arrow)'});line(0,0,0,120,{class:'axis','marker-end':'url(#arrow)'});
- text(112,58,lab?'Wage':'Price',{'text-anchor':'middle','font-weight':700});text(614.105263157895,460,lab?'Quantity Of Labour':'Quantity',{'text-anchor':'end','font-weight':700});
- const supplyColor='#16a34a',demandColor='#2563eb',policyColor='#4169e1';
+ line(0,0,120,0,{class:'axis','marker-end':'url(#arrow)'});line(0,0,0,120,{class:'axis','marker-end':'url(#arrow)'});
+ text(112,58,lab?'Wage':'Price',{'text-anchor':'middle','font-weight':700});text(482,460,lab?'Quantity Of Labour':'Quantity',{'text-anchor':'end','font-weight':700});
+ const supplyColor='#16a34a',demandColor='#2563eb',policyColor='#dc2626';
  const lines=add('g',{'clip-path':'url(#plot-clip)'});
  const demand=curve([[0,100],[100,0]],demandColor,lab?'Demand for Labour: employers are willing to hire more labour at lower wages.':'Demand: the relationship between price and quantity demanded.');lines.append(demand);
  const supply=curve([[0,0],[100,100]],supplyColor,lab?'Supply of Labour: workers are willing to supply more labour at higher wages.':'Supply: the relationship between price and quantity supplied.');lines.append(supply);
@@ -427,8 +434,8 @@ function render(){
  if(v>0&&(k==='specific'||k==='indirect')){const sign=k==='specific'?1:-1,pl=curve([[0,sign*v],[100,100+sign*v]],policyColor,k==='specific'?'Supply after specific tax. The vertical gap from S equals the tax per unit.':'Supply after indirect subsidy. The vertical gap below S equals the subsidy per unit.');lines.append(pl);const qlab=k==='specific'?Math.min(48,88-v):75;labelCurve(pl,k==='specific'?'S + tax':'S − subsidy',policyColor);}
  if(k==='advalorem'&&v>0){const r=v/100,pl=curve([[0,0],[100,100*(1+r)]],policyColor,'Supply after ad-valorem tax. Each original supply price is raised in proportion to the tax rate.');lines.append(pl);const qlab=18;labelCurve(pl,'S + ad-valorem tax',policyColor);}
  if(k==='direct'&&v>0){const pl=curve([[0,100+v],[100,v]],policyColor,'Demand after the direct consumer subsidy. Consumers can offer their willingness to pay plus the subsidy to producers.');lines.append(pl);labelCurve(pl,'D + subsidy',policyColor);}
- if(['ceiling','floor','wage'].includes(k)){line(0,v,100,v,{stroke:policyColor,'stroke-width':2.5});text(X(88),Y(v)-10,lab?'Minimum wage':k==='ceiling'?'Ceiling':'Floor',{fill:policyColor,'text-anchor':'end'});}
- if(k==='quota'){line(v,0,v,113,{stroke:policyColor,'stroke-width':2.5});text(X(v)+8,Y(110),'Quota',{fill:policyColor});}
+ if(['ceiling','floor','wage'].includes(k)){line(0,v,120,v,{stroke:policyColor,'stroke-width':2.5});text(X(120)+10,Y(v)+4,lab?'Minimum wage':k==='ceiling'?'Ceiling':'Floor',{fill:policyColor,'text-anchor':'start','data-policy-label':'true'});}
+ if(k==='quota'){line(v,0,v,120,{stroke:policyColor,'stroke-width':2.5});text(X(v),Y(120)-10,'Quota',{fill:policyColor});}
  const priceLabels=[{value:50,label:lab?'W₀':'P₀',tip:'Price or wage at the initial no-policy equilibrium.'},{value:p1,label:lab?'W₁':'P₁',tip:k==='quota'?'Producers set P₁ at the demand curve for Qquota: this is the highest market-clearing price at which consumers buy the restricted quantity. An ineffective quota leaves price at P₀.':taxSub?(k==='direct'?'P₁ is the price received by producers at the intersection of subsidised demand and supply.':'P₁ is the price paid by consumers at the intersection of demand and policy-adjusted supply.'):'Price or wage after intervention. An effective control does not clear the market.'}];
  if(showPrices)priceLabels.push({value:m.pc,label:'P_c',tip:'Price paid by consumers per unit, after deducting any direct consumer subsidy.'},{value:m.pp,label:'Pₚ',tip:'Price received by producers per unit, after paying any tax or including any producer subsidy.'});
  if(k==='ceiling'&&m.binding)priceLabels.push({value:D(m.q),label:'P_bm',tip:'Potential black market price: the demand-curve price at the quantity available under the ceiling. It is what buyers would pay if that restricted supply were resold at a market-clearing price. Actual illegal-market prices may differ. Legal-market welfare is still evaluated at P₁.'});
@@ -464,7 +471,7 @@ function render(){
  target(a,'Immediately after the policy, at P₀, '+(shortage?'quantity demanded exceeds quantity supplied':'quantity supplied exceeds quantity demanded')+'. This temporary imbalance causes price adjustment.');
  text((X(oldQd)+X(oldQs))/2,404,(shortage?'Shortage':'Surplus')+' at P₀',{'text-anchor':'middle',fill:'#dc2626','font-weight':600},'The temporary shortage or surplus is measured at P₀ on the policy-adjusted curves. The red arrow is placed near the quantity axis for clarity.');
  const nextPrice=k==='direct'?m.pp:m.pc;
- if(k!=='quota')target(add('line',{x1:746,y1:Y(50),x2:746,y2:Y(nextPrice),stroke:'#6b7280','stroke-width':1.5,'marker-end':'url(#arrow)'}),(shortage?'Shortage puts upward':'Excess supply puts downward')+' pressure on the market price until the new equilibrium is reached.');
+ if(k!=='quota')target(add('line',{x1:560,y1:Y(50),x2:560,y2:Y(nextPrice),stroke:'#6b7280','stroke-width':1.5,'marker-end':'url(#arrow)'}),(shortage?'Shortage puts upward':'Excess supply puts downward')+' pressure on the market price until the new equilibrium is reached.');
 
  }
  resolveLabels();
@@ -816,6 +823,80 @@ configure();
  let pending=false;
  new MutationObserver(()=>{if(!pending){pending=true;queueMicrotask(()=>{pending=false;refresh();});}}).observe(document.body,{childList:true,subtree:true,characterData:true});
  window.WidgetInterface={closeExplanation:closeTip,exportPNG};
+})();
+
+</script>
+<script>
+(()=>{
+ const svg=document.getElementById('diagram');if(!svg)return;
+ const NS='http://www.w3.org/2000/svg',isGov=document.title==='Government Intervention';
+ const stage=document.createElementNS(NS,'g');stage.id='queue-stage';stage.setAttribute('transform','translate(70 0)');for(const e of [...svg.children])if(!['defs','title','desc','style'].includes(e.tagName))stage.append(e);svg.append(stage);
+ const visible=e=>!e.closest('defs')&&getComputedStyle(e).display!=='none'&&e.getClientRects().length>0;
+ let pending=false,running=false;
+ const rootPoint=(e,x,y)=>{const m=svg.getScreenCTM().inverse().multiply(e.getScreenCTM());return new DOMPoint(x,y).matrixTransform(m);};
+ const box=e=>{const b=e.getBBox(),corners=[[b.x,b.y],[b.x+b.width,b.y],[b.x,b.y+b.height],[b.x+b.width,b.y+b.height]].map(([x,y])=>rootPoint(e,x,y));return {x:Math.min(...corners.map(p=>p.x)),y:Math.min(...corners.map(p=>p.y)),r:Math.max(...corners.map(p=>p.x)),b:Math.max(...corners.map(p=>p.y))};};
+ const overlaps=(a,b,pad=3)=>a.x<b.r+pad&&a.r>b.x-pad&&a.y<b.b+pad&&a.b>b.y-pad;
+ const inBox=(p,b,pad=3)=>p.x>=b.x-pad&&p.x<=b.r+pad&&p.y>=b.y-pad&&p.y<=b.b+pad;
+ function extendLine(e){
+  const a={x:+e.getAttribute('x1'),y:+e.getAttribute('y1')},d={x:+e.getAttribute('x2')-a.x,y:+e.getAttribute('y2')-a.y};
+  if(!Number.isFinite(d.x+d.y)||Math.hypot(d.x,d.y)<.01)return;
+  let lo=-1e6,hi=1e6;
+  for(const [v,delta,min,max] of [[a.x,d.x,70,425],[a.y,d.y,25,380]]){if(Math.abs(delta)<1e-8){if(v<min-.01||v>max+.01)return;continue;}const t1=(min-v)/delta,t2=(max-v)/delta;lo=Math.max(lo,Math.min(t1,t2));hi=Math.min(hi,Math.max(t1,t2));}
+  if(lo>hi)return;
+  e.setAttribute('x1',a.x+lo*d.x);e.setAttribute('y1',a.y+lo*d.y);e.setAttribute('x2',a.x+hi*d.x);e.setAttribute('y2',a.y+hi*d.y);
+ }
+ function refresh(){
+  if(running||!svg.getScreenCTM())return;running=true;observer.disconnect();
+  try{
+   svg.querySelectorAll('.queue-leader').forEach(e=>e.remove());
+   // The same economic scale is used on both axes. Extend the social/private
+   // straight curves to the square boundary, while keeping model values intact.
+   const plot=svg.querySelector('#diagram-plot');
+   if(plot&&!plot.querySelector('#queue-square-clip')){const defs=document.createElementNS(NS,'defs'),clip=document.createElementNS(NS,'clipPath'),rect=document.createElementNS(NS,'rect');clip.id='queue-square-clip';for(const [k,v] of Object.entries({x:70,y:25,width:355,height:355}))rect.setAttribute(k,v);clip.append(rect);defs.append(clip);plot.prepend(defs);}
+   if(plot)for(const e of plot.querySelectorAll('polygon.dwl-poly,polygon.ban-free-area,polygon#dwl,polygon#area-dwl,polygon#area-tax-rev'))e.setAttribute('clip-path','url(#queue-square-clip)');
+   for(const e of svg.querySelectorAll('line.line-mpb,line.line-mpc,line.line-msb,line.line-msc,line.line-policy,line.line-tax,line.line-qpoll,line.line-rd,line.line-edu'))if(visible(e))extendLine(e);
+   for(const label of svg.querySelectorAll('#label-mpb,#label-mpc,#label-msb,#label-msc,#label-policy-curve,#group-dynamic-curve-labels text,#free-scene text,#ban-scene text')){
+    if(!visible(label))continue;
+    const id=label.id.replace('label-','curve-'),name=label.textContent.trim();let e=label.id?svg.querySelector('#'+id):null;if(!e&&label.id==='label-policy-curve')e=svg.querySelector('#line-policy-curve');if(!e){const kind=/^MPB/.test(name)?'mpb':/^MSB/.test(name)?'msb':/^MPC/.test(name)?'mpc':/^MSC/.test(name)?'msc':null;if(kind)e=[...svg.querySelectorAll('line.line-'+kind)].find(visible);}
+    if(e?.tagName==='line'&&visible(e)){const a={x:+e.getAttribute('x1'),y:+e.getAttribute('y1')},b={x:+e.getAttribute('x2'),y:+e.getAttribute('y2')},p=a.x>b.x?a:b;label.setAttribute('x',p.x+10);label.setAttribute('y',p.y+4);label.setAttribute('text-anchor','start');}
+   }
+   const texts=[...svg.querySelectorAll('text')].filter(visible);
+   for(const e of texts){
+    if(!e.dataset.queueCategory){const small=!e.matches('.axis-title')&&(e.matches('[font-size="11"],[font-size="12"],.area-label')||/font-size:\s*(?:10|11|12|13)(?:px)?/.test(e.getAttribute('style')||''));e.dataset.queueCategory=small?'small':'main';}
+    const m=e.getScreenCTM(),scale=Math.hypot(m.a,m.b);e.style.setProperty('font-size',((e.dataset.queueCategory==='small'?12:14)/scale)+'px','important');
+    for(const sub of e.querySelectorAll('tspan[baseline-shift="sub"]'))sub.style.setProperty('font-size',(10/scale)+'px','important');
+   }
+   // Check all sampled curve segments and point markers, not only other labels.
+   const curves=[...svg.querySelectorAll('line,polyline,path')].filter(e=>visible(e)&&!e.closest('marker,defs')&&!e.matches('.axis,.guide-line,.label-leader,.collision-leader,.queue-leader')&&((e.matches('.curve,.line-mpb,.line-mpc,.line-msb,.line-msc,.line-policy,.line-tax,.line-qpoll,.line-rd,.line-edu'))||(e.tagName==='polyline'&&getComputedStyle(e).fill==='none')||(e.tagName==='path'&&e.getAttribute('fill')==='none'&&+e.getAttribute('stroke-width')>=2)||(e.tagName==='line'&&+e.getAttribute('stroke-width')>=2.4)));
+   const samples=curves.flatMap(e=>{try{const len=e.getTotalLength(),n=Math.max(2,Math.ceil(len/3)),points=[];for(let i=0;i<=n;i++){const p=e.getPointAtLength(len*i/n);points.push(rootPoint(e,p.x,p.y));}return points;}catch{return [];}});
+   const pointBoxes=[...svg.querySelectorAll('circle')].filter(e=>visible(e)&&+e.getAttribute('r')<=6).map(box);
+   const movable=texts.filter(e=>!e.matches('.area-label,#label-dwl-text,#label-subsidy-cost-text')&& (e.hasAttribute('data-curve-label')||e.hasAttribute('data-movable')||e.hasAttribute('data-policy-label')||/^(?:[DESAB](?:[₀₁₂]|\d|\s|$)|M(?:P|S|E)[BC]|PPC|Ceiling|Floor|Minimum wage|Quota)/.test(e.textContent.trim())));
+   const fixed=texts.filter(e=>!movable.includes(e)).map(box),placed=[...fixed];let unresolved=0;
+   for(const e of movable){
+    let ox=+e.getAttribute('x'),oy=+e.getAttribute('y');
+    // Repeated refreshes start from a stable point; rerenders replace the node
+    // or change its position, so slider changes retain their new anchor.
+    if(e.dataset.queueLastX===String(ox)&&e.dataset.queueLastY===String(oy)){ox=+e.dataset.queueBaseX;oy=+e.dataset.queueBaseY;}
+    e.dataset.queueBaseX=ox;e.dataset.queueBaseY=oy;
+    const candidateGood=b=>b.x>=4&&b.r<=696&&b.y>=4&&b.b<=496&&!placed.some(p=>overlaps(b,p))&&!samples.some(p=>inBox(p,b,3))&&!pointBoxes.some(p=>overlaps(b,p,3));
+    let good=false,chosen;
+    const offsets=[[0,0]];for(let r=10;r<=220;r+=10)offsets.push([0,-r],[r,0],[0,r],[-r,0],[r,-r],[-r,-r],[r,r],[-r,r]);
+    for(const [dx,dy] of offsets){
+     // Keep the four price-control/quota labels at the requested end.
+     if(e.hasAttribute('data-policy-label')&&dx!==0)continue;
+     e.setAttribute('x',ox+dx);e.setAttribute('y',oy+dy);const b=box(e);if(candidateGood(b)){good=true;chosen=b;break;}
+    }
+    if(!good){e.setAttribute('x',ox);e.setAttribute('y',oy);chosen=box(e);unresolved++;}
+    e.dataset.queueLastX=e.getAttribute('x');e.dataset.queueLastY=e.getAttribute('y');placed.push(chosen);
+    if(good&&Math.hypot(+e.getAttribute('x')-ox,+e.getAttribute('y')-oy)>25){const l=document.createElementNS(NS,'line');for(const [k,v] of Object.entries({class:'queue-leader',x1:ox,y1:oy-4,x2:+e.getAttribute('x'),y2:+e.getAttribute('y')-4}))l.setAttribute(k,v);e.parentNode.insertBefore(l,e);}
+   }
+   svg.dataset.queueUnresolved=String(unresolved);svg.dataset.queueCheckedLabels=String(movable.length);
+  }finally{observer.observe(svg,{childList:true,subtree:true});running=false;}
+ }
+ const schedule=()=>{if(!pending){pending=true;requestAnimationFrame(()=>{pending=false;refresh();});}};
+ const observer=new MutationObserver(schedule);observer.observe(svg,{childList:true,subtree:true});
+ document.addEventListener('input',schedule);document.addEventListener('change',schedule);document.addEventListener('click',schedule);window.addEventListener('resize',schedule);
+ window.WidgetDiagramLayout={refresh};refresh();
 })();
 
 </script>

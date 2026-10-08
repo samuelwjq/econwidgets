@@ -230,7 +230,7 @@ body.index-page main { width:min(100% - 24px,1060px); padding:24px 0; }
 .widget-page .ui-diagram-legends { padding:6px 10px 8px; }
 .widget-page .ui-diagram-legends>.legend,.widget-page .ui-diagram-legends>.curve-key,.widget-page .ui-diagram-legends>.area-key,.widget-page .ui-diagram-legends>.surplus-key,.widget-page .ui-diagram-legends>.ban-legend { margin:0; font-size:13px; gap:6px 14px; }
 .widget-page .ui-diagram-legends>*+* { margin-top:5px!important; }
-.widget-page .ui-teaching-panels { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:8px; align-items:start; margin-top:6px; }
+.widget-page .ui-teaching-panels { display:grid; grid-template-columns:minmax(0,1fr); gap:8px; align-items:start; margin-top:6px; }
 .widget-page .ui-teaching-disclosure { min-width:0; margin:0; padding:0 10px; }
 .widget-page .ui-teaching-disclosure>summary { min-height:64px; padding:6px 0; flex-wrap:wrap; gap:4px 10px; align-content:center; }
 .widget-page .ui-expand-hint { color:var(--muted); font-size:13px; font-weight:400; flex-basis:100%; }
@@ -251,6 +251,13 @@ body.index-page main { width:min(100% - 24px,1060px); padding:24px 0; }
 @media(max-width:480px) { .widget-page .ui-teaching-panels { grid-template-columns:minmax(0,1fr); } }
 
 </style>
+<style>
+/* Shared square diagrams, text sizes and full-width teaching sections. */
+.widget-page .ui-teaching-panels { grid-template-columns:minmax(0,1fr); }
+.widget-page .ui-teaching-disclosure { width:100%; box-sizing:border-box; }
+.widget-page svg#diagram text { font-size:17.5px; }
+.widget-page svg#diagram .queue-leader { stroke:#9ca3af; stroke-width:1; pointer-events:none; }
+</style>
 </head><body class="widget-page" style="--diagram-max-width:560px">
 <header class="widget-header"><h1>Cross-Price Elasticity Of Demand</h1><p>Topic 3 · A-Level Economics · Interactive Diagrams</p></header>
 <div class="layout"><main class="main-content">
@@ -260,7 +267,7 @@ body.index-page main { width:min(100% - 24px,1060px); padding:24px 0; }
 <div class="shift-choice" role="group" aria-label="Direction of related-good price change"><span class="scale-label">Related-good price:</span><button id="decrease" aria-pressed="false">Decrease related-good price</button><button id="increase" aria-pressed="true">Increase related-good price</button></div>
 <div class="slider-card"><label for="shock">Change size:</label><input id="shock" type="range" min="0" max="50" step="5" value="0"><output id="shock-value" for="shock"></output></div>
 <div class="toggle-grid"><label class="toggle-label"><input id="adjustment" type="checkbox">Price adjustment</label><label class="toggle-label"><input id="tooltips" type="checkbox" checked>Tooltips</label></div></div>
-<div class="diagram-frame" id="frame"><svg id="diagram" viewBox="0 0 700 500" role="img" aria-labelledby="diagram-title diagram-desc"><title id="diagram-title">Cross-Price Elasticity Of Demand</title><desc id="diagram-desc"></desc><defs><marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M1 1.5 L9 5 L1 8.5Z" fill="#374151"/></marker><clipPath id="plot"><rect x="90" y="30" width="520" height="380"/></clipPath></defs><g id="drawing"></g></svg></div>
+<div class="diagram-frame" id="frame"><svg id="diagram" viewBox="0 0 700 500" role="img" aria-labelledby="diagram-title diagram-desc"><title id="diagram-title">Cross-Price Elasticity Of Demand</title><desc id="diagram-desc"></desc><defs><marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M1 1.5 L9 5 L1 8.5Z" fill="#374151"/></marker><clipPath id="plot"><rect x="90" y="30" width="380" height="380"/></clipPath></defs><g id="drawing"></g></svg></div>
 <div class="curve-key"><span><i style="border-color:#2563eb"></i>Demand</span><span><i style="border-color:#16a34a"></i>Supply</span><span>Initial shifted curve is lighter.</span></div>
 <div id="area-key" class="area-key" hidden></div><div id="tooltip" class="tooltip" role="note" hidden></div>
 <div class="toolbar"><button id="zoom" aria-pressed="false">Enlarge diagram</button><button id="reset" class="reset-button"><strong>Reset Diagram</strong></button><label class="export-format" for="image-style">Image style<select id="image-style"><option value="colour">Colour</option><option value="grayscale">Grayscale (print)</option></select></label><button id="download">Download diagram</button><button id="copy">Copy diagram</button></div>
@@ -273,7 +280,7 @@ body.index-page main { width:min(100% - 24px,1060px); padding:24px 0; }
 <script>const KIND='XED', TITLE='Cross-Price Elasticity Of Demand';
 // Topic calculations use initial-equilibrium point elasticity and linear curves.
 const $=id=>document.getElementById(id),NS='http://www.w3.org/2000/svg',priceTopic=['PED','PES'].includes(KIND);
-const svg=$('diagram'),layer=$('drawing'),X=q=>90+520*q/110,Y=p=>410-380*p/110;
+const svg=$('diagram'),layer=$('drawing'),X=q=>90+380*q/110,Y=p=>410-380*p/110;
 let sign=1, activeShift=false;
 function elasticity(){const t=+$('elasticity').value;return priceTopic?(t===2?Infinity:t/(2-t)):t;}
 const sub=(a,i)=>`${a}<tspan baseline-shift="sub" font-size="9">${i}</tspan>`,eq=(a,b)=>Math.abs(a-b)<1e-8;
@@ -328,7 +335,7 @@ function render(){hideTip();if(!priceTopic){const e=elasticity(),limit=e*sign<0?
 // Shade an exact decomposition: ΔTR = Q₀(P₁−P₀) + P₁(Q₁−Q₀).
 const key=[];
 if(priceTopic&&$('tr').checked&&changed){for(const [type,a,b,c,d,value,fill]of [['price',0,50,50,p,s.priceEffect,'#ede9fe'],['quantity',50,q,0,p,s.quantityEffect,'#fef3c7']]){if(eq(value,0))continue;tip(add('rect',{x:X(Math.min(a,b)),y:Y(Math.max(c,d)),width:Math.abs(X(b)-X(a)),height:Math.abs(Y(d)-Y(c)),fill,stroke:type==='price'?'#7c3aed':'#b45309','stroke-width':1,'data-area':type}),`${type==='price'?'Price':'Quantity'} effect: ${value>0?'gain':'loss'} in total revenue from the ${type==='price'?'price change on the initial quantity Q₀':'quantity change valued at the new price P₁'}.`);key.push(type);}}
-line(90,410,628,410,'#374151',{'marker-end':'url(#arrow)'});line(90,410,90,20,'#374151',{'marker-end':'url(#arrow)'});text(652,415,'Quantity');text(66,28,'Price');
+line(90,410,470,410,'#374151',{'marker-end':'url(#arrow)'});line(90,410,90,30,'#374151',{'marker-end':'url(#arrow)'});text(505,415,'Quantity');text(66,28,'Price');
 const oldD=p0=>50-(KIND==='PED'?e:1)*(p0-50),oldS=p0=>50+(KIND==='PES'?e:1)*(p0-50);
 if(changed)curve(KIND==='PED'?oldS:oldD,sub(KIND==='PED'?'S':'D',0),KIND==='PED'?'#8fcea3':'#93b4f2');
 curve(s.qd,changed&&KIND!=='PED'?sub('D',1):'D','#2563eb');curve(s.qs,changed&&KIND==='PED'?sub('S',1):'S','#16a34a');placeCurveLabels();
@@ -693,6 +700,80 @@ render();
  let pending=false;
  new MutationObserver(()=>{if(!pending){pending=true;queueMicrotask(()=>{pending=false;refresh();});}}).observe(document.body,{childList:true,subtree:true,characterData:true});
  window.WidgetInterface={closeExplanation:closeTip,exportPNG};
+})();
+
+</script>
+<script>
+(()=>{
+ const svg=document.getElementById('diagram');if(!svg)return;
+ const NS='http://www.w3.org/2000/svg',isGov=document.title==='Government Intervention';
+ const stage=document.createElementNS(NS,'g');stage.id='queue-stage';stage.setAttribute('transform','translate(70 0)');for(const e of [...svg.children])if(!['defs','title','desc','style'].includes(e.tagName))stage.append(e);svg.append(stage);
+ const visible=e=>!e.closest('defs')&&getComputedStyle(e).display!=='none'&&e.getClientRects().length>0;
+ let pending=false,running=false;
+ const rootPoint=(e,x,y)=>{const m=svg.getScreenCTM().inverse().multiply(e.getScreenCTM());return new DOMPoint(x,y).matrixTransform(m);};
+ const box=e=>{const b=e.getBBox(),corners=[[b.x,b.y],[b.x+b.width,b.y],[b.x,b.y+b.height],[b.x+b.width,b.y+b.height]].map(([x,y])=>rootPoint(e,x,y));return {x:Math.min(...corners.map(p=>p.x)),y:Math.min(...corners.map(p=>p.y)),r:Math.max(...corners.map(p=>p.x)),b:Math.max(...corners.map(p=>p.y))};};
+ const overlaps=(a,b,pad=3)=>a.x<b.r+pad&&a.r>b.x-pad&&a.y<b.b+pad&&a.b>b.y-pad;
+ const inBox=(p,b,pad=3)=>p.x>=b.x-pad&&p.x<=b.r+pad&&p.y>=b.y-pad&&p.y<=b.b+pad;
+ function extendLine(e){
+  const a={x:+e.getAttribute('x1'),y:+e.getAttribute('y1')},d={x:+e.getAttribute('x2')-a.x,y:+e.getAttribute('y2')-a.y};
+  if(!Number.isFinite(d.x+d.y)||Math.hypot(d.x,d.y)<.01)return;
+  let lo=-1e6,hi=1e6;
+  for(const [v,delta,min,max] of [[a.x,d.x,70,425],[a.y,d.y,25,380]]){if(Math.abs(delta)<1e-8){if(v<min-.01||v>max+.01)return;continue;}const t1=(min-v)/delta,t2=(max-v)/delta;lo=Math.max(lo,Math.min(t1,t2));hi=Math.min(hi,Math.max(t1,t2));}
+  if(lo>hi)return;
+  e.setAttribute('x1',a.x+lo*d.x);e.setAttribute('y1',a.y+lo*d.y);e.setAttribute('x2',a.x+hi*d.x);e.setAttribute('y2',a.y+hi*d.y);
+ }
+ function refresh(){
+  if(running||!svg.getScreenCTM())return;running=true;observer.disconnect();
+  try{
+   svg.querySelectorAll('.queue-leader').forEach(e=>e.remove());
+   // The same economic scale is used on both axes. Extend the social/private
+   // straight curves to the square boundary, while keeping model values intact.
+   const plot=svg.querySelector('#diagram-plot');
+   if(plot&&!plot.querySelector('#queue-square-clip')){const defs=document.createElementNS(NS,'defs'),clip=document.createElementNS(NS,'clipPath'),rect=document.createElementNS(NS,'rect');clip.id='queue-square-clip';for(const [k,v] of Object.entries({x:70,y:25,width:355,height:355}))rect.setAttribute(k,v);clip.append(rect);defs.append(clip);plot.prepend(defs);}
+   if(plot)for(const e of plot.querySelectorAll('polygon.dwl-poly,polygon.ban-free-area,polygon#dwl,polygon#area-dwl,polygon#area-tax-rev'))e.setAttribute('clip-path','url(#queue-square-clip)');
+   for(const e of svg.querySelectorAll('line.line-mpb,line.line-mpc,line.line-msb,line.line-msc,line.line-policy,line.line-tax,line.line-qpoll,line.line-rd,line.line-edu'))if(visible(e))extendLine(e);
+   for(const label of svg.querySelectorAll('#label-mpb,#label-mpc,#label-msb,#label-msc,#label-policy-curve,#group-dynamic-curve-labels text,#free-scene text,#ban-scene text')){
+    if(!visible(label))continue;
+    const id=label.id.replace('label-','curve-'),name=label.textContent.trim();let e=label.id?svg.querySelector('#'+id):null;if(!e&&label.id==='label-policy-curve')e=svg.querySelector('#line-policy-curve');if(!e){const kind=/^MPB/.test(name)?'mpb':/^MSB/.test(name)?'msb':/^MPC/.test(name)?'mpc':/^MSC/.test(name)?'msc':null;if(kind)e=[...svg.querySelectorAll('line.line-'+kind)].find(visible);}
+    if(e?.tagName==='line'&&visible(e)){const a={x:+e.getAttribute('x1'),y:+e.getAttribute('y1')},b={x:+e.getAttribute('x2'),y:+e.getAttribute('y2')},p=a.x>b.x?a:b;label.setAttribute('x',p.x+10);label.setAttribute('y',p.y+4);label.setAttribute('text-anchor','start');}
+   }
+   const texts=[...svg.querySelectorAll('text')].filter(visible);
+   for(const e of texts){
+    if(!e.dataset.queueCategory){const small=!e.matches('.axis-title')&&(e.matches('[font-size="11"],[font-size="12"],.area-label')||/font-size:\s*(?:10|11|12|13)(?:px)?/.test(e.getAttribute('style')||''));e.dataset.queueCategory=small?'small':'main';}
+    const m=e.getScreenCTM(),scale=Math.hypot(m.a,m.b);e.style.setProperty('font-size',((e.dataset.queueCategory==='small'?12:14)/scale)+'px','important');
+    for(const sub of e.querySelectorAll('tspan[baseline-shift="sub"]'))sub.style.setProperty('font-size',(10/scale)+'px','important');
+   }
+   // Check all sampled curve segments and point markers, not only other labels.
+   const curves=[...svg.querySelectorAll('line,polyline,path')].filter(e=>visible(e)&&!e.closest('marker,defs')&&!e.matches('.axis,.guide-line,.label-leader,.collision-leader,.queue-leader')&&((e.matches('.curve,.line-mpb,.line-mpc,.line-msb,.line-msc,.line-policy,.line-tax,.line-qpoll,.line-rd,.line-edu'))||(e.tagName==='polyline'&&getComputedStyle(e).fill==='none')||(e.tagName==='path'&&e.getAttribute('fill')==='none'&&+e.getAttribute('stroke-width')>=2)||(e.tagName==='line'&&+e.getAttribute('stroke-width')>=2.4)));
+   const samples=curves.flatMap(e=>{try{const len=e.getTotalLength(),n=Math.max(2,Math.ceil(len/3)),points=[];for(let i=0;i<=n;i++){const p=e.getPointAtLength(len*i/n);points.push(rootPoint(e,p.x,p.y));}return points;}catch{return [];}});
+   const pointBoxes=[...svg.querySelectorAll('circle')].filter(e=>visible(e)&&+e.getAttribute('r')<=6).map(box);
+   const movable=texts.filter(e=>!e.matches('.area-label,#label-dwl-text,#label-subsidy-cost-text')&& (e.hasAttribute('data-curve-label')||e.hasAttribute('data-movable')||e.hasAttribute('data-policy-label')||/^(?:[DESAB](?:[₀₁₂]|\d|\s|$)|M(?:P|S|E)[BC]|PPC|Ceiling|Floor|Minimum wage|Quota)/.test(e.textContent.trim())));
+   const fixed=texts.filter(e=>!movable.includes(e)).map(box),placed=[...fixed];let unresolved=0;
+   for(const e of movable){
+    let ox=+e.getAttribute('x'),oy=+e.getAttribute('y');
+    // Repeated refreshes start from a stable point; rerenders replace the node
+    // or change its position, so slider changes retain their new anchor.
+    if(e.dataset.queueLastX===String(ox)&&e.dataset.queueLastY===String(oy)){ox=+e.dataset.queueBaseX;oy=+e.dataset.queueBaseY;}
+    e.dataset.queueBaseX=ox;e.dataset.queueBaseY=oy;
+    const candidateGood=b=>b.x>=4&&b.r<=696&&b.y>=4&&b.b<=496&&!placed.some(p=>overlaps(b,p))&&!samples.some(p=>inBox(p,b,3))&&!pointBoxes.some(p=>overlaps(b,p,3));
+    let good=false,chosen;
+    const offsets=[[0,0]];for(let r=10;r<=220;r+=10)offsets.push([0,-r],[r,0],[0,r],[-r,0],[r,-r],[-r,-r],[r,r],[-r,r]);
+    for(const [dx,dy] of offsets){
+     // Keep the four price-control/quota labels at the requested end.
+     if(e.hasAttribute('data-policy-label')&&dx!==0)continue;
+     e.setAttribute('x',ox+dx);e.setAttribute('y',oy+dy);const b=box(e);if(candidateGood(b)){good=true;chosen=b;break;}
+    }
+    if(!good){e.setAttribute('x',ox);e.setAttribute('y',oy);chosen=box(e);unresolved++;}
+    e.dataset.queueLastX=e.getAttribute('x');e.dataset.queueLastY=e.getAttribute('y');placed.push(chosen);
+    if(good&&Math.hypot(+e.getAttribute('x')-ox,+e.getAttribute('y')-oy)>25){const l=document.createElementNS(NS,'line');for(const [k,v] of Object.entries({class:'queue-leader',x1:ox,y1:oy-4,x2:+e.getAttribute('x'),y2:+e.getAttribute('y')-4}))l.setAttribute(k,v);e.parentNode.insertBefore(l,e);}
+   }
+   svg.dataset.queueUnresolved=String(unresolved);svg.dataset.queueCheckedLabels=String(movable.length);
+  }finally{observer.observe(svg,{childList:true,subtree:true});running=false;}
+ }
+ const schedule=()=>{if(!pending){pending=true;requestAnimationFrame(()=>{pending=false;refresh();});}};
+ const observer=new MutationObserver(schedule);observer.observe(svg,{childList:true,subtree:true});
+ document.addEventListener('input',schedule);document.addEventListener('change',schedule);document.addEventListener('click',schedule);window.addEventListener('resize',schedule);
+ window.WidgetDiagramLayout={refresh};refresh();
 })();
 
 </script>
