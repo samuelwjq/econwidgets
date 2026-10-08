@@ -98,6 +98,22 @@ strong,b{color:#dc2626!important;font-weight:700}
 .widget-page .ui-diagram-legends>.area-key,
 .widget-page .ui-diagram-legends>.surplus-key,
 .widget-page .ui-diagram-legends>.ban-legend { justify-content:center; }
+
+/* One area-only row. Matching top space centres the canvas independently. */
+.widget-page .diagram-frame{padding:10px 0!important;min-height:0!important;justify-content:center;gap:0;overflow:visible}
+.widget-page .diagram-frame::before{content:"";display:block;flex:0 0 var(--queue-legend-height,0px);width:100%}
+.widget-page .diagram-frame>svg#diagram{width:100%;max-width:560px;height:auto;aspect-ratio:600 / 500}
+.widget-page .ui-diagram-legends{padding:6px 2px 0!important;display:flex;flex-wrap:nowrap;overflow-x:auto;align-items:center;justify-content:safe center;max-width:100%;white-space:nowrap;min-height:26px}
+.widget-page .ui-diagram-legends>.legend,.widget-page .ui-diagram-legends>.curve-key,.widget-page .ui-diagram-legends>.area-key,.widget-page .ui-diagram-legends>.surplus-key,.widget-page .ui-diagram-legends>.ban-legend{display:none!important}
+.widget-page .queue-area-legend{display:flex;flex-wrap:nowrap;align-items:center;gap:14px;margin:0!important;flex:none;font-size:12px;white-space:nowrap}
+.widget-page .ui-diagram-legends>.queue-area-legend{margin:0!important}
+.widget-page .queue-area-item{display:inline-flex;align-items:center;gap:5px;flex:none;white-space:nowrap}
+.widget-page .queue-area-item i{display:inline-block;width:14px;height:11px;border:1px solid #777;flex:none}
+.widget-page .queue-pattern{background:repeating-linear-gradient(135deg,#fff 0 4px,#777 4px 5px)}
+.widget-page .queue-pattern.ps,.widget-page .queue-pattern.other,.widget-page .queue-pattern.quantity{background:repeating-linear-gradient(0deg,#fff 0 4px,#777 4px 5px)}
+.widget-page .queue-pattern.policy{background:repeating-linear-gradient(45deg,transparent 0 4px,#777 4px 5px),repeating-linear-gradient(135deg,#fff 0 4px,#777 4px 5px)}
+.widget-page svg .line-policy,.widget-page svg .line-tax,.widget-page svg .line-quota,.widget-page svg .line-qpoll,.widget-page svg .line-rd,.widget-page svg .line-edu{stroke-dasharray:none!important}
+
 </style><style data-shared-interface="approved">
 /* Approved Collection Interface. Embedded By build.py; No External Dependencies. */
 :root { --radius:8px; --ui-text:14px; }
@@ -374,6 +390,7 @@ function curve(points,colour,tip){
   const t1=(min-start)/delta,t2=(max-start)/delta;lo=Math.max(lo,Math.min(t1,t2));hi=Math.min(hi,Math.max(t1,t2));
  }
  if(lo>hi)return null;
+ if(a[0]===0&&a[1]===0&&b[0]===100&&b[1]===100){lo=0;hi=1;}
  const clipped=[[a[0]+lo*dx,a[1]+lo*dy],[a[0]+hi*dx,a[1]+hi*dy]];
  const e=add('polyline',{points:clipped.map(([q,p])=>X(q)+','+Y(p)).join(' '),stroke:colour,class:'curve'});
  e.curveEndpoint=clipped.reduce((best,pt)=>pt[0]>best[0]?pt:best,clipped[0]);target(e,tip);return e;
@@ -712,9 +729,12 @@ configure();
   for(const s of context){add('text',{x:padding,y,style:'font:14px system-ui;fill:#4b5563'},s);y+=20;}
   const diagramTop=y+8;clone.setAttribute('x',0);clone.setAttribute('y',diagramTop);clone.setAttribute('width',width);clone.setAttribute('height',vb.height);clone.style.width=width+'px';clone.style.height=vb.height+'px';out.append(clone);
   y=diagramTop+vb.height+22;
-  const keys=[...main.querySelectorAll('.legend,.curve-key,.area-key,.surplus-key')].filter(visible).map(n=>n.textContent.replace(/\s+/g,' ').trim()).filter(Boolean);
-  for(const s of wrap([...new Set(keys)].join(' · '))){add('text',{x:padding,y,style:'font:13px system-ui;fill:#374151'},s);y+=19;}
-  const gray=style?.value==='grayscale';
+  const gray=style?.value==='grayscale',entries=window.WidgetDiagramLayout?.legendEntries()||[];
+  if(entries.length){
+   ctx.font='13px system-ui';const widths=entries.map(e=>ctx.measureText(e.label).width+34),factor=Math.min(1,(width-2*padding)/widths.reduce((a,b)=>a+b,0));
+   const row=add('g',{transform:`translate(${padding} ${y-12}) scale(${factor})`});let x=0;
+   for(const e of entries){add('rect',{x,y:0,width:14,height:11,fill:gray?'url(#ui-hatch-'+e.kind+')':e.colour,stroke:'#777'},undefined,row);add('text',{x:x+19,y:10,style:'font:13px system-ui;fill:#374151'},e.label,row);x+=ctx.measureText(e.label).width+34;}y+=19;
+  }
   if(gray) {
    const defs=add('defs',{},undefined,out);
    for(const kind of ['social','other','policy','cs','ps','price','quantity']){
@@ -774,7 +794,7 @@ configure();
    }
   }
   const any=legends.some(n=>!n.hidden&&getComputedStyle(n).display!=='none'&&n.textContent.trim());
-  if(legendBox.hidden===any)legendBox.hidden=!any;
+  // Area-only legend visibility is managed by WidgetDiagramLayout.
  }
  // Remove Small Interface Instructions; Preserve Status Messages And Model Notes.
  for(const help of main.querySelectorAll('.diagram-help,.case-help')){
@@ -829,8 +849,9 @@ configure();
 <script>
 (()=>{
  const svg=document.getElementById('diagram');if(!svg)return;
- const NS='http://www.w3.org/2000/svg',isGov=document.title==='Government Intervention';
+ const NS='http://www.w3.org/2000/svg',isGov=document.title==='Government Intervention',isTopic5=!!svg.querySelector('.line-mpb');
  const stage=document.createElementNS(NS,'g');stage.id='queue-stage';stage.setAttribute('transform','translate(70 0)');for(const e of [...svg.children])if(!['defs','title','desc','style'].includes(e.tagName))stage.append(e);svg.append(stage);
+ svg.setAttribute('viewBox','50 0 600 500');
  const visible=e=>!e.closest('defs')&&getComputedStyle(e).display!=='none'&&e.getClientRects().length>0;
  let pending=false,running=false;
  const rootPoint=(e,x,y)=>{const m=svg.getScreenCTM().inverse().multiply(e.getScreenCTM());return new DOMPoint(x,y).matrixTransform(m);};
@@ -845,32 +866,79 @@ configure();
   if(lo>hi)return;
   e.setAttribute('x1',a.x+lo*d.x);e.setAttribute('y1',a.y+lo*d.y);e.setAttribute('x2',a.x+hi*d.x);e.setAttribute('y2',a.y+hi*d.y);
  }
+
+ // The private baseline pair has the same drawn length. Social/policy shifts
+ // keep their own intercepts and remain clipped at the nonnegative boundary.
+ function equalPrivatePair(){
+  for(const scope of [svg.querySelector('#diagram-plot'),svg.querySelector('#ban-scene'),svg.querySelector('#free-scene')].filter(Boolean)){
+   const pair=['mpb','mpc'].map(k=>[...scope.querySelectorAll('line.line-'+k)].find(visible));
+   if(pair.some(e=>!e))continue;
+   const length=e=>Math.hypot(+e.getAttribute('x2')-+e.getAttribute('x1'),+e.getAttribute('y2')-+e.getAttribute('y1'));
+   const target=Math.min(...pair.map(length));
+   for(const e of pair){const n=length(e);if(n<=target+.01)continue;const t=target/n;e.setAttribute('x2',+e.getAttribute('x1')+t*(+e.getAttribute('x2')-+e.getAttribute('x1')));e.setAttribute('y2',+e.getAttribute('y1')+t*(+e.getAttribute('y2')-+e.getAttribute('y1')));}
+  }
+ }
+ const frame=svg.closest('.diagram-frame'),legendBox=frame?.querySelector('.ui-diagram-legends');
+ const legend=document.createElement('div');legend.className='queue-area-legend';legend.setAttribute('aria-label','Shaded areas: colour and grayscale patterns');legendBox?.append(legend);
+ let legendEntries=[];
+ const areaNames={cs:'Consumer surplus',ps:'Producer surplus',g:'Government revenue / expenditure',dwl:'Deadweight loss',price:'Price effect',quantity:'Quantity effect'};
+ const areaIds={'dwl':['Deadweight loss','social'],'area-dwl':['Deadweight loss','social'],'ban-loss-area':['DWL under ban','social'],'free-policy-loss':['Free-provision DWL','social'],'ban-free-area':['Free-market DWL','other'],'free-market-loss':['Free-market DWL','other'],'area-tax-rev':['Tax revenue','policy'],'subsidy-cost-rect':['Subsidy expenditure','policy'],'cs-area':['Consumer surplus','cs'],'ps-area':['Producer surplus','ps']};
+ function refreshLegend(){
+  const entries=[];
+  for(const e of svg.querySelectorAll('polygon,rect,path')){
+   if(!visible(e)||e.closest('defs'))continue;
+   const b=e.getBBox();if(b.width<.01||b.height<.01)continue;
+   let info=areaIds[e.id],kind=e.dataset.area;
+   if(!info&&kind&&areaNames[kind])info=[areaNames[kind],kind==='g'?'policy':kind==='dwl'?'social':kind];
+   if(!info&&e.matches('.subsidy-rect'))info=['Subsidy expenditure','policy'];
+   if(!info||entries.some(n=>n.label===info[0]))continue;
+   if(kind==='g')info=[['indirect','direct'].includes(document.getElementById('policy-select')?.value)?'Subsidy expenditure':'Government revenue','policy'];
+   entries.push({label:info[0],kind:info[1],colour:getComputedStyle(e).fill});
+  }
+  legendEntries=entries;legend.replaceChildren();
+  for(const entry of entries){const item=document.createElement('span'),colour=document.createElement('i'),pattern=document.createElement('i');item.className='queue-area-item';colour.className='queue-colour';colour.style.background=entry.colour;pattern.className='queue-pattern '+entry.kind;colour.setAttribute('aria-hidden','true');pattern.setAttribute('aria-hidden','true');item.append(colour,pattern,document.createTextNode(entry.label));legend.append(item);}
+  legend.hidden=!entries.length;
+  if(legendBox){legendBox.hidden=!entries.length;const h=entries.length?legendBox.getBoundingClientRect().height:0;frame.style.setProperty('--queue-legend-height',h+'px');}
+ }
  function refresh(){
   if(running||!svg.getScreenCTM())return;running=true;observer.disconnect();
   try{
    svg.querySelectorAll('.queue-leader').forEach(e=>e.remove());
+   if(isTopic5)svg.querySelectorAll('.label-leader,.collision-leader').forEach(e=>e.remove());
    // The same economic scale is used on both axes. Extend the social/private
    // straight curves to the square boundary, while keeping model values intact.
    const plot=svg.querySelector('#diagram-plot');
    if(plot&&!plot.querySelector('#queue-square-clip')){const defs=document.createElementNS(NS,'defs'),clip=document.createElementNS(NS,'clipPath'),rect=document.createElementNS(NS,'rect');clip.id='queue-square-clip';for(const [k,v] of Object.entries({x:70,y:25,width:355,height:355}))rect.setAttribute(k,v);clip.append(rect);defs.append(clip);plot.prepend(defs);}
    if(plot)for(const e of plot.querySelectorAll('polygon.dwl-poly,polygon.ban-free-area,polygon#dwl,polygon#area-dwl,polygon#area-tax-rev'))e.setAttribute('clip-path','url(#queue-square-clip)');
    for(const e of svg.querySelectorAll('line.line-mpb,line.line-mpc,line.line-msb,line.line-msc,line.line-policy,line.line-tax,line.line-qpoll,line.line-rd,line.line-edu'))if(visible(e))extendLine(e);
+   equalPrivatePair();
    for(const label of svg.querySelectorAll('#label-mpb,#label-mpc,#label-msb,#label-msc,#label-policy-curve,#group-dynamic-curve-labels text,#free-scene text,#ban-scene text')){
     if(!visible(label))continue;
-    const id=label.id.replace('label-','curve-'),name=label.textContent.trim();let e=label.id?svg.querySelector('#'+id):null;if(!e&&label.id==='label-policy-curve')e=svg.querySelector('#line-policy-curve');if(!e){const kind=/^MPB/.test(name)?'mpb':/^MSB/.test(name)?'msb':/^MPC/.test(name)?'mpc':/^MSC/.test(name)?'msc':null;if(kind)e=[...svg.querySelectorAll('line.line-'+kind)].find(visible);}
-    if(e?.tagName==='line'&&visible(e)){const a={x:+e.getAttribute('x1'),y:+e.getAttribute('y1')},b={x:+e.getAttribute('x2'),y:+e.getAttribute('y2')},p=a.x>b.x?a:b;label.setAttribute('x',p.x+10);label.setAttribute('y',p.y+4);label.setAttribute('text-anchor','start');}
+    const name=label.textContent.trim();let e=label.dataset.curveTarget?svg.querySelector('#'+label.dataset.curveTarget):null;
+    if(!e&&label.id==='label-policy-curve')e=svg.querySelector('#line-policy-curve');
+    if(!e&&label.id)e=svg.querySelector('#'+label.id.replace('label-','curve-'));
+    const scope=label.closest('#free-scene,#ban-scene')||svg;
+    if(!e&&/^MPC\*/.test(name))e=[...scope.querySelectorAll('line.line-policy')].find(visible);
+    if(!e&&/^Quota$/.test(name))e=svg.querySelector('#line-quota');
+    if(!e){const kind=/^MPB/.test(name)?'mpb':/^MSB/.test(name)?'msb':/^MPC/.test(name)?'mpc':/^MSC/.test(name)?'msc':null;if(kind)e=[...scope.querySelectorAll('line.line-'+kind)].find(visible);}
+    if(e?.tagName==='line'&&visible(e)){
+     const a={x:+e.getAttribute('x1'),y:+e.getAttribute('y1')},b={x:+e.getAttribute('x2'),y:+e.getAttribute('y2')},p=Math.abs(a.x-b.x)<.01?(a.y<b.y?a:b):(a.x>b.x?a:b);
+     label.dataset.queueCurveLabel='true';label.dataset.queueAnchorX=p.x;label.dataset.queueAnchorY=p.y;
+     label.setAttribute('x',p.x+10);label.setAttribute('y',p.y+4);label.setAttribute('text-anchor','start');
+     if(name==='Quota'){label.setAttribute('x',p.x);label.setAttribute('y',p.y-10);label.setAttribute('text-anchor','middle');}
+    }
    }
    const texts=[...svg.querySelectorAll('text')].filter(visible);
    for(const e of texts){
     if(!e.dataset.queueCategory){const small=!e.matches('.axis-title')&&(e.matches('[font-size="11"],[font-size="12"],.area-label')||/font-size:\s*(?:10|11|12|13)(?:px)?/.test(e.getAttribute('style')||''));e.dataset.queueCategory=small?'small':'main';}
-    const m=e.getScreenCTM(),scale=Math.hypot(m.a,m.b);e.style.setProperty('font-size',((e.dataset.queueCategory==='small'?12:14)/scale)+'px','important');
+    const m=e.getScreenCTM(),scale=Math.hypot(m.a,m.b);e.style.setProperty('font-size',((isTopic5&&e.dataset.queueCurveLabel==='true'?12:e.dataset.queueCategory==='small'?12:14)/scale)+'px','important');
     for(const sub of e.querySelectorAll('tspan[baseline-shift="sub"]'))sub.style.setProperty('font-size',(10/scale)+'px','important');
    }
    // Check all sampled curve segments and point markers, not only other labels.
    const curves=[...svg.querySelectorAll('line,polyline,path')].filter(e=>visible(e)&&!e.closest('marker,defs')&&!e.matches('.axis,.guide-line,.label-leader,.collision-leader,.queue-leader')&&((e.matches('.curve,.line-mpb,.line-mpc,.line-msb,.line-msc,.line-policy,.line-tax,.line-qpoll,.line-rd,.line-edu'))||(e.tagName==='polyline'&&getComputedStyle(e).fill==='none')||(e.tagName==='path'&&e.getAttribute('fill')==='none'&&+e.getAttribute('stroke-width')>=2)||(e.tagName==='line'&&+e.getAttribute('stroke-width')>=2.4)));
    const samples=curves.flatMap(e=>{try{const len=e.getTotalLength(),n=Math.max(2,Math.ceil(len/3)),points=[];for(let i=0;i<=n;i++){const p=e.getPointAtLength(len*i/n);points.push(rootPoint(e,p.x,p.y));}return points;}catch{return [];}});
    const pointBoxes=[...svg.querySelectorAll('circle')].filter(e=>visible(e)&&+e.getAttribute('r')<=6).map(box);
-   const movable=texts.filter(e=>!e.matches('.area-label,#label-dwl-text,#label-subsidy-cost-text')&& (e.hasAttribute('data-curve-label')||e.hasAttribute('data-movable')||e.hasAttribute('data-policy-label')||/^(?:[DESAB](?:[₀₁₂]|\d|\s|$)|M(?:P|S|E)[BC]|PPC|Ceiling|Floor|Minimum wage|Quota)/.test(e.textContent.trim())));
+   const movable=texts.filter(e=>!e.matches('.area-label,#label-dwl-text,#label-subsidy-cost-text')&& (e.dataset.queueCurveLabel==='true'||e.hasAttribute('data-curve-label')||e.hasAttribute('data-movable')||e.hasAttribute('data-policy-label')||/^(?:[DESAB](?:[₀₁₂]|\d|\s|$)|M(?:P|S|E)[BC]|PPC|Ceiling|Floor|Minimum wage|Quota)/.test(e.textContent.trim())));
    const fixed=texts.filter(e=>!movable.includes(e)).map(box),placed=[...fixed];let unresolved=0;
    for(const e of movable){
     let ox=+e.getAttribute('x'),oy=+e.getAttribute('y');
@@ -878,25 +946,26 @@ configure();
     // or change its position, so slider changes retain their new anchor.
     if(e.dataset.queueLastX===String(ox)&&e.dataset.queueLastY===String(oy)){ox=+e.dataset.queueBaseX;oy=+e.dataset.queueBaseY;}
     e.dataset.queueBaseX=ox;e.dataset.queueBaseY=oy;
-    const candidateGood=b=>b.x>=4&&b.r<=696&&b.y>=4&&b.b<=496&&!placed.some(p=>overlaps(b,p))&&!samples.some(p=>inBox(p,b,3))&&!pointBoxes.some(p=>overlaps(b,p,3));
+    const candidateGood=b=>b.x>=54&&b.r<=646&&b.y>=4&&b.b<=496&&!placed.some(p=>overlaps(b,p))&&!samples.some(p=>inBox(p,b,3))&&!pointBoxes.some(p=>overlaps(b,p,3));
     let good=false,chosen;
     const offsets=[[0,0]];for(let r=10;r<=220;r+=10)offsets.push([0,-r],[r,0],[0,r],[-r,0],[r,-r],[-r,-r],[r,r],[-r,r]);
     for(const [dx,dy] of offsets){
      // Keep the four price-control/quota labels at the requested end.
-     if(e.hasAttribute('data-policy-label')&&dx!==0)continue;
+     if((e.hasAttribute('data-policy-label')||e.dataset.queueCurveLabel==='true')&&dx!==0)continue;
      e.setAttribute('x',ox+dx);e.setAttribute('y',oy+dy);const b=box(e);if(candidateGood(b)){good=true;chosen=b;break;}
     }
     if(!good){e.setAttribute('x',ox);e.setAttribute('y',oy);chosen=box(e);unresolved++;}
     e.dataset.queueLastX=e.getAttribute('x');e.dataset.queueLastY=e.getAttribute('y');placed.push(chosen);
-    if(good&&Math.hypot(+e.getAttribute('x')-ox,+e.getAttribute('y')-oy)>25){const l=document.createElementNS(NS,'line');for(const [k,v] of Object.entries({class:'queue-leader',x1:ox,y1:oy-4,x2:+e.getAttribute('x'),y2:+e.getAttribute('y')-4}))l.setAttribute(k,v);e.parentNode.insertBefore(l,e);}
+    if(good&&Math.hypot(+e.getAttribute('x')-ox,+e.getAttribute('y')-oy)>25){const l=document.createElementNS(NS,'line');for(const [k,v] of Object.entries({class:'queue-leader',x1:e.dataset.queueCurveLabel==='true'?+e.dataset.queueAnchorX:ox,y1:e.dataset.queueCurveLabel==='true'?+e.dataset.queueAnchorY:oy-4,x2:+e.getAttribute('x'),y2:+e.getAttribute('y')-4}))l.setAttribute(k,v);e.parentNode.insertBefore(l,e);}
    }
+   refreshLegend();
    svg.dataset.queueUnresolved=String(unresolved);svg.dataset.queueCheckedLabels=String(movable.length);
   }finally{observer.observe(svg,{childList:true,subtree:true});running=false;}
  }
  const schedule=()=>{if(!pending){pending=true;requestAnimationFrame(()=>{pending=false;refresh();});}};
  const observer=new MutationObserver(schedule);observer.observe(svg,{childList:true,subtree:true});
  document.addEventListener('input',schedule);document.addEventListener('change',schedule);document.addEventListener('click',schedule);window.addEventListener('resize',schedule);
- window.WidgetDiagramLayout={refresh};refresh();
+ window.WidgetDiagramLayout={refresh,legendEntries:()=>legendEntries};refresh();
 })();
 
 </script>
