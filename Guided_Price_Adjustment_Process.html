@@ -95,6 +95,19 @@ strong,b{color:#dc2626!important;font-weight:700}
 @media(max-width:480px){.step-navigation{margin-left:0;width:100%}.step-navigation button{flex:1}.case-buttons button{padding:8px 5px}.walkthrough-copy{font-size:13px}}
 .cs-area-note strong{color:#2563eb!important}.ps-area-note strong{color:#16a34a!important}
 .walkthrough-copy p{font-size:inherit;color:inherit;line-height:inherit;margin:0 0 12px}.walkthrough-copy p:last-child{margin-bottom:0}
+
+/* Centre the canvas and its legend together, with balanced vertical space. */
+.widget-page .diagram-frame {
+ display:flex; flex-direction:column; align-items:center; justify-content:center;
+ box-sizing:border-box; min-height:clamp(280px,85vw,480px); padding-block:16px;
+}
+.widget-page .diagram-frame>svg#diagram { flex-shrink:0; }
+.widget-page .ui-diagram-legends { width:100%; box-sizing:border-box; text-align:center; }
+.widget-page .ui-diagram-legends>.legend,
+.widget-page .ui-diagram-legends>.curve-key,
+.widget-page .ui-diagram-legends>.area-key,
+.widget-page .ui-diagram-legends>.surplus-key,
+.widget-page .ui-diagram-legends>.ban-legend { justify-content:center; }
 </style><style data-shared-interface="approved">
 /* Approved Collection Interface. Embedded By build.py; No External Dependencies. */
 :root { --radius:8px; --ui-text:14px; }
@@ -283,7 +296,7 @@ function axisLabels(v0,v1,letter,isP){let same=Math.abs(v1-v0)<1e-8;
 }
 
 function render(){hideTip();let {d,s,q,p,qd,qs}=state(),changed=d!==0||s!==0,sameP=Math.abs(p-50)<1e-8,sameQ=Math.abs(q-50)<1e-8;layer.replaceChildren();
-part('axes',()=>{line(90,410,475,410,colour.ink,2,{'marker-end':'url(#marker-ink)'});line(90,410,90,38,colour.ink,2,{'marker-end':'url(#marker-ink)'});text(76,32,'Price',colour.ink,{'font-weight':'600'});text(485,416,'Quantity',colour.ink,{'font-weight':'600','text-anchor':'start'});});
+part('axes',()=>{line(90,410,610,410,colour.ink,2,{'marker-end':'url(#marker-ink)'});line(90,410,90,30,colour.ink,2,{'marker-end':'url(#marker-ink)'});text(76,32,'Price',colour.ink,{'font-weight':'600'});text(620,416,'Quantity',colour.ink,{'font-weight':'600','text-anchor':'start'});});
 part('initial-guides',()=>guides(50,50));if(step>=5&&changed)part('new-guides',()=>guides(q,p));
 if(d!==0)part('old-curves',()=>curve('d',0,sub('D',0),true));if(s!==0)part('old-curves',()=>curve('s',0,sub('S',0),true));
 part('current-d',()=>curve('d',d,d!==0?sub('D',1):step>=5?sub('D',0)+' = '+sub('D',1):sub('D',0)));

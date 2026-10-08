@@ -85,6 +85,19 @@ strong,b{color:#dc2626!important;font-weight:700}
 [hidden]{display:none!important}.outcomes{border-collapse:collapse;width:100%;font-size:13px;margin:14px 0}.outcomes th,.outcomes td{padding:9px 10px;border:1px solid var(--border);text-align:right;font-variant-numeric:tabular-nums}.outcomes th:first-child,.outcomes td:first-child{text-align:left}.outcomes thead{background:#f3f4f6}.outcomes caption{font-weight:700;text-align:left;margin-bottom:8px;font-size:15px}.outcomes tr:last-child{background:#f0f4ff;font-weight:700}.note-small{font-size:12px;color:#6b7280}.slider-card label{flex-basis:100%}.slider-card output{min-width:65px;font-weight:700;color:#4169e1;text-align:right}.areas{cursor:pointer}.area-label{font-weight:700;pointer-events:none;stroke:none}.axis{stroke:#111}.curve{fill:none;stroke-width:2.5}.diagram-tooltip-target{cursor:help}#tooltip{max-width:330px}.live-note{min-height:22px}.pattern-cs{background:repeating-linear-gradient(135deg,#fff 0 4px,#777 4px 5px)}.pattern-ps{background:repeating-linear-gradient(0deg,#fff 0 4px,#777 4px 5px)}.pattern-g{background:repeating-linear-gradient(45deg,transparent 0 4px,#777 4px 5px),repeating-linear-gradient(135deg,#fff 0 4px,#777 4px 5px)}.pattern-dwl{background:radial-gradient(#555 1px,#fff 1px);background-size:5px 5px}.glossary-highlight{border-color:#4169e1;background:#f0f4ff}.formula{font-weight:600;color:#4169e1}.table-wrap{overflow:auto}.toolbar .hint{text-align:center}.policy-note strong{color:inherit!important}svg text{font-size:13px} .toggle-grid{gap:0 14px}
 @media(max-width:480px){.outcomes th,.outcomes td{padding:7px 5px;font-size:12px}.slider-card output{min-width:45px}}
 @media print{.controls,.toolbar,nav,.sidebar,.diagram-help,#tooltip{display:none!important}.layout{display:block}body{max-width:none}.diagram-frame{border:0}}
+
+/* Centre the canvas and its legend together, with balanced vertical space. */
+.widget-page .diagram-frame {
+ display:flex; flex-direction:column; align-items:center; justify-content:center;
+ box-sizing:border-box; min-height:clamp(280px,85vw,480px); padding-block:16px;
+}
+.widget-page .diagram-frame>svg#diagram { flex-shrink:0; }
+.widget-page .ui-diagram-legends { width:100%; box-sizing:border-box; text-align:center; }
+.widget-page .ui-diagram-legends>.legend,
+.widget-page .ui-diagram-legends>.curve-key,
+.widget-page .ui-diagram-legends>.area-key,
+.widget-page .ui-diagram-legends>.surplus-key,
+.widget-page .ui-diagram-legends>.ban-legend { justify-content:center; }
 </style><style data-shared-interface="approved">
 /* Approved Collection Interface. Embedded By build.py; No External Dependencies. */
 :root { --radius:8px; --ui-text:14px; }
@@ -231,7 +244,7 @@ body.index-page main { width:min(100% - 24px,1060px); padding:24px 0; }
 @media(max-width:480px) { .widget-page .ui-teaching-panels { grid-template-columns:minmax(0,1fr); } }
 
 </style>
-</head><body class="widget-page" style="--diagram-max-width:640px">
+</head><body class="widget-page" style="--diagram-max-width:560px">
 <header class="widget-header"><h1>Government Intervention</h1><p>Topic 4 · A-Level Economics · Interactive Diagrams</p></header>
 <div class="layout"><main class="main-content">
 <div class="controls"><div class="policy-selector"><label for="policy-select">Government policy:</label><select id="policy-select">
@@ -246,7 +259,7 @@ body.index-page main { width:min(100% - 24px,1060px); padding:24px 0; }
 <label id="adjustment-control" class="checkbox-label"><input id="show-adjustment" type="checkbox">Price adjustment</label>
 <label class="checkbox-label"><input id="show-tooltips" type="checkbox" checked>Tooltips</label>
 </div><div class="toolbar"><button id="reset" class="reset-button" type="button">Reset Diagram</button><span class="hint">Hover, tap or focus a label or shaded area for an explanation.</span></div></div>
-<div class="diagram-frame"><svg id="diagram" viewBox="0 0 800 560" role="img" aria-labelledby="diagram-title diagram-desc"></svg></div>
+<div class="diagram-frame"><svg id="diagram" viewBox="0 0 700 500" role="img" aria-labelledby="diagram-title diagram-desc"><g id="diagram-plot" class="diagram-viewport" transform="matrix(1.055555555556 0 0 1.055555555556 -28.222222222222 -46.000000000000)"></g></svg></div>
 <div id="area-key" class="area-key" aria-label="Shaded area key"></div>
 <p id="axis-help" class="diagram-help">P₀ and Q₀ mark the initial equilibrium. P_c is the price paid by consumers; Pₚ is the price received by producers. All values use illustrative units.</p>
 <div class="toolbar"><label class="export-format">Image style <select id="export-style"><option value="colour">Colour</option><option value="grayscale">Grayscale (print)</option></select></label><button id="download" type="button">Download diagram</button><button id="copy" type="button">Copy diagram</button></div><p id="export-status" class="diagram-help live-note" role="status"></p>
@@ -327,7 +340,7 @@ let current=calculate('none',0);
 function configure(){for(const id of ['show-cs','show-ps','show-g'])$(id).checked=false;const k=$('policy-select').value,p=policies[k];$('slider-card').hidden=k==='none';if(k!=='none'){Object.assign($('policy-slider'),{min:p.min,max:p.max,value:values[k]});$('slider-label').textContent=p.label;$('slider-min').textContent=k==='quota'?'Smaller quota':'Lower';$('slider-max').textContent=k==='quota'?'Larger quota':'Higher';}$('tooltip').hidden=true;render();}
 const palette={cs:'#2563eb',ps:'#16a34a',g:'#8b5cf6',dwl:'#dc2626'};
 const X=q=>112+3*q,Y=p=>432-p/120*360;
-function add(tag,attrs={},parent=$('diagram')){const e=document.createElementNS(NS,tag);for(const [k,v] of Object.entries(attrs))e.setAttribute(k,v);parent.append(e);return e;}
+function add(tag,attrs={},parent=$('diagram-plot')){const e=document.createElementNS(NS,tag);for(const [k,v] of Object.entries(attrs))e.setAttribute(k,v);parent.append(e);return e;}
 function text(x,y,str,attrs={},tip){str=str.replace(/\b([QL])(dd|ss|quota)\b/g,'$1_$2');const e=add('text',{x,y,...attrs});str.split(/([PWQLE]_[a-z]+)/g).forEach(part=>{const m=part.match(/^([PWQLE])_([a-z]+)$/);if(m){e.append(document.createTextNode(m[1]));const sub=add('tspan',{'baseline-shift':'sub','font-size':9},e);sub.textContent=m[2];}else e.append(document.createTextNode(part));});if(tip)target(e,tip);return e;}
 function line(q1,p1,q2,p2,attrs={}){return add('line',{x1:X(q1),y1:Y(p1),x2:X(q2),y2:Y(p2),...attrs});}
 function target(el,tip){el.dataset.tip=tip;el.setAttribute('tabindex','0');el.setAttribute('role','button');el.setAttribute('aria-label',tip);el.classList.add('diagram-tooltip-target');if($('show-tooltips').checked){const title=add('title',{},el);title.textContent=tip;}return el;}
@@ -363,7 +376,7 @@ function labelCurve(e,label,colour){
  return text(X(q)+14,Y(p)+4,label,{fill:colour,'text-anchor':'start','font-weight':600,'data-movable':'true','data-curve-label':'true'});
 }
 
-function defs(){const d=add('defs');const c=add('clipPath',{id:'plot-clip'},d);add('rect',{x:112,y:72,width:360,height:360},c);for(const [id,reverse] of [['arrow',false],['arrow-start',true],['arrow-red',false]]){const m=add('marker',{id,viewBox:'0 0 10 10',refX:reverse?1:9,refY:5,markerWidth:6,markerHeight:6,orient:'auto-start-reverse'},d);add('path',{d:'M0,0 L10,5 L0,10 Z',fill:id==='arrow-red'?'#dc2626':'#6b7280'},m);} }
+function defs(){const d=add('defs');const c=add('clipPath',{id:'plot-clip'},d);add('rect',{x:112,y:72,width:492.631578947368,height:360},c);for(const [id,reverse] of [['arrow',false],['arrow-start',true],['arrow-red',false]]){const m=add('marker',{id,viewBox:'0 0 10 10',refX:reverse?1:9,refY:5,markerWidth:6,markerHeight:6,orient:'auto-start-reverse'},d);add('path',{d:'M0,0 L10,5 L0,10 Z',fill:id==='arrow-red'?'#dc2626':'#6b7280'},m);} }
 function render(){
  const k=$('policy-select').value,v=values[k],p=policies[k],m=current=calculate(k,v),lab=k==='wage';
  const taxSub=['specific','advalorem','indirect','direct'].includes(k),showPrices=taxSub&&$('show-prices').checked,p1=k==='direct'?m.pp:m.pc;
@@ -396,15 +409,15 @@ function render(){
  rows.push(['Deadweight Loss','dwl','None',m.dwl>1e-7?'Present':'None'],['Total Welfare','tw','Maximum',level(m.tw-2500)]);
  $('outcomes-body').innerHTML=rows.map(([name,key,initial,after])=>'<tr data-metric="'+key+'"><th scope="row">'+formatNotation(name)+'</th><td>'+formatNotation(initial)+'</td><td>'+formatNotation(after)+'</td></tr>').join('');
  [...$('glossary').children].forEach(e=>{const relevant=glossaryRelevant(e.id.replace('glossary-',''),k);e.hidden=!relevant;if(!relevant)e.open=false;e.classList.toggle('glossary-highlight',e.id==='glossary-'+p.glossary);});if(p.glossary)$('glossary').prepend($('glossary-'+p.glossary));
- const svg=$('diagram');svg.replaceChildren();const title=add('title',{id:'diagram-title'});title.textContent=p.name+' — '+(lab?'labour market':'demand and supply');const desc=add('desc',{id:'diagram-desc'});desc.textContent=note+' '+$('welfare-formula').textContent;defs();
+ const svg=$('diagram-plot');svg.replaceChildren();const title=add('title',{id:'diagram-title'});title.textContent=p.name+' — '+(lab?'labour market':'demand and supply');const desc=add('desc',{id:'diagram-desc'});desc.textContent=note+' '+$('welfare-formula').textContent;defs();
  const clip=add('g',{'clip-path':'url(#plot-clip)'});const areaList=[];
  if(!lab&&$('show-cs').checked&&m.q>0){shade('cs',[[0,100],[m.q,D(m.q)],[m.q,m.pc],[0,m.pc]],'Consumer Surplus: willingness to pay minus the effective price paid, summed over the units actually traded. How to identify the area: below the original demand curve and above '+(taxSub?'P_c, the effective price paid by consumers':'P₁')+', from the quantity origin to Q₁.'+(k==='direct'?' The consumer price is net of the direct subsidy.':''));areaList.push('cs');}
  if(!lab&&$('show-ps').checked&&m.q>0){shade('ps',[[0,0],[m.q,S(m.q)],[m.q,m.pp],[0,m.pp]],'Producer Surplus: revenue received minus minimum acceptable revenue, summed over the units actually traded. How to identify the area: above the original supply curve and below '+(taxSub?'Pₚ, the price received by producers':'P₁')+', from the quantity origin to Q₁.'+(k==='indirect'?' The producer price includes the subsidy.':m.fiscal==='revenue'?' The producer price is after paying the tax.':'')+(k==='quota'?' This includes quota rent retained by producers.':''));areaList.push('ps');}
  if(m.fiscal&&$('show-g').checked&&Math.abs(m.g)>1e-7){shade('g',[[0,m.pc],[m.q,m.pc],[m.q,m.pp],[0,m.pp]],'Government '+m.fiscal+': '+(m.fiscal==='revenue'?'tax':'subsidy')+' per unit × quantity traded. '+(m.g>0?'Added to':'Subtracted from')+' CS + PS when calculating Total Welfare.'+(m.g<0?' The expenditure area overlaps parts of CS and PS; subtract it once.':''));areaList.push('g');}
  if($('show-dwl').checked&&m.dwl>1e-7){shade('dwl',[[50,50],[m.q,D(m.q)],[m.q,S(m.q)]],'Deadweight Loss: '+(lab?'Gains from employment forgone as employment falls. How to identify the area: between the original Demand for Labour and Supply of Labour curves, over the reduction in employment from L₀ to L₁.':m.q<50?'Gains from trade forgone because too few units are traded. How to identify the area: between the original demand and supply curves, over the units between Q₁ and Q₀ that are no longer traded.':'For units beyond Q₀, marginal cost exceeds marginal benefit. How to identify the area: between the original demand and supply curves, over the additional units between Q₀ and Q₁.'));areaList.push('dwl');}
  [...svg.querySelectorAll('.areas')].forEach(e=>clip.append(e));
- line(0,0,120,0,{class:'axis','marker-end':'url(#arrow)'});line(0,0,0,120,{class:'axis','marker-end':'url(#arrow)'});
- text(112,40,lab?'Wage':'Price',{'text-anchor':'middle','font-weight':700});text(478,460,lab?'Quantity Of Labour':'Quantity',{'text-anchor':'end','font-weight':700});
+ line(0,0,164.210526315789,0,{class:'axis','marker-end':'url(#arrow)'});line(0,0,0,120,{class:'axis','marker-end':'url(#arrow)'});
+ text(112,58,lab?'Wage':'Price',{'text-anchor':'middle','font-weight':700});text(614.105263157895,460,lab?'Quantity Of Labour':'Quantity',{'text-anchor':'end','font-weight':700});
  const supplyColor='#16a34a',demandColor='#2563eb',policyColor='#4169e1';
  const lines=add('g',{'clip-path':'url(#plot-clip)'});
  const demand=curve([[0,100],[100,0]],demandColor,lab?'Demand for Labour: employers are willing to hire more labour at lower wages.':'Demand: the relationship between price and quantity demanded.');lines.append(demand);

@@ -92,7 +92,20 @@ strong,b{color:#dc2626!important;font-weight:700}
 .cs-area-note strong{color:#2563eb!important}.ps-area-note strong{color:#16a34a!important}
 
 .elastic-readout{display:flex;gap:10px;align-items:center;flex-wrap:wrap;font-size:14px}.elastic-readout output{font-weight:750;color:#4169e1;font-variant-numeric:tabular-nums}.elastic-label{font-weight:650}.slider-card output{font-size:13px;font-weight:650;min-width:65px}.slider-scale{display:flex;justify-content:space-between;font-size:12px;color:#6b7280;width:100%}.result-banner{padding:10px 12px;border:1px solid #cbd7fa;border-radius:8px;margin-top:10px;font-size:14px;font-weight:650;background:#f0f4ff}.skeleton{min-height:28px}.curve-key{display:flex;flex-wrap:wrap;gap:6px 18px;font-size:12px;margin:8px 0}.curve-key i{display:inline-block;width:22px;border-top:2px solid;margin-right:6px}.area-key i.price{background:#ede9fe}.area-key i.quantity{background:#fef3c7}.area-key i.hatch-price{background:repeating-linear-gradient(135deg,#fff 0 4px,#777 4px 5px)}.area-key i.hatch-quantity{background:repeating-linear-gradient(0deg,#fff 0 4px,#777 4px 5px)}.model-note{font-size:12px;color:#6b7280;margin:10px 2px}.widget-header{text-align:center;border-left:0;border-bottom:3px solid #4169e1;padding:0 0 12px}.tooltip strong{color:#dc2626!important}
-.slider-scale.signed{padding-left:33.333%;padding-right:33.333%}.slider-scale{position:relative}.slider-scale span::before{content:"";display:block;height:6px;width:1px;background:#9ca3af;margin:0 auto 2px}.elastic-track{flex:1;min-width:100px}.elastic-track input{width:100%;display:block}.slider-scale{height:22px;display:block;padding:0!important}.slider-scale span{position:absolute;top:0;transform:translateX(-50%)}.slider-scale span:nth-child(1){left:0}.slider-scale span:nth-child(2){left:50%}.slider-scale span:nth-child(3){left:100%}.slider-scale.signed span:nth-child(1){left:33.333%}.slider-scale.signed span:nth-child(3){left:66.667%}</style><style data-shared-interface="approved">
+.slider-scale.signed{padding-left:33.333%;padding-right:33.333%}.slider-scale{position:relative}.slider-scale span::before{content:"";display:block;height:6px;width:1px;background:#9ca3af;margin:0 auto 2px}.elastic-track{flex:1;min-width:100px}.elastic-track input{width:100%;display:block}.slider-scale{height:22px;display:block;padding:0!important}.slider-scale span{position:absolute;top:0;transform:translateX(-50%)}.slider-scale span:nth-child(1){left:0}.slider-scale span:nth-child(2){left:50%}.slider-scale span:nth-child(3){left:100%}.slider-scale.signed span:nth-child(1){left:33.333%}.slider-scale.signed span:nth-child(3){left:66.667%}
+/* Centre the canvas and its legend together, with balanced vertical space. */
+.widget-page .diagram-frame {
+ display:flex; flex-direction:column; align-items:center; justify-content:center;
+ box-sizing:border-box; min-height:clamp(280px,85vw,480px); padding-block:16px;
+}
+.widget-page .diagram-frame>svg#diagram { flex-shrink:0; }
+.widget-page .ui-diagram-legends { width:100%; box-sizing:border-box; text-align:center; }
+.widget-page .ui-diagram-legends>.legend,
+.widget-page .ui-diagram-legends>.curve-key,
+.widget-page .ui-diagram-legends>.area-key,
+.widget-page .ui-diagram-legends>.surplus-key,
+.widget-page .ui-diagram-legends>.ban-legend { justify-content:center; }
+</style><style data-shared-interface="approved">
 /* Approved Collection Interface. Embedded By build.py; No External Dependencies. */
 :root { --radius:8px; --ui-text:14px; }
 .widget-header { text-align:center; border-left:0; border-bottom:3px solid var(--accent); padding:0 0 12px; margin-bottom:10px; }

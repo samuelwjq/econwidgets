@@ -86,6 +86,19 @@ strong,b{color:#dc2626!important;font-weight:700}
 .tooltip-close{color:var(--ink)}
 .tooltip-close:hover{background:#f0f4ff}
 .area-key{display:flex;gap:8px 16px;flex-wrap:wrap;align-items:center;font-size:12px;margin:8px 2px}.area-key[hidden],.ban-legend[hidden]{display:none}.key-heading{font-weight:600;color:#4b5563}.key-item{display:inline-flex;align-items:center;gap:6px}.key-item i{display:inline-block;width:16px;height:12px;border:1px solid #777;flex-shrink:0}.key-colour{opacity:.65}.key-pattern.social{background:repeating-linear-gradient(135deg,#fff 0 4px,#777 4px 5px)}.key-pattern.other{background:repeating-linear-gradient(0deg,#fff 0 4px,#777 4px 5px)}.key-pattern.policy{background:repeating-linear-gradient(45deg,transparent 0 4px,#777 4px 5px),repeating-linear-gradient(135deg,#fff 0 4px,#777 4px 5px)}.related-widget{margin:12px 2px}.related-widget a{display:inline-block;color:#4169e1;font-size:13px;font-weight:600;text-decoration:underline;text-underline-offset:3px;padding:8px 0;max-width:100%}
+
+/* Centre the canvas and its legend together, with balanced vertical space. */
+.widget-page .diagram-frame {
+ display:flex; flex-direction:column; align-items:center; justify-content:center;
+ box-sizing:border-box; min-height:clamp(280px,85vw,480px); padding-block:16px;
+}
+.widget-page .diagram-frame>svg#diagram { flex-shrink:0; }
+.widget-page .ui-diagram-legends { width:100%; box-sizing:border-box; text-align:center; }
+.widget-page .ui-diagram-legends>.legend,
+.widget-page .ui-diagram-legends>.curve-key,
+.widget-page .ui-diagram-legends>.area-key,
+.widget-page .ui-diagram-legends>.surplus-key,
+.widget-page .ui-diagram-legends>.ban-legend { justify-content:center; }
 </style>
 <style data-shared-interface="approved">
 /* Approved Collection Interface. Embedded By build.py; No External Dependencies. */
@@ -234,7 +247,7 @@ body.index-page main { width:min(100% - 24px,1060px); padding:24px 0; }
 
 </style>
 </head>
-<body class="widget-page" style="--diagram-max-width:568px">
+<body class="widget-page" style="--diagram-max-width:560px">
 <header class="widget-header"><h1>Government Measures To Correct Negative Externalities</h1><p>Topic 5 · A-Level Economics · Interactive Diagrams</p></header>
 
 <div class="layout">
@@ -281,7 +294,7 @@ body.index-page main { width:min(100% - 24px,1060px); padding:24px 0; }
         <div class="control-group">
           <label for="tax-slider"><strong>Tax Size:</strong></label>
           <span class="scale-label">Min</span>
-          <input type="range" id="tax-slider" min="0" max="40" value="0" step="1">
+          <input type="range" id="tax-slider" min="0" max="60" value="0" step="1">
           <span class="scale-label">Max</span>
         </div>
       </div>
@@ -291,7 +304,7 @@ body.index-page main { width:min(100% - 24px,1060px); padding:24px 0; }
         <div class="control-group">
           <label for="quota-slider"><strong>Output Quota Limit:</strong></label>
           <span class="scale-label">Strict</span>
-          <input type="range" id="quota-slider" min="30" max="75" value="75" step="0.5">
+          <input type="range" id="quota-slider" min="20" max="75" value="75" step="0.5">
           <span class="scale-label">Relaxed</span>
         </div>
       </div>
@@ -301,7 +314,7 @@ body.index-page main { width:min(100% - 24px,1060px); padding:24px 0; }
         <div class="control-group">
           <label for="qpoll-slider"><strong>Pollutant Quota Strictness:</strong></label>
           <span class="scale-label">Relaxed</span>
-          <input type="range" id="qpoll-slider" min="0" max="25" value="0" step="1">
+          <input type="range" id="qpoll-slider" min="0" max="40" value="0" step="1">
           <span class="scale-label">Zero Pollutant</span>
         </div>
       </div>
@@ -311,7 +324,7 @@ body.index-page main { width:min(100% - 24px,1060px); padding:24px 0; }
         <div class="control-group">
           <label for="rd-slider"><strong>MEC Reduction (R&amp;D):</strong></label>
           <span class="scale-label">Low</span>
-          <input type="range" id="rd-slider" min="0" max="25" value="0" step="1">
+          <input type="range" id="rd-slider" min="0" max="40" value="0" step="1">
           <span class="scale-label">High</span>
         </div>
       </div>
@@ -321,15 +334,15 @@ body.index-page main { width:min(100% - 24px,1060px); padding:24px 0; }
         <div class="control-group">
           <label for="edu-slider"><strong>Campaign Effectiveness:</strong></label>
           <span class="scale-label">Zero</span>
-          <input type="range" id="edu-slider" min="0" max="40" value="0" step="1">
+          <input type="range" id="edu-slider" min="0" max="60" value="0" step="1">
           <span class="scale-label">Extremely Effective</span>
         </div>
       </div>
     </div>
 
-<div id="ban-controls" class="policy-note" style="display:none"><div class="control-group"><label for="ban-mec-slider"><strong>Marginal External Cost (MEC):</strong></label><span class="scale-label">None</span><input id="ban-mec-slider" type="range" min="0" max="120" step="1" value="25"><span class="scale-label">Very high</span></div><p>A ban fixes output at <strong>no output</strong>. Vary MEC to compare a ban with the unregulated market at the <em>same</em> MEC.</p><label class="checkbox-label"><input type="checkbox" id="ban-compare" checked> Show free-market DWL for comparison</label></div>
+<div id="ban-controls" class="policy-note" style="display:none"><div class="control-group"><label for="ban-mec-slider"><strong>Marginal External Cost (MEC):</strong></label><span class="scale-label">None</span><input id="ban-mec-slider" type="range" min="0" max="120" step="1" value="40"><span class="scale-label">Very high</span></div><p>A ban fixes output at <strong>no output</strong>. Vary MEC to compare a ban with the unregulated market at the <em>same</em> MEC.</p><label class="checkbox-label"><input type="checkbox" id="ban-compare" checked> Show free-market DWL for comparison</label></div>
     <!-- SVG Diagram -->
-    <svg id="diagram" viewBox="-40 0 710 470">
+    <svg id="diagram" viewBox="0 0 700 500"><g id="diagram-plot" class="diagram-viewport" transform="matrix(1.070422535211 0 0 1.070422535211 15.070422535211 3.239436619718)">
       <defs>
         <!-- Standard Axis Arrow -->
         <marker id="arrow" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="7" markerHeight="7" orient="auto">
@@ -350,12 +363,12 @@ body.index-page main { width:min(100% - 24px,1060px); padding:24px 0; }
       <text id="label-dwl-text" class="has-tooltip" fill="#7f1d1d" font-weight="bold" text-anchor="middle" dominant-baseline="central" font-size="11">DWL</text>
 
       <!-- Axes -->
-      <line x1="70" y1="380" x2="425" y2="380" class="axis" marker-end="url(#arrow)" />
+      <line x1="70" y1="380" x2="555.789473684211" y2="380" class="axis" marker-end="url(#arrow)" />
       <line x1="70" y1="380" x2="70" y2="25" class="axis" marker-end="url(#arrow)" />
 
       <!-- Axis Headers -->
-      <text class="axis-title" x="64" y="12" text-anchor="end" font-weight="bold" style="font-size:12px"><tspan x="64">Price /</tspan><tspan x="64" dy="14">Costs /</tspan><tspan x="64" dy="14">Benefits</tspan></text>
-      <text class="axis-title" x="435" y="385" font-weight="bold">Quantity</text>
+      <text class="axis-title" x="64" y="19" text-anchor="end" font-weight="bold" style="font-size:12px"><tspan x="64">Price /</tspan><tspan x="64" dy="14">Costs /</tspan><tspan x="64" dy="14">Benefits</tspan></text>
+      <text class="axis-title" x="565.131578947369" y="385" font-weight="bold">Quantity</text>
       
 
       <!-- Baseline Market Curves -->
@@ -388,7 +401,7 @@ body.index-page main { width:min(100% - 24px,1060px); padding:24px 0; }
         <line id="line-overprod" stroke="#dc2626" stroke-width="2" marker-start="url(#arrow-left)" marker-end="url(#arrow-right)" />
         <text id="label-overprod" fill="#dc2626" font-weight="bold" font-size="11" text-anchor="middle">Over-production</text>
       </g>
-    </svg>
+    </g></svg>
 
 <section id="ban-results" class="policy-note" aria-live="polite" style="display:none"></section>
     <!-- Standardized Tooltip Element -->
@@ -421,7 +434,7 @@ body.index-page main { width:min(100% - 24px,1060px); padding:24px 0; }
 
 <script>
   const ECON_EPS = 1e-9;
-  const FIXED_MEC = 25; // Baseline external cost
+  const FIXED_MEC = 40; // Baseline external cost
 
   // Master Tooltip Dictionary Mechanics
   const diagramTooltip = document.getElementById('diagram-tooltip');
@@ -492,8 +505,8 @@ body.index-page main { width:min(100% - 24px,1060px); padding:24px 0; }
   };
 
   // Coordinate Converters
-  function toSvgX(q) { return 70 + 3.4 * q; }
-  function toSvgY(p) { return 380 - 3.4 * p; }
+  function toSvgX(q) { return 70 + 2.8 * q; }
+  function toSvgY(p) { return 380 - 2.8 * p; }
 
   function createSvgLine(x1, y1, x2, y2, className, strokeColor) {
     const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
@@ -587,7 +600,7 @@ body.index-page main { width:min(100% - 24px,1060px); padding:24px 0; }
   // Policy Switcher
   policySelect.addEventListener('change', () => {
     const policy = policySelect.value;
-    if(policy==='ban')document.getElementById('ban-mec-slider').value=25;
+    if(policy==='ban')document.getElementById('ban-mec-slider').value=FIXED_MEC;
 
     taxCard.style.display = 'none';
     quotaCard.style.display = 'none';
@@ -1131,7 +1144,7 @@ body.index-page main { width:min(100% - 24px,1060px); padding:24px 0; }
     return {mec,qe,qs,freeDwl,banDwl,gain:freeDwl-banDwl};
   }
   function setBanView(active){
-    const svg=document.getElementById('diagram');let original=document.getElementById('original-scene');
+    const svg=document.getElementById('diagram-plot');let original=document.getElementById('original-scene');
     if(!original){original=document.createElementNS('http://www.w3.org/2000/svg','g');original.id='original-scene';[...svg.children].filter(el=>el.tagName!=='defs').forEach(el=>original.append(el));svg.append(original);}
     let ban=document.getElementById('ban-scene');if(!ban){ban=document.createElementNS('http://www.w3.org/2000/svg','g');ban.id='ban-scene';svg.append(ban);}
     original.style.display=active?'none':'block';ban.style.display=active?'block':'none';
@@ -1149,8 +1162,8 @@ body.index-page main { width:min(100% - 24px,1060px); padding:24px 0; }
     const banExplanation=`<strong>DWL caused by the ban</strong><br>Output is zero. The shaded area represents the net benefits forgone on units up to Q<sub>s</sub>, where MSB exceeds MSC.`;
     if(document.getElementById('ban-compare').checked&&b.freeDwl>ECON_EPS){const a=banEl('polygon',{id:'ban-free-area',class:'ban-free-area',points:pts([[b.qs,mpb(b.qs)],[b.qe,mpb(b.qe)],[b.qe,msc(b.qe)],[b.qs,msc(b.qs)]])});explainBan(a,freeExplanation,'Explain free-market deadweight loss');}
     if(dwlCheck.checked&&b.banDwl>ECON_EPS){const a=banEl('polygon',{id:'ban-loss-area',class:'dwl-poly',points:pts([[0,mpb(0)],[0,msc(0)],[b.qs,mpb(b.qs)]])});explainBan(a,banExplanation,'Explain deadweight loss under the ban');}
-    banEl('line',{x1:70,y1:380,x2:590,y2:380,class:'axis','marker-end':'url(#arrow)'});banEl('line',{x1:70,y1:380,x2:70,y2:25,class:'axis','marker-end':'url(#arrow)'});
-    const axisTitle=txt(64,12,'',{'text-anchor':'end',class:'axis-title',style:'font-size:12px'});['Price /','Costs /','Benefits'].forEach((word,i)=>{const span=document.createElementNS('http://www.w3.org/2000/svg','tspan');span.setAttribute('x','64');if(i)span.setAttribute('dy','14');span.textContent=word;axisTitle.append(span);});txt(600,385,'Quantity',{class:'axis-title'});
+    banEl('line',{x1:70,y1:380,x2:555.789473684211,y2:380,class:'axis','marker-end':'url(#arrow)'});banEl('line',{x1:70,y1:380,x2:70,y2:25,class:'axis','marker-end':'url(#arrow)'});
+    const axisTitle=txt(64,19,'',{'text-anchor':'end',class:'axis-title',style:'font-size:12px'});['Price /','Costs /','Benefits'].forEach((word,i)=>{const span=document.createElementNS('http://www.w3.org/2000/svg','tspan');span.setAttribute('x','64');if(i)span.setAttribute('dy','14');span.textContent=word;axisTitle.append(span);});txt(565.131578947369,385,'Quantity',{class:'axis-title'});
     line(0,mpb(0),85,mpb(85),{class:'line-mpb'});line(0,mpc(0),60,mpc(60),{class:'line-mpc'});if(mec>ECON_EPS)line(0,msc(0),60,msc(60),{class:'line-msc'});
     txt(x(85)+6,y(mpb(85))+5,'MPB = MSB',{fill:'#2563eb'});txt(x(60)+6,y(mpc(60))+5,mec===0?'MPC = MSC':'MPC',{fill:'#16a34a'});if(mec>ECON_EPS)txt(x(60)+6,y(msc(60))-12,'MSC = MPC + MEC',{fill:'#dc2626'});
     banEl('line',{x1:70,y1:380,x2:70,y2:40,stroke:'#4169e1','stroke-width':3,'stroke-dasharray':'6,4'});txt(82,48,'Ban: no output',{fill:'#4169e1'});
@@ -1272,12 +1285,12 @@ body.index-page main { width:min(100% - 24px,1060px); padding:24px 0; }
     pLabels.forEach(el=>{
       const old=+el.getAttribute('y');const y=Math.max(old,previous+17);previous=y;
       el.setAttribute('y',y);
-      if(y-old>1){const l=document.createElementNS('http://www.w3.org/2000/svg','line');l.setAttribute('class','label-leader');l.setAttribute('x1',66);l.setAttribute('y1',y-4);l.setAttribute('x2',70);l.setAttribute('y2',old-4);l.setAttribute('stroke','#9ca3af');widgetSvg.append(l);}
+      if(y-old>1){const l=document.createElementNS('http://www.w3.org/2000/svg','line');l.setAttribute('class','label-leader');l.setAttribute('x1',66);l.setAttribute('y1',y-4);l.setAttribute('x2',70);l.setAttribute('y2',old-4);l.setAttribute('stroke','#9ca3af');document.getElementById('diagram-plot').append(l);}
     });
     const curveLabels=[...widgetSvg.querySelectorAll('#label-mpb,#label-mpc,#label-msb,#label-msc,#label-policy-curve,#group-dynamic-curve-labels text')].filter(el=>visible(el)&&el.textContent!=='Quota');
     curveLabels.sort((a,b)=>+a.getAttribute('y')- +b.getAttribute('y'));
     let curvePrevious=-Infinity;
-    curveLabels.forEach(el=>{const old=+el.getAttribute('y'),y=Math.max(old,curvePrevious+18);curvePrevious=y;el.setAttribute('y',y);if(y-old>1){const l=document.createElementNS('http://www.w3.org/2000/svg','line');l.setAttribute('class','label-leader');const x=+el.getAttribute('x');l.setAttribute('x1',x-4);l.setAttribute('y1',old-4);l.setAttribute('x2',x);l.setAttribute('y2',y-4);l.setAttribute('stroke',el.getAttribute('fill')||'#9ca3af');widgetSvg.append(l);}});
+    curveLabels.forEach(el=>{const old=+el.getAttribute('y'),y=Math.max(old,curvePrevious+18);curvePrevious=y;el.setAttribute('y',y);if(y-old>1){const l=document.createElementNS('http://www.w3.org/2000/svg','line');l.setAttribute('class','label-leader');const x=+el.getAttribute('x');l.setAttribute('x1',x-4);l.setAttribute('y1',old-4);l.setAttribute('x2',x);l.setAttribute('y2',y-4);l.setAttribute('stroke',el.getAttribute('fill')||'#9ca3af');document.getElementById('diagram-plot').append(l);}});
     // Hide only the text when a narrow DWL triangle cannot contain it.
     const area=document.getElementById('dwl')||document.getElementById('area-dwl');
     const label=document.getElementById('label-dwl-text');
@@ -1286,7 +1299,7 @@ body.index-page main { width:min(100% - 24px,1060px); padding:24px 0; }
     widgetSvg.querySelectorAll('text').forEach(el=>{
       if(!visible(el))return;const b=el.getBBox();const x=+el.getAttribute('x');
       if(b.x < -30)el.setAttribute('x',x+(-30-b.x));
-      else if(b.x+b.width>660)el.setAttribute('x',x-(b.x+b.width-660));
+      else if(b.x+b.width>635)el.setAttribute('x',x-(b.x+b.width-635));
     });
   }
   // Restore presentation-only edits before the model renders the next state.
@@ -1312,7 +1325,7 @@ body.index-page main { width:min(100% - 24px,1060px); padding:24px 0; }
       const ox=+el.getAttribute('x'),oy=+el.getAttribute('y');let box=el.getBBox(),moved=false;
       if(placed.some(b=>overlaps(box,b))){
         const offsets=[];for(let r=18;r<=144;r+=18)offsets.push([0,-r],[0,r],[r,0],[-r,0],[r,-r],[-r,-r],[r,r],[-r,r]);
-        for(const [dx,dy] of offsets){el.setAttribute('x',ox+dx);el.setAttribute('y',oy+dy);box=el.getBBox();if(box.x>=-30&&box.x+box.width<=660&&box.y>=5&&box.y+box.height<=469&&!placed.some(b=>overlaps(box,b))){moved=true;break;}}
+        for(const [dx,dy] of offsets){el.setAttribute('x',ox+dx);el.setAttribute('y',oy+dy);box=el.getBBox();if(box.x>=-10&&box.x+box.width<=635&&box.y>=5&&box.y+box.height<=460&&!placed.some(b=>overlaps(box,b))){moved=true;break;}}
         if(!moved){el.setAttribute('x',ox);el.setAttribute('y',oy);box=el.getBBox();}
       }
       if(moved){const l=document.createElementNS('http://www.w3.org/2000/svg','line');Object.entries({class:'collision-leader',x1:ox,y1:oy-4,x2:Math.max(box.x,Math.min(ox,box.x+box.width)),y2:box.y+box.height/2,stroke:'#9ca3af','stroke-width':.8,'pointer-events':'none'}).forEach(([k,v])=>l.setAttribute(k,v));el.parentNode.insertBefore(l,el);}
@@ -1408,7 +1421,7 @@ body.index-page main { width:min(100% - 24px,1060px); padding:24px 0; }
     const captions=[...widgetSvg.querySelectorAll('#label-output-gap,#label-gap,#label-overprod,#ban-scene text,.free-gap-label')].filter(el=>visible(el)&&/(Under|Over)-(consumption|production)/i.test(el.textContent));
     const qlabels=[...widgetSvg.querySelectorAll('text')].filter(el=>visible(el)&&/^[Qq]/.test(el.textContent)&&+el.getAttribute('y')>=380&&+el.getAttribute('y')<440);
     const bottom=Math.max(402,...qlabels.map(el=>el.getBBox().y+el.getBBox().height));
-    captions.forEach(el=>el.setAttribute('y',Math.min(459,bottom+28)));
+    captions.forEach(el=>el.setAttribute('y',Math.min(445,bottom+28)));
     widgetSvg.querySelectorAll('#under-arrow,#over-arrow,#arrow-gap,#line-overprod,.free-gap-arrow').forEach(el=>{if(visible(el)){el.setAttribute('y1',Math.min(441,bottom+10));el.setAttribute('y2',Math.min(441,bottom+10));}});
     widgetSvg.querySelectorAll('#ban-scene line').forEach(el=>{if(+el.getAttribute('y1')===452&&+el.getAttribute('y2')===452){el.setAttribute('y1',Math.min(441,bottom+10));el.setAttribute('y2',Math.min(441,bottom+10));}});
   }

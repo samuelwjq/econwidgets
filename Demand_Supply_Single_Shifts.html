@@ -90,6 +90,19 @@ strong,b{color:#dc2626!important;font-weight:700}
 .slider-track{flex:1;min-width:70px;position:relative;padding-bottom:18px}.slider-track input[type=range]{width:100%;display:block}.slider-zero{position:absolute;left:50%;bottom:0;transform:translateX(-50%);font-size:12px;line-height:14px;font-weight:600;color:var(--muted);pointer-events:none}.slider-zero::before{content:"";display:block;width:1px;height:6px;background:#6b7280;margin:0 auto 2px}
 .mechanism h2{font-size:15px;margin:0 0 8px;color:var(--accent)}.mechanism ol{margin:0;padding-left:22px}.mechanism li{margin:0 0 7px}.mechanism li:last-child{margin-bottom:0}
 .cs-area-note strong{color:#2563eb!important}.ps-area-note strong{color:#16a34a!important}
+
+/* Centre the canvas and its legend together, with balanced vertical space. */
+.widget-page .diagram-frame {
+ display:flex; flex-direction:column; align-items:center; justify-content:center;
+ box-sizing:border-box; min-height:clamp(280px,85vw,480px); padding-block:16px;
+}
+.widget-page .diagram-frame>svg#diagram { flex-shrink:0; }
+.widget-page .ui-diagram-legends { width:100%; box-sizing:border-box; text-align:center; }
+.widget-page .ui-diagram-legends>.legend,
+.widget-page .ui-diagram-legends>.curve-key,
+.widget-page .ui-diagram-legends>.area-key,
+.widget-page .ui-diagram-legends>.surplus-key,
+.widget-page .ui-diagram-legends>.ban-legend { justify-content:center; }
 </style><style data-shared-interface="approved">
 /* Approved Collection Interface. Embedded By build.py; No External Dependencies. */
 :root { --radius:8px; --ui-text:14px; }
@@ -279,7 +292,7 @@ function render(){hideTip();let {d,s,q,p,qd,qs}=state(),changed=d!==0||s!==0,sam
  if($('cs-toggle').checked){tip(el('polygon',{id:'cs-area',class:'welfare-area',points:`90,${Y(100+d)} 90,${Y(p)} ${X(q)},${Y(p)}`,fill:'rgba(37,99,235,.18)',stroke:'#2563eb'}),csDesc);text((180+X(q))/3,(Y(100+d)+2*Y(p))/3,'CS',colour.d,{class:'welfare-label',visibility:q<14?'hidden':'visible'});}
  if($('ps-toggle').checked){tip(el('polygon',{id:'ps-area',class:'welfare-area',points:(s>0?[[0,0],[0,p],[q,p],[s,0]]:[[0,-s],[0,p],[q,p]]).map(([qv,pv])=>`${X(qv)},${Y(pv)}`).join(' '),fill:'rgba(22,163,74,.18)',stroke:'#16a34a'}),psDesc);text((180+X(q))/3,(Y(-s)+2*Y(p))/3,'PS',colour.s,{class:'welfare-label',visibility:q<14?'hidden':'visible'});}
  $('surplus-key').hidden=!$('cs-toggle').checked&&!$('ps-toggle').checked;$('cs-key').hidden=!$('cs-toggle').checked;$('ps-key').hidden=!$('ps-toggle').checked;
- line(90,410,475,410,colour.ink,2,{'marker-end':'url(#marker-ink)'});line(90,410,90,38,colour.ink,2,{'marker-end':'url(#marker-ink)'});text(76,32,'Price',colour.ink,{'font-weight':'600'});text(485,416,'Quantity',colour.ink,{'font-weight':'600','text-anchor':'start'});
+ line(90,410,610,410,colour.ink,2,{'marker-end':'url(#marker-ink)'});line(90,410,90,30,colour.ink,2,{'marker-end':'url(#marker-ink)'});text(76,32,'Price',colour.ink,{'font-weight':'600'});text(620,416,'Quantity',colour.ink,{'font-weight':'600','text-anchor':'start'});
  guides(50,50);if(changed)guides(q,p);
  if(d!==0)curve('d',0,sub('D',0),true);if(s!==0)curve('s',0,sub('S',0),true);
  curve('d',d,d!==0?sub('D',1):sub('D',0)+' = '+sub('D',1));curve('s',s,s!==0?sub('S',1):sub('S',0)+' = '+sub('S',1));
