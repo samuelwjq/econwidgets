@@ -272,7 +272,19 @@ body.index-page main { width:min(100% - 24px,1060px); padding:24px 0; }
 .widget-page svg#diagram text { font-size:17.5px; }
 .widget-page svg#diagram .queue-leader { stroke:#9ca3af; stroke-width:1; pointer-events:none; }
 </style>
-</head><body class="widget-page" style="--diagram-max-width:560px">
+<style>
+/* Compact controls span the diagram and glossary; narrow screens wrap. */
+.widget-page>.controls{width:100%;max-width:calc(var(--diagram-max-width) + 316px);margin:0 auto 10px;display:flex;flex-flow:row wrap;gap:6px 12px;padding:10px 12px}
+.widget-page>.controls>.control-row,.widget-page>.controls>.control-group,.widget-page>.controls>.slider-card,.widget-page>.controls>.policy-selector{flex:1 1 250px;width:auto;margin:0;min-width:0}
+.widget-page>.controls .slider-card>label{flex-basis:auto}
+.widget-page .ui-diagram-settings{flex:0 0 100%;margin:0!important}
+.widget-page .ui-diagram-settings>summary{min-height:30px!important;padding:2px 0!important;font-size:12px}
+.widget-page .ui-diagram-settings .toggle-grid,.widget-page .ui-diagram-settings .option-row,.widget-page .ui-diagram-settings .checkbox-group{display:flex;flex-flow:row wrap;gap:2px 10px;padding:2px 0!important;width:100%}
+.widget-page .ui-diagram-settings label{font-size:11px!important;font-weight:500;min-height:26px!important;gap:4px;white-space:nowrap}
+.widget-page .ui-diagram-settings input[type=checkbox]{width:14px;height:14px}
+.widget-page svg .queue-leader{stroke:#9ca3af!important;stroke-width:1;stroke-dasharray:none!important;fill:none;pointer-events:none}
+@media(max-width:600px){.widget-page>.controls>.control-row,.widget-page>.controls>.control-group,.widget-page>.controls>.slider-card,.widget-page>.controls>.policy-selector{flex-basis:100%}.widget-page .ui-diagram-settings label{font-size:11px!important}}
+</style></head><body class="widget-page" style="--diagram-max-width:560px">
  <header class="widget-header"><h1>Demand And Supply (Simultaneous Shifts)</h1><p>Topic 2 · A-Level Economics · Interactive Diagrams</p></header>
  <div class="layout"><main class="main-content"><div class="controls"><div class="slider-card"><label for="d-shift"><strong>Demand:</strong></label><span class="scale-label">Decrease</span><div class="slider-track"><input id="d-shift" type="range" min="-45" max="45" step="1" value="0" aria-label="Demand shift" aria-describedby="d-zero-marker"><span class="slider-zero" id="d-zero-marker">0</span></div><span class="scale-label">Increase</span><output id="d-output" class="shift-output" for="d-shift">No shift</output></div><div class="slider-card"><label for="s-shift"><strong>Supply:</strong></label><span class="scale-label">Decrease</span><div class="slider-track"><input id="s-shift" type="range" min="-45" max="45" step="1" value="0" aria-label="Supply shift" aria-describedby="s-zero-marker"><span class="slider-zero" id="s-zero-marker">0</span></div><span class="scale-label">Increase</span><output id="s-output" class="shift-output" for="s-shift">No shift</output></div><div class="toggle-grid"><label class="toggle-label"><input id="cs-toggle" type="checkbox">Consumer surplus</label><label class="toggle-label"><input id="ps-toggle" type="checkbox">Producer surplus</label><label class="toggle-label"><input id="tooltips" type="checkbox" checked>Tooltips</label><label class="toggle-label"><input id="gap" type="checkbox" checked>Shortage / surplus</label><label class="toggle-label"><input id="adjustment" type="checkbox" >Price adjustment arrows</label></div></div>
  <div class="diagram-frame" id="frame"><svg id="diagram" viewBox="0 0 700 500" role="img" aria-labelledby="diagram-title diagram-desc"><title id="diagram-title">Demand And Supply (Simultaneous Shifts)</title><desc id="diagram-desc"></desc><defs><marker id="marker-ink" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M 1 1.5 L 9 5 L 1 8.5 z" fill="#374151"/></marker><marker id="marker-d" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M 1 1.5 L 9 5 L 1 8.5 z" fill="#2563eb"/></marker><marker id="marker-s" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M 1 1.5 L 9 5 L 1 8.5 z" fill="#16a34a"/></marker><marker id="marker-accent" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M 1 1.5 L 9 5 L 1 8.5 z" fill="#4169e1"/></marker><marker id="marker-gap" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M 1 1.5 L 9 5 L 1 8.5 z" fill="#dc2626"/></marker></defs><g id="drawing"></g></svg></div>
@@ -289,7 +301,7 @@ const $=id=>document.getElementById(id), svg=$('diagram'), layer=$('drawing');
 let selectedCurve='d';
 const X=q=>90+(380/110)*q,Y=p=>410-(380/110)*p, sub=(letter,i)=>`${letter}<tspan baseline-shift="sub" font-size="9">${i}</tspan>`;
 const colour={d:'#2563eb',s:'#16a34a',oldD:'#93b4f2',oldS:'#8fcea3',ink:'#374151',accent:'#4169e1',gap:'#dc2626'};
-function el(tag,attrs={},html=''){let n=document.createElementNS(NS,tag);for(let [k,v] of Object.entries(attrs))n.setAttribute(k,v);n.innerHTML=html;layer.append(n);return n;}
+function el(tag,attrs={},html=''){let n=document.createElementNS(NS,tag);for(let [k,v] of Object.entries(attrs))n.setAttribute(k,v);n.innerHTML=html;if(tag==='text'){const plain=html.replace(/<[^>]*>/g,'').trim();if(/^[QP](?:[0-9₀₁₂]|_|[dsecp])/.test(plain)){const st=state();n.dataset.axisKind=plain[0]==='Q'?'q':'p';n.dataset.axisX=plain[0]==='Q'?+attrs.x:90;n.dataset.axisY=plain[0]==='Q'?410:Y(/^P(?:0|₀)/.test(plain)?50:st.p);}if(/^E(?:[0-9₀₁₂]|_)/.test(plain)){const st=state(),initial=/^E(?:0|₀)/.test(plain);n.dataset.pointX=X(initial?50:st.q);n.dataset.pointY=Y(initial?50:st.p);}}layer.append(n);return n;}
 function line(x1,y1,x2,y2,c=colour.ink,w=2,extra={}){return el('line',{x1,y1,x2,y2,stroke:c,'stroke-width':w,...extra});}
 function text(x,y,html,c=colour.ink,extra={}){return el('text',{x,y,fill:c,'text-anchor':'middle',...extra},html);}
 function tip(n,description){n.dataset.tip=description.replace(/<[^>]*>/g,'');if(description.includes('<strong>'))n.dataset.tipHtml=description;n.setAttribute('tabindex','0');n.setAttribute('role','img');n.setAttribute('aria-label',n.dataset.tip);n.classList.add('has-tooltip');return n;}
@@ -297,7 +309,7 @@ function arrow(x1,y1,x2,y2,c,id,both=false){let len=Math.hypot(x2-x1,y2-y1);if(l
 
 function curve(kind,shift,label,old=false){let a=kind==='d'?100+shift:-shift,b=kind==='d'?-1:1,c=old?colour[kind==='d'?'oldD':'oldS']:colour[kind];
  let qStart=Math.max(0,b>0?-a: a-105),qEnd=Math.min(shift===0?100:105,b<0?a:105-a);line(X(qStart),Y(a+b*qStart),X(qEnd),Y(a+b*qEnd),c,2.5);
- let close=Math.abs(shift)<8; let offset=close?(old? -11:11):0; if(old){let st=state();close=Math.abs(kind==='d'?st.d:st.s)<8;offset=close?-11:0;} if(offset)line(X(qEnd),Y(a+b*qEnd),X(qEnd)+10,Y(a+b*qEnd)+offset,c,1); tip(text(X(qEnd)+14,Y(a+b*qEnd)+4+offset,label,c,{'text-anchor':'start','font-weight':'600'}),`${old?'Initial':'Current'} ${kind==='d'?'demand':'supply'} curve.`);
+ let close=Math.abs(shift)<8; let offset=close?(old? -11:11):0; if(old){let st=state();close=Math.abs(kind==='d'?st.d:st.s)<8;offset=close?-11:0;} if(offset)line(X(qEnd),Y(a+b*qEnd),X(qEnd)+10,Y(a+b*qEnd)+offset,c,1); tip(text(X(qEnd)+14,Y(a+b*qEnd)+4+offset,label,c,{'text-anchor':'start','font-weight':'600','data-curve-label':'true'}),`${old?'Initial':'Current'} ${kind==='d'?'demand':'supply'} curve.`);
 }
 function guides(q,p,c){line(90,Y(p),X(q),Y(p),'#9ca3af',1.2,{'stroke-dasharray':'4 4'});line(X(q),Y(p),X(q),410,'#9ca3af',1.2,{'stroke-dasharray':'4 4'});}
 function state(){let d=0,s=0;if(SIM){d=+$('d-shift').value;s=+$('s-shift').value;}else{let a=+$('magnitude').value;if(selectedCurve==='d')d=a;else s=a;}return {d,s,q:50+(d+s)/2,p:50+(d-s)/2,qd:50+d,qs:50+s};}
@@ -317,8 +329,8 @@ function render(){hideTip();let {d,s,q,p,qd,qs}=state(),changed=d!==0||s!==0,sam
  $('surplus-key').hidden=!$('cs-toggle').checked&&!$('ps-toggle').checked;$('cs-key').hidden=!$('cs-toggle').checked;$('ps-key').hidden=!$('ps-toggle').checked;
  line(90,410,470,410,colour.ink,2,{'marker-end':'url(#marker-ink)'});line(90,410,90,30,colour.ink,2,{'marker-end':'url(#marker-ink)'});text(76,32,'Price',colour.ink,{'font-weight':'600'});text(480,416,'Quantity',colour.ink,{'font-weight':'600','text-anchor':'start'});
  guides(50,50);if(changed)guides(q,p);
- if(d!==0)curve('d',0,sub('D',0),true);if(s!==0)curve('s',0,sub('S',0),true);
- curve('d',d,d!==0?sub('D',1):sub('D',0)+' = '+sub('D',1));curve('s',s,s!==0?sub('S',1):sub('S',0)+' = '+sub('S',1));
+ if(d!==0)curve('d',0,sub('DD',0),true);if(s!==0)curve('s',0,sub('SS',0),true);
+ curve('d',d,d!==0?sub('DD',1):sub('DD',0));curve('s',s,s!==0?sub('SS',1):sub('SS',0));
  if($('adjustment').checked&&!sameP){for(let [k,start] of [['d',qd],['s',qs]]){let dx=X(q)-X(start),dy=Y(p)-Y(50),c=colour.gap;
  let desc=`As price ${p>50?'rises':'falls'}, quantity ${k==='d'?'demanded':'supplied'} ${q>start?'increases':'decreases'} along the current ${k==='d'?'demand':'supply'} curve towards the new equilibrium.`;
  let g=el('g',{'data-adjustment':k});let length=Math.hypot(dx,dy),size=Math.min(12,length*.20),angle=Math.atan2(dy,dx)*180/Math.PI;for(let t of [0,.33,.66]){let head=el('polygon',{points:`${size},0 0,${-size*.42} 0,${size*.42}`,fill:c,stroke:'none',transform:`translate(${X(start)+t*dx} ${Y(50)+t*dy}) rotate(${angle})`,'data-arrowhead':k});g.append(head);}tip(g,desc);
@@ -341,7 +353,7 @@ function render(){hideTip();let {d,s,q,p,qd,qs}=state(),changed=d!==0||s!==0,sam
  let previous=null;for(let group of groups){let width=group.items.length*20+(group.items.length-1)*15,x=X(group.v),lane=430;if(previous&&x-previous.x<(width+previous.width)/2+8)lane=previous.lane===430?460:430;
  let html=group.items.map(item=>`<tspan fill="${item.c}">${sub('Q',item.i)}</tspan>`).join(' = ');
  let n=text(x,lane,html,colour.ink,{'data-quantity-label':group.items.map(i=>i.i).join('=')});tip(n,group.items.map(item=>({'d':'Quantity demanded on the current demand curve at P₀.','s':'Quantity supplied on the current supply curve at P₀.','0':'Initial equilibrium quantity Q₀.','1':'New equilibrium quantity Q₁.'})[item.i]).join(' '));
- if(lane!==430)line(x,414,x,lane-12,'#9ca3af',1);previous={x,width,lane};}
+ previous={x,width,lane};}
 
  for(let [visible,coords,kind] of [[!sameP,[55,Y(50),55,Y(p)],'price'],[!sameQ,[X(50),439,X(q),439],'quantity']]){if(visible){let a=arrow(...coords,colour.gap,'gap');if(a){a.setAttribute('stroke-width','1.2');a.dataset.axisChange=kind;}}}
  $('summary-body').innerHTML=`<tr><th scope="row">Price</th><td>P<sub>0</sub></td><td>P<sub>1</sub></td><td>${direction(p-50)}</td></tr><tr><th scope="row">Quantity</th><td>Q<sub>0</sub></td><td>Q<sub>1</sub></td><td>${direction(q-50)}</td></tr>`;
@@ -705,6 +717,7 @@ window.exportSVG=exportSVG;window.diagramPNG=png;render();
  const svg=document.getElementById('diagram');if(!svg)return;
  const NS='http://www.w3.org/2000/svg',isGov=document.title==='Government Intervention',isTopic5=!!svg.querySelector('.line-mpb');
  const stage=document.createElementNS(NS,'g');stage.id='queue-stage';stage.setAttribute('transform','translate(70 0)');for(const e of [...svg.children])if(!['defs','title','desc','style'].includes(e.tagName))stage.append(e);svg.append(stage);
+ const pageLayout=document.querySelector('.layout'),pageControls=document.querySelector('.controls');if(pageLayout&&pageControls)pageLayout.before(pageControls);
  svg.setAttribute('viewBox','50 0 600 500');
  const visible=e=>!e.closest('defs')&&getComputedStyle(e).display!=='none'&&e.getClientRects().length>0;
  let pending=false,running=false;
@@ -754,6 +767,55 @@ window.exportSVG=exportSVG;window.diagramPNG=png;render();
   legend.hidden=!entries.length;
   if(legendBox){legendBox.hidden=!entries.length;const h=entries.length?legendBox.getBoundingClientRect().height:0;frame.style.setProperty('--queue-legend-height',h+'px');}
  }
+
+ // Lay out measured intervals on one axis, preserving their economic order.
+ function separateIntervals(items,min,max,gap=7){
+  items.sort((a,b)=>a.target-b.target);let edge=min;
+  for(const item of items){item.position=Math.max(item.target-item.size/2,edge);edge=item.position+item.size+gap;}
+  let overflow=Math.max(0,edge-gap-max);
+  for(let i=items.length-1;i>=0;i--){const item=items[i],ceiling=i===items.length-1?max:items[i+1].position-gap;item.position=Math.min(item.position,ceiling-item.size);}
+  if(items[0]?.position<min){const delta=min-items[0].position;for(const item of items)item.position+=delta;}
+  if(items.length){const desired=items.reduce((s,i)=>s+i.target-i.position-i.size/2,0)/items.length,first=items[0],last=items[items.length-1],shift=Math.max(min-first.position,Math.min(max-last.position-last.size,desired));for(const item of items)item.position+=shift;}
+  return items;
+ }
+ function localPoint(e,p){return new DOMPoint(p.x,p.y).matrixTransform(e.getScreenCTM().inverse().multiply(svg.getScreenCTM()));}
+ function setRootPosition(e,p){const v=localPoint(e,p);e.setAttribute('x',v.x);e.setAttribute('y',v.y);}
+ function leader(e,anchor){
+  const b=box(e),end={x:Math.max(b.x,Math.min(b.r,anchor.x)),y:Math.max(b.y,Math.min(b.b,anchor.y))};
+  const a=localPoint(e,anchor),z=localPoint(e,end),l=document.createElementNS(NS,'line');
+  for(const [k,v] of Object.entries({class:'queue-leader',x1:a.x,y1:a.y,x2:z.x,y2:z.y,stroke:'#9ca3af','stroke-width':1,'stroke-dasharray':'none','vector-effect':'non-scaling-stroke','pointer-events':'none'}))l.setAttribute(k,v);
+  e.parentNode.insertBefore(l,e);
+ }
+ function axisLayout(texts){
+  const axes=texts.filter(e=>e.dataset.axisKind),groups=new Map();
+  for(const e of axes){const k=e.dataset.axisKind;if(!groups.has(k))groups.set(k,[]);groups.get(k).push(e);}
+  for(const [kind,labels] of groups){
+   const q=kind==='q';
+   if(!q)for(const e of labels){const p=rootPoint(e,+e.dataset.axisX,+e.dataset.axisY),b=box(e),available=p.x-12-54;if(b.r-b.x>available&&available>0)e.style.setProperty('font-size',(parseFloat(e.style.fontSize)*available/(b.r-b.x))+'px','important');}
+   const items=labels.map(e=>{const p=rootPoint(e,+e.dataset.axisX,+e.dataset.axisY),b=box(e);return {e,anchor:p,target:q?p.x:p.y,size:q?b.r-b.x:b.b-b.y};});
+   const baseline=q?Math.max(...items.map(i=>i.anchor.y))+23:Math.min(...items.map(i=>i.anchor.x))-12;
+   separateIntervals(items,q?140:50,q?620:400,7);
+   for(const item of items){const e=item.e;e.setAttribute('text-anchor',q?'middle':'end');const center=item.position+item.size/2;setRootPosition(e,q?{x:center,y:baseline}:{x:baseline,y:center+4});
+    const b=box(e),dx=q?Math.abs((b.x+b.r)/2-item.anchor.x):Math.abs((b.y+b.b)/2-item.anchor.y);
+    if(dx>2)leader(e,item.anchor);
+   }
+  }
+  return axes;
+ }
+ function orderCurveLabels(texts){
+  const groups=new Map();
+  for(const e of texts.filter(e=>e.dataset.queueCurveLabel==='true'&&e.textContent.trim()!=='Quota')){
+   const group=e.dataset.queueCurveGroup;if(!groups.has(group))groups.set(group,[]);
+   const p=rootPoint(e,+e.getAttribute('x'),+e.getAttribute('y')),b=box(e);groups.get(group).push({e,target:+e.dataset.queueCurveRank,size:b.b-b.y,desired:p.y});
+  }
+  for(const items of groups.values()){
+   items.sort((a,b)=>a.target-b.target);let last=14;
+   for(const i of items){i.position=Math.max(i.desired,last+i.size+6);last=i.position;}
+   const overflow=Math.max(0,last-398);if(overflow)for(const i of items)i.position-=overflow;
+   for(let j=0;j<items.length;j++){const i=items[j],p=rootPoint(i.e,+i.e.getAttribute('x'),+i.e.getAttribute('y'));setRootPosition(i.e,{x:p.x,y:i.position});i.e.dataset.queueOrderMin=j?(items[j-1].position+i.position)/2:10;i.e.dataset.queueOrderMax=j<items.length-1?(i.position+items[j+1].position)/2:405;}
+  }
+ }
+
  function refresh(){
   if(running||!svg.getScreenCTM())return;running=true;observer.disconnect();
   try{
@@ -778,6 +840,8 @@ window.exportSVG=exportSVG;window.diagramPNG=png;render();
     if(e?.tagName==='line'&&visible(e)){
      const a={x:+e.getAttribute('x1'),y:+e.getAttribute('y1')},b={x:+e.getAttribute('x2'),y:+e.getAttribute('y2')},p=Math.abs(a.x-b.x)<.01?(a.y<b.y?a:b):(a.x>b.x?a:b);
      label.dataset.queueCurveLabel='true';label.dataset.queueAnchorX=p.x;label.dataset.queueAnchorY=p.y;
+     const referenceX=70+355*50/120,rankY=Math.abs(b.x-a.x)<.01?p.y:a.y+(b.y-a.y)*(referenceX-a.x)/(b.x-a.x);
+     label.dataset.queueCurveRank=rootPoint(e,referenceX,rankY).y;label.dataset.queueCurveGroup=(scope.id||'main')+':' +(b.y-a.y<0?'up':'down');
      label.setAttribute('x',p.x+10);label.setAttribute('y',p.y+4);label.setAttribute('text-anchor','start');
      if(name==='Quota'){label.setAttribute('x',p.x);label.setAttribute('y',p.y-10);label.setAttribute('text-anchor','middle');}
     }
@@ -788,19 +852,23 @@ window.exportSVG=exportSVG;window.diagramPNG=png;render();
     const m=e.getScreenCTM(),scale=Math.hypot(m.a,m.b);e.style.setProperty('font-size',((isTopic5&&e.dataset.queueCurveLabel==='true'?12:e.dataset.queueCategory==='small'?12:14)/scale)+'px','important');
     for(const sub of e.querySelectorAll('tspan[baseline-shift="sub"]'))sub.style.setProperty('font-size',(10/scale)+'px','important');
    }
+   const axisTexts=axisLayout(texts);orderCurveLabels(texts);
+   for(const e of texts.filter(e=>e.dataset.pointX!==undefined)){
+    const p=rootPoint(e,+e.dataset.pointX,+e.dataset.pointY);setRootPosition(e,{x:p.x+14,y:p.y-13});e.setAttribute('text-anchor','start');
+   }
    // Check all sampled curve segments and point markers, not only other labels.
    const curves=[...svg.querySelectorAll('line,polyline,path')].filter(e=>visible(e)&&!e.closest('marker,defs')&&!e.matches('.axis,.guide-line,.label-leader,.collision-leader,.queue-leader')&&((e.matches('.curve,.line-mpb,.line-mpc,.line-msb,.line-msc,.line-policy,.line-tax,.line-qpoll,.line-rd,.line-edu'))||(e.tagName==='polyline'&&getComputedStyle(e).fill==='none')||(e.tagName==='path'&&e.getAttribute('fill')==='none'&&+e.getAttribute('stroke-width')>=2)||(e.tagName==='line'&&+e.getAttribute('stroke-width')>=2.4)));
    const samples=curves.flatMap(e=>{try{const len=e.getTotalLength(),n=Math.max(2,Math.ceil(len/3)),points=[];for(let i=0;i<=n;i++){const p=e.getPointAtLength(len*i/n);points.push(rootPoint(e,p.x,p.y));}return points;}catch{return [];}});
    const pointBoxes=[...svg.querySelectorAll('circle')].filter(e=>visible(e)&&+e.getAttribute('r')<=6).map(box);
-   const movable=texts.filter(e=>!e.matches('.area-label,#label-dwl-text,#label-subsidy-cost-text')&& (e.dataset.queueCurveLabel==='true'||e.hasAttribute('data-curve-label')||e.hasAttribute('data-movable')||e.hasAttribute('data-policy-label')||/^(?:[DESAB](?:[₀₁₂]|\d|\s|$)|M(?:P|S|E)[BC]|PPC|Ceiling|Floor|Minimum wage|Quota)/.test(e.textContent.trim())));
+   const movable=texts.filter(e=>!axisTexts.includes(e)&&!e.matches('.area-label,#label-dwl-text,#label-subsidy-cost-text')&& (e.dataset.pointX!==undefined||e.dataset.queueCurveLabel==='true'||e.hasAttribute('data-curve-label')||e.hasAttribute('data-movable')||e.hasAttribute('data-policy-label')||/^(?:(?:DD|SS|[DESAB])(?:[₀₁₂]|\d|\s|$)|M(?:P|S|E)[BC]|PPC|Ceiling|Floor|Minimum wage|Quota)/.test(e.textContent.trim())));
    const fixed=texts.filter(e=>!movable.includes(e)).map(box),placed=[...fixed];let unresolved=0;
    for(const e of movable){
     let ox=+e.getAttribute('x'),oy=+e.getAttribute('y');
     // Repeated refreshes start from a stable point; rerenders replace the node
     // or change its position, so slider changes retain their new anchor.
-    if(e.dataset.queueLastX===String(ox)&&e.dataset.queueLastY===String(oy)){ox=+e.dataset.queueBaseX;oy=+e.dataset.queueBaseY;}
+    if(e.dataset.pointX===undefined&&e.dataset.queueCurveLabel!=='true'&&e.dataset.queueLastX===String(ox)&&e.dataset.queueLastY===String(oy)){ox=+e.dataset.queueBaseX;oy=+e.dataset.queueBaseY;}
     e.dataset.queueBaseX=ox;e.dataset.queueBaseY=oy;
-    const candidateGood=b=>b.x>=54&&b.r<=646&&b.y>=4&&b.b<=496&&!placed.some(p=>overlaps(b,p))&&!samples.some(p=>inBox(p,b,3))&&!pointBoxes.some(p=>overlaps(b,p,3));
+    const candidateGood=b=>(!e.dataset.queueOrderMin||((b.y+b.b)/2>=+e.dataset.queueOrderMin&&(b.y+b.b)/2<=+e.dataset.queueOrderMax))&&b.x>=54&&b.r<=646&&b.y>=4&&b.b<=496&&!placed.some(p=>overlaps(b,p))&&!samples.some(p=>inBox(p,b,3))&&!pointBoxes.some(p=>overlaps(b,p,3));
     let good=false,chosen;
     const offsets=[[0,0]];for(let r=10;r<=220;r+=10)offsets.push([0,-r],[r,0],[0,r],[-r,0],[r,-r],[-r,-r],[r,r],[-r,r]);
     for(const [dx,dy] of offsets){
@@ -810,7 +878,9 @@ window.exportSVG=exportSVG;window.diagramPNG=png;render();
     }
     if(!good){e.setAttribute('x',ox);e.setAttribute('y',oy);chosen=box(e);unresolved++;}
     e.dataset.queueLastX=e.getAttribute('x');e.dataset.queueLastY=e.getAttribute('y');placed.push(chosen);
-    if(good&&Math.hypot(+e.getAttribute('x')-ox,+e.getAttribute('y')-oy)>25){const l=document.createElementNS(NS,'line');for(const [k,v] of Object.entries({class:'queue-leader',x1:e.dataset.queueCurveLabel==='true'?+e.dataset.queueAnchorX:ox,y1:e.dataset.queueCurveLabel==='true'?+e.dataset.queueAnchorY:oy-4,x2:+e.getAttribute('x'),y2:+e.getAttribute('y')-4}))l.setAttribute(k,v);e.parentNode.insertBefore(l,e);}
+    if(e.dataset.pointX!==undefined){const anchor=rootPoint(e,+e.dataset.pointX,+e.dataset.pointY),b=box(e),distance=Math.hypot(Math.max(b.x-anchor.x,0,anchor.x-b.r),Math.max(b.y-anchor.y,0,anchor.y-b.b));if(distance>24)leader(e,anchor);}
+    else if(e.dataset.queueCurveLabel==='true'){const anchor=rootPoint(e,+e.dataset.queueAnchorX,+e.dataset.queueAnchorY),b=box(e);if(Math.hypot(Math.max(b.x-anchor.x,0,anchor.x-b.r),Math.max(b.y-anchor.y,0,anchor.y-b.b))>12)leader(e,anchor);}
+    else if(good&&Math.hypot(+e.getAttribute('x')-ox,+e.getAttribute('y')-oy)>25)leader(e,rootPoint(e,ox,oy-4));
    }
    refreshLegend();
    svg.dataset.queueUnresolved=String(unresolved);svg.dataset.queueCheckedLabels=String(movable.length);
@@ -819,7 +889,7 @@ window.exportSVG=exportSVG;window.diagramPNG=png;render();
  const schedule=()=>{if(!pending){pending=true;requestAnimationFrame(()=>{pending=false;refresh();});}};
  const observer=new MutationObserver(schedule);observer.observe(svg,{childList:true,subtree:true});
  document.addEventListener('input',schedule);document.addEventListener('change',schedule);document.addEventListener('click',schedule);window.addEventListener('resize',schedule);
- window.WidgetDiagramLayout={refresh,legendEntries:()=>legendEntries};refresh();
+ window.WidgetDiagramLayout={refresh,separateIntervals,legendEntries:()=>legendEntries};refresh();
 })();
 
 </script>
