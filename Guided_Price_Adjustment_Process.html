@@ -289,6 +289,12 @@ body.index-page main { width:min(100% - 24px,1060px); padding:24px 0; }
 .widget-page .ui-diagram-settings input[type=checkbox]{width:14px;height:14px}
 .widget-page svg .queue-leader{stroke:#9ca3af!important;stroke-width:1;stroke-dasharray:none!important;fill:none;pointer-events:none}
 @media(max-width:600px){.widget-page>.controls>.control-row,.widget-page>.controls>.control-group,.widget-page>.controls>.slider-card,.widget-page>.controls>.policy-selector{flex-basis:100%}.widget-page .ui-diagram-settings label{font-size:11px!important}}
+</style><style>
+/* Compact case selection and blue guided explanation. */
+#case-selector{width:100%;min-width:0;overflow-x:auto}
+.widget-page #case-selector .case-buttons{grid-template-columns:repeat(4,minmax(125px,1fr));gap:6px}
+.widget-page #case-selector .case-buttons button{font-size:11px;white-space:nowrap;padding:6px;min-height:36px}
+.widget-page #walk-panel{background:#f0f4ff;border:1px solid #cbd7fa;border-radius:8px;padding:12px;margin-bottom:12px}
 </style></head><body class="widget-page" style="--diagram-max-width:560px">
 <header class="widget-header"><h1>[Guided] Price Adjustment Process</h1><p>Topic 2 · A-Level Economics · Guided Walkthrough</p></header>
 <div class="layout"><main class="main-content">
