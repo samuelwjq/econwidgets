@@ -308,7 +308,7 @@ body.index-page main { width:min(100% - 24px,1060px); padding:24px 0; }
 <script>const KIND='XED', TITLE='Cross-Price Elasticity Of Demand';
 // Topic calculations use initial-equilibrium point elasticity and linear curves.
 const $=id=>document.getElementById(id),NS='http://www.w3.org/2000/svg',priceTopic=['PED','PES'].includes(KIND);
-const svg=$('diagram'),layer=$('drawing'),X=q=>90+380*q/110,Y=p=>410-380*p/110;
+const svg=$('diagram'),layer=$('drawing'),PLOT_MAX=110,X=q=>90+380*q/PLOT_MAX,Y=p=>410-380*p/PLOT_MAX;
 let sign=1, activeShift=false;
 function elasticity(){const t=+$('elasticity').value;return priceTopic?(t===2?Infinity:t/(2-t)):t;}
 const sub=(a,i)=>`${a}<tspan baseline-shift="sub" font-size="9">${i}</tspan>`,eq=(a,b)=>Math.abs(a-b)<1e-8;
@@ -327,38 +327,26 @@ function labelCurveEndpoint(pt,name,c,description){
  const label=tip(text(pt[0]+14,pt[1]+4,name,c,{'text-anchor':'start','font-weight':'600','data-curve-label':'true'}),description);
  label.dataset.endpointX=pt[0];label.dataset.endpointY=pt[1];return label;
 }
-// Fixed Euclidean lengths in economic coordinates; X/Y use equal scales.
-// XED/YED need shorter segments to fit the full permitted parallel shifts.
+// Topic 2 endpoint convention: show the entire nonnegative curve up to
+// the plot boundary. No fixed-length trimming or equilibrium-dependent centring.
+function curveSegment(fn,name){
+ const st=state();
+ const pivot=priceTopic&&name===sub(KIND==='PED'?'DD':'SS',0);
+ if(pivot&&st.e===Infinity)return {points:[[0,50],[PLOT_MAX,50]],horizontal:true};
+ // The model expresses quantity as a function of price, including vertical
+ // curves (constant quantity). Intersect that line with the positive square.
+ const k=(fn(51)-fn(49))/2,b=fn(50)-k*50;
+ let lo=0,hi=PLOT_MAX;
+ if(Math.abs(k)<1e-12){if(b<0||b>PLOT_MAX)throw Error('Curve outside plot');}
+ else{const a=-b/k,z=(PLOT_MAX-b)/k;lo=Math.max(lo,Math.min(a,z));hi=Math.min(hi,Math.max(a,z));}
+ if(hi<lo)throw Error('Curve outside plot');
+ return {points:[lo,hi].map(p=>[Math.max(0,Math.min(PLOT_MAX,fn(p))),p]),horizontal:false};
+}
 function curve(fn,name,c){
- const length=priceTopic?100:60,st=state();
- const horizontal=priceTopic&&st.e===Infinity&&
-  ((KIND==='PED'&&name===sub('DD',0))||(KIND==='PES'&&name===sub('SS',0)));
- let pts;
- if(horizontal){
-  pts=[[X(0),Y(50)],[X(100),Y(50)]];
- }else{
-  const k=(fn(51)-fn(49))/2,b=fn(50)-k*50;
-  const half=length/(2*Math.hypot(1,k));
-  // Centre parallel demand shifts at their equilibrium. For the unchanged
-  // curve, slide endpoints along its own line only as needed to include E₁.
-  // Neither its equation nor its length depends on the other curve's slope.
-  let centre=50;
-  if(!priceTopic){
-   centre=k<0?b/2:(50+st.p)/2;
-  }else if(!eq(fn(50),50))centre=50-b/(2*k);
-  let low=half,high=110-half;
-  if(Math.abs(k)<1e-10){if(b<0||b>110)return;}
-  else{
-   const a=(0-b)/k,z=(110-b)/k;
-   low=Math.max(low,Math.min(a,z)+half);
-   high=Math.min(high,Math.max(a,z)-half);
-  }
-  centre=Math.max(low,Math.min(high,centre));
-  pts=[centre-half,centre+half].map(p=>[X(fn(p)),Y(p)]);
- }
- add('polyline',{points:pts.map(p=>p.join(',')).join(' '),stroke:c,'stroke-width':2.5,fill:'none','clip-path':'url(#plot)','data-fixed-curve-length':priceTopic?100:60});
+ const geometry=curveSegment(fn,name),pts=geometry.points.map(([q,p])=>[X(q),Y(p)]);
+ add('polyline',{points:pts.map(p=>p.join(',')).join(' '),stroke:c,'stroke-width':2.5,fill:'none','clip-path':'url(#plot)','data-curve-extent':'positive-plot-boundaries'});
  const endpoint=pts.reduce((best,pt)=>pt[0]>best[0]+.01||Math.abs(pt[0]-best[0])<=.01&&pt[1]<best[1]?pt:best,pts[0]);
- labelCurveEndpoint(endpoint,name,c,horizontal?'Perfectly price elastic '+(KIND==='PED'?'demand':'supply')+' at P₀.':'The '+name.replace(/<[^>]*>/g,'')+' curve.');
+ labelCurveEndpoint(endpoint,name,c,geometry.horizontal?'Perfectly price elastic '+(KIND==='PED'?'demand':'supply')+' at P₀.':'The '+name.replace(/<[^>]*>/g,'')+' curve.');
 }
 
 function placeCurveLabels(){
