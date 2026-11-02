@@ -56,14 +56,21 @@
  }else{if(s.amount)supplyCurve(85,20,'AS₀','#8fcea3');supplyCurve(p.full,p.level,s.amount?'AS₁':'AS₀',colours.as);
  if(s.amount){
   const a=s.factor==='resources'?{q:85,p:90}:s.factor==='productivity'?M.supply(.35,85,20):{q:30,p:20};
-  const b=s.factor==='resources'?{q:p.full,p:90}:s.factor==='productivity'?M.supply(.35,p.full,p.level):{q:30,p:p.level};
+  let b=s.factor==='resources'?{q:p.full,p:90}:s.factor==='productivity'?M.supply(.35,p.full,p.level):{q:30,p:p.level};
+  if(s.factor==='productivity'){
+   // Equal axis scales: q + p constant gives a 45-degree screen arrow.
+   // Find its intersection with AS1 so both ends remain on their curves.
+   const total=a.q+a.p;let lo=0,hi=1;
+   for(let i=0;i<60;i++){const t=(lo+hi)/2,c=M.supply(t,p.full,p.level);if(c.q+c.p<total)lo=t;else hi=t;}
+   b=M.supply((lo+hi)/2,p.full,p.level);
+  }
   line(X(a.q),Y(a.p),X(b.q),Y(b.p),colours.red,{'marker-end':'url(#ad-red-arrow)','data-as-shift-arrow':''});
  }
  const parts=[factors[s.factor]+' '+dir(s.amount)];
  if(s.factor==='exchange'&&s.amount)parts.push(s.amount>0?'Appreciation':'Depreciation');
- if(s.factor==='productivity'){parts.push('COP '+dir(p.level-20)+' & Productive Capacity '+dir(p.full-85),'SRAS & LRAS '+(s.amount===0?'Unchanged':s.amount>0?'Increase':'Decrease'));}
- else if(s.factor!=='resources')parts.push('COP '+dir(p.level-20),'SRAS '+(p.level===20?'Unchanged':p.level<20?'Increases':'Decreases'));
- if(s.factor==='resources')parts.push('Productive Capacity '+dir(p.full-85),'LRAS '+(p.full===85?'Unchanged':p.full>85?'Increases':'Decreases'));
+ if(s.factor==='productivity'){parts.push('COP '+dir(p.level-20)+' & Productive Capacity '+dir(p.full-85),'SRAS & LRAS '+(s.amount===0?'Unchanged':s.amount>0?'Increase (Outwards Shift)':'Decrease (Inwards Shift)'));}
+ else if(s.factor!=='resources')parts.push('COP '+dir(p.level-20),'SRAS '+(p.level===20?'Unchanged':p.level<20?'Increases (Downwards Shift)':'Decreases (Upwards Shift)'));
+ if(s.factor==='resources')parts.push('Productive Capacity '+dir(p.full-85),'LRAS '+(p.full===85?'Unchanged':p.full>85?'Increases (Rightwards Shift)':'Decreases (Leftwards Shift)'));
  if(s.showAD){const a=M.equilibrium(110,85,20),b=M.equilibrium(110,p.full,p.level);points(a,b,false);parts.push('P '+dir(b.p-a.p),'RNY '+dir(b.q-a.q));}summary=parts.join(' · ');
  const reason={labour:'Labour costs change unit production costs, holding productivity constant.',raw:'Raw-material prices change production costs.',exchange:'An increase means domestic-currency appreciation: imported inputs become cheaper, lowering production costs. A decrease means depreciation and reverses the effect. Only the imported-input channel is shown; AD is fixed.',resources:'The quantity of resources changes productive capacity. This case holds the horizontal SRAS price level fixed.',productivity:'Higher productivity lowers unit production costs AND raises productive capacity: SRAS moves down and LRAS moves right. Lower productivity reverses both changes.'}[s.factor];
  $('mechanism').innerHTML='<p>'+reason+'</p><p>The intermediate section adjusts smoothly between the horizontal and vertical sections. AS₀ remains fixed. AS₁ represents the changed costs and/or capacity.</p><p>'+(s.showAD?'AD is fixed. E₀ and E₁ show the initial and new macroeconomic equilibria.':'AD is hidden, so equilibrium price and income outcomes are not inferred from AS alone.')+'</p><p>Geometry is illustrative; no numerical calibration or multiplier rounds are included.</p>';
