@@ -34,6 +34,7 @@
  }
  function render(){
   window.WidgetInterface?.closeExplanation();drawing.replaceChildren();const s=state(),move=s.mode==='movement',shift=M.shock(s.component,s.amount),changed=!move&&shift!==0,eq0=M.equilibrium(110,s.full,s.steep),eq1=M.equilibrium(110+shift,s.full,s.steep);
+  $('show-as').closest('label').hidden=move;if(move)s.showAS=false;
   for(const id of ['component-control','shift-control'])$(id).hidden=move;$('movement-control').hidden=!move;for(const id of ['as-steep-control','as-full-control'])$(id).hidden=!s.showAS;
   $('change-value').textContent=dir(s.amount);$('price-value').textContent=dir(s.price-50);
   line(100,430,490,430,colours.ink,{'marker-end':'url(#ad-axis-arrow)'});line(100,430,100,40,colours.ink,{'marker-end':'url(#ad-axis-arrow)'});
@@ -42,7 +43,7 @@
   curve.span=120;
   if(move){curve(110,'AD',colours.ad);const a={q:60,p:50},b={q:110-s.price,p:s.price};if(s.price!==50){line(X(a.q)+6,Y(a.p)+6,X(b.q)+6,Y(b.p)+6,colours.red,{'marker-end':'url(#ad-red-arrow)'});}points(a,b,true);
    summary=`AD Unchanged · Price Level ${dir(s.price-50)} · Real Output Demanded ${dir(50-s.price)}`;
-   $('mechanism').innerHTML='<p>A change in the general price level causes a <strong>movement along the same AD curve</strong>. A lower price level increases real output demanded; a higher price level reduces it, ceteris paribus. C, I, G, X and M are held unchanged as autonomous determinants.</p><p>Points A and B are positions on AD. If AS is displayed, it is a reference curve: moving the selected point does not create a new AD–AS equilibrium.</p>';
+   $('mechanism').innerHTML='<p>A change in the general price level causes a <strong>movement along the same AD curve</strong>. A lower price level increases real output demanded; a higher price level reduces it, ceteris paribus. C, I, G, X and M are held unchanged as autonomous determinants.</p><p>Points A and B are positions on AD. AS is hidden in this mode. Moving the selected point does not create a new AD–AS equilibrium.</p>';
   }else{
    if(changed)curve(110,'AD₀',colours.initial,Math.abs(shift)<12?-24:0);curve(110+shift,changed?'AD₁':'AD₀',colours.ad,Math.abs(shift)<12&&changed?0:0);
    if(changed)line(X(60),Y(50),X(60+shift),Y(50),colours.red,{'marker-end':'url(#ad-red-arrow)'});
