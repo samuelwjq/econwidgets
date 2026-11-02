@@ -47,3 +47,18 @@ SRAS; zero multiplier leaves supply changes active; initial-case changes
 and Reset restore neutral shocks; E labels remain centred above points
 in all three initial sections, including small shifts and phone width.
 Phone width check passed without horizontal overflow.
+
+ARROW AND LABEL REVISION
+Diagram Options has independent AD Shift Arrow and AS Shift Arrow toggles.
+Both start off and Reset switches them off. Neither appears for zero shift.
+SRAS-only arrows are vertical; LRAS-only arrows are horizontal near the top.
+Reinforcing cost/capacity changes use a 45-degree arrow with endpoints on AS.
+Opposing cost/capacity effects use a top horizontal arrow between the vertical
+sections, where productive-capacity changes are unambiguous.
+AD labels follow AD Factors' preferred positions, with collision clearance
+from every curve. Summary strips write Unchanged instead of sideways arrows.
+
+REVISION VALIDATION
+1,680 AS arrow geometries passed endpoint-on-curve and direction checks.
+Browser verified separate toggles, defaults, reset, vertical and top-horizontal
+arrows, the 45-degree combined arrow, and phone Unchanged summary fit.

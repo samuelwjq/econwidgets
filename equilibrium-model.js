@@ -16,5 +16,14 @@
   const level=base.level-(['sras','both'].includes(s.as)?10*s.sras/100:0);
   return {initial,final:initial+shift,autonomous,shift,full,level,a:equilibrium(initial,85,20),b:equilibrium(initial+shift,full,level)};
  }
- const api=Object.freeze({supply,equilibrium,calculate});root.EquilibriumModel=api;if(typeof module!=='undefined')module.exports=api;
+ // Arrow endpoints stay on AS0 and AS1. Internal axis scales give dq = -.75 dp
+ // for a 45-degree screen arrow when costs and capacity reinforce one another.
+ function supplyShiftArrow(full,level){
+  if(full===85)return {a:{q:30,p:20},b:{q:30,p:level}};
+  if(level===20||(full-85)*(level-20)>0)return {a:{q:85,p:150},b:{q:full,p:150}};
+  const a=supply(.35,85,20),total=a.q+.75*a.p;let lo=0,hi=1;
+  for(let i=0;i<64;i++){const t=(lo+hi)/2,b=supply(t,full,level);if(b.q+.75*b.p<total)lo=t;else hi=t;}
+  return {a,b:supply((lo+hi)/2,full,level)};
+ }
+ const api=Object.freeze({supply,equilibrium,calculate,supplyShiftArrow});root.EquilibriumModel=api;if(typeof module!=='undefined')module.exports=api;
 })(typeof globalThis!=='undefined'?globalThis:this);

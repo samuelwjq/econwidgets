@@ -9,10 +9,10 @@
  function line(x1,y1,x2,y2,stroke=colours.ink,extra={}){return node('line',{x1,y1,x2,y2,stroke,'stroke-width':2,'vector-effect':'non-scaling-stroke',...extra});}
  function text(x,y,value,extra={}){return node('text',{x,y,fill:colours.ink,'font-size':14,'text-anchor':'middle',...extra},value);}
  function tip(n,message){n.dataset.tip=message;n.setAttribute('aria-label',message);n.setAttribute('tabindex','0');n.setAttribute('role','button');return n;}
- const dir=v=>Math.abs(v)<1e-6?'↔':v>0?'↑':'↓';
+ const dir=v=>Math.abs(v)<1e-6?'Unchanged':v>0?'↑':'↓';
  const size=v=>v===0?'Zero':v<34?'Small':v<67?'Medium':'Large';
  function state(){const change=+$('ad-shift').value,cop=+$('cop').value;return {initial:$('initial').value,ad:change===0?'none':change>0?'increase':'decrease',spending:Math.abs(change),multiplier:+$('multiplier').value,as:'both',sras:-cop,lras:+$('capacity').value,cop};}
- function demand(intercept,label,colour,old){const q0=Math.max(0,intercept-160),q1=Math.min(120,intercept);tip(line(X(q0),Y(intercept-q0),X(q1),Y(intercept-q1),colour,{'stroke-width':2.5,'data-curve':'','data-intercept':intercept,'clip-path':'url(#ad-plot-clip)'}),label+': planned expenditure on domestic output at each general price level.');const q=q0+(q1-q0)*(old?.25:.78);tip(text(X(q)+12*units(),Y(intercept-q)-14*units(),label,{fill:colour,class:'ad-bold','text-anchor':'start'}),'Aggregate demand curve.');}
+ function demand(intercept,label,colour,old){const q0=Math.max(0,intercept-160),q1=Math.min(120,intercept);tip(line(X(q0),Y(intercept-q0),X(q1),Y(intercept-q1),colour,{'stroke-width':2.5,'data-curve':'','data-intercept':intercept,'clip-path':'url(#ad-plot-clip)'}),label+': planned expenditure on domestic output at each general price level.');const q=old?Math.min(q1-6,q0+20):q1-6;tip(text(X(q)-8,Y(intercept-q)-16*units(),label,{fill:colour,class:'ad-bold','text-anchor':'end'}),'Aggregate demand curve.');}
  function supply(full,level,label,colour,other){let d=`M${X(0)},${Y(level)} L${X(.6*full)},${Y(level)}`;for(let i=1;i<=100;i++){const p=M.supply(i/100,full,level);d+=` L${X(p.q)},${Y(p.p)}`;}d+=` L${X(full)},${Y(160)}`;tip(node('path',{d,fill:'none',stroke:colour,'stroke-width':2.5,'vector-effect':'non-scaling-stroke','data-curve':'','clip-path':'url(#ad-plot-clip)'}),label+': aggregate supply.');let lx=X(full)+12*units(),ly=85,anchor='start';if(other&&full!==other.full){const left=full<other.full;lx=X(full)+(left?-12:12)*units();anchor=left?'end':'start';}else if(other&&level!==other.level){lx=X(.24*full);ly=Y(level)+(level>other.level?-12:23)*units();anchor='middle';}tip(text(lx,ly,label,{fill:colour,class:'ad-bold','text-anchor':anchor}),'Aggregate supply curve.');}
  function coordinatePair(a,b){
   const equalP=Math.abs(a.p-b.p)<1e-6,equalQ=Math.abs(a.q-b.q)<1e-6;
@@ -34,17 +34,17 @@
  }
 
 
- function shiftArrow(a,b){if(Math.hypot(a.q-b.q,a.p-b.p)>1e-7)line(X(a.q),Y(a.p),X(b.q),Y(b.p),colours.red,{'marker-end':'url(#ad-red-arrow)','data-shift-arrow':''});}
+ function shiftArrow(a,b,kind){if(Math.hypot(a.q-b.q,a.p-b.p)>1e-7)line(X(a.q),Y(a.p),X(b.q),Y(b.p),colours.red,{'marker-end':'url(#ad-red-arrow)','data-shift-arrow':kind});}
  function render(){window.WidgetInterface?.closeExplanation();drawing.replaceChildren();const s=state(),r=M.calculate(s),adChanged=Math.abs(r.shift)>1e-7,asChanged=r.full!==85||r.level!==20;
  $('multiplier').setAttribute('aria-valuetext',size(s.multiplier));
  for(const id of ['ad-shift','cop','capacity']){const v=+$(id).value;$(id).setAttribute('aria-valuetext',v===0?'Unchanged':size(Math.abs(v))+' '+(v>0?'increase':'decrease'));}
  line(100,430,490,430,colours.ink,{'marker-end':'url(#ad-axis-arrow)'});line(100,430,100,40,colours.ink,{'marker-end':'url(#ad-axis-arrow)'});text(100,30,'General Price Level',{'font-size':12,class:'ew-axis-title'});text(588,448,'Real National Income',{'font-size':12,'text-anchor':'end',class:'ew-axis-title'});text(88,446,'0',{'font-size':12});
  if(adChanged)demand(r.initial,'AD₀','#93b4f2',true);demand(r.final,adChanged?'AD₁':'AD₀',colours.ad,false);
  if(asChanged)supply(85,20,'AS₀','#8fcea3',{full:r.full,level:r.level});supply(r.full,r.level,asChanged?'AS₁':'AS₀',colours.as,asChanged?{full:85,level:20}:null);
- if(adChanged){const p=55,q=r.initial-p;if(q>=0&&q<=120&&q+r.shift>=0&&q+r.shift<=120)shiftArrow({q,p},{q:q+r.shift,p});else {const p=100;shiftArrow({q:r.initial-p,p},{q:r.final-p,p});}}
- if(asChanged){if(r.full===85)shiftArrow({q:25,p:20},{q:25,p:r.level});else if(r.level===20)shiftArrow({q:85,p:150},{q:r.full,p:150});else shiftArrow(M.supply(.25,85,20),M.supply(.25,r.full,r.level));}
+ if(adChanged&&$('show-ad-arrow').checked){const p=55,q=r.initial-p;if(q>=0&&q<=120&&q+r.shift>=0&&q+r.shift<=120)shiftArrow({q,p},{q:q+r.shift,p},'ad');else {const p=100;shiftArrow({q:r.initial-p,p},{q:r.final-p,p},'ad');}}
+ if(asChanged&&$('show-as-arrow').checked){const arrow=M.supplyShiftArrow(r.full,r.level);shiftArrow(arrow.a,arrow.b,'as');}
  points(r.a,r.b,false);
- const parts=[adChanged?'AD '+dir(r.shift):'AD ↔'];if(asChanged){if(r.level!==20)parts.push('SRAS '+dir(20-r.level));if(r.full!==85)parts.push('LRAS '+dir(r.full-85));}else parts.push('AS ↔');parts.push('P '+dir(r.b.p-r.a.p),'RNY '+dir(r.b.q-r.a.q));summary=parts.join(' · ');$('ad-summary').textContent=summary;$('diagram-desc').textContent=summary;
+ const parts=[adChanged?'AD '+dir(r.shift):'AD Unchanged'];if(asChanged){if(r.level!==20)parts.push('SRAS '+dir(20-r.level));if(r.full!==85)parts.push('LRAS '+dir(r.full-85));}else parts.push('AS Unchanged');parts.push('P '+dir(r.b.p-r.a.p),'RNY '+dir(r.b.q-r.a.q));summary=parts.join(' · ');$('ad-summary').textContent=summary;$('diagram-desc').textContent=summary;
  const adWords=adChanged?'AD '+(r.shift>0?'increases (Rightwards Shift).':'decreases (Leftwards Shift).'):s.ad!=='none'?'AD is unchanged because '+(s.multiplier===0?'the multiplier is set to Zero.':'the initial spending change is Zero.'):'AD is unchanged.';
  const asWords=[];if(r.level!==20)asWords.push('SRAS '+(r.level<20?'increases (Downwards Shift)':'decreases (Upwards Shift)'));if(r.full!==85)asWords.push('LRAS '+(r.full>85?'increases (Rightwards Shift)':'decreases (Leftwards Shift)'));
  $('mechanism').innerHTML='<p><strong>'+adWords+' '+(asWords.length?asWords.join('; ')+'.':'AS is unchanged.')+'</strong></p><p>E₀ starts on the '+r.a.section.toLowerCase()+' section; E₁ lies on the '+r.b.section.toLowerCase()+' section. P '+(Math.abs(r.b.p-r.a.p)<1e-6?'is unchanged':r.b.p>r.a.p?'increases':'decreases')+'; real national income '+(Math.abs(r.b.q-r.a.q)<1e-6?'is unchanged':r.b.q>r.a.q?'increases':'decreases')+'.</p><p>For the same initial spending change, a larger multiplier gives a larger total AD shift. The AS section determines how the equilibrium adjustment is divided between price and real national income. The controls are qualitative; the diagram is not a numerical forecast.</p>';
@@ -64,7 +64,7 @@
  }
  function resetShocks(){$('ad-shift').value=0;$('multiplier').value=50;$('cop').value=0;$('capacity').value=0;}
  document.querySelector('.controls').addEventListener('input',e=>{if(e.target.id==='initial')resetShocks();render();});
- $('reset').onclick=()=>{$('initial').value='intermediate';resetShocks();$('tooltips').checked=true;$('image-style').value='colour';$('export-status').textContent='';render();};
+ $('reset').onclick=()=>{$('initial').value='intermediate';resetShocks();$('tooltips').checked=true;$('show-ad-arrow').checked=false;$('show-as-arrow').checked=false;$('image-style').value='colour';$('export-status').textContent='';render();};
  window.EconPilot=Object.freeze({chrome:()=>{},refresh:()=>{},schedule:()=>{},legendEntries:()=>[],summaryText:()=>summary});
  window.EconWidgetPresentation=Object.freeze({refresh:render});window.EquilibriumWidget=Object.freeze({state,render,calculate:()=>M.calculate(state())});window.addEventListener('resize',render);render();
 })();
