@@ -3,7 +3,7 @@ Open Aggregate_Supply_Factors.html with all supplied JS/CSS alongside it.
 Upload the 11 web files to the existing repository root. README is optional.
 No index.html is included or changed. The shared files are unchanged.
 
-Movement along AS: select A on horizontal SRAS, intermediate AS or vertical
+Movement along AS: select the initial point A on horizontal SRAS, intermediate AS or vertical
 LRAS. The movement slider fixes A and moves B continuously along unchanged AS,
 including across sections. It selects curve position, not a unique price shock.
 Coordinate guides are always shown. These points need not be equilibria.
