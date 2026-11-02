@@ -43,6 +43,9 @@
  const caption=tip(text(lx,ly,label,{fill:colour,class:'ad-bold','text-anchor':anchor}),'Aggregate supply curve.');if(side){caption.dataset.side=side;caption.dataset.curveX=X(full);}}
  function render(){window.WidgetInterface?.closeExplanation();drawing.replaceChildren();const s=state(),move=s.mode==='movement',p=M.parameters(s.factor,s.amount);
  $('start-control').hidden=!move;$('movement-control').hidden=!move;$('component-control').hidden=move;$('shift-control').hidden=move;
+ document.querySelector('label[for="change"]').textContent={labour:'Cost',raw:'Price',exchange:'Exchange Rate',resources:'Resources',productivity:'Productivity'}[s.factor];
+ $('factor-decrease').textContent=s.factor==='exchange'?'Depreciation':'Decrease';
+ $('factor-increase').textContent=s.factor==='exchange'?'Appreciation':'Increase';
  line(100,430,490,430,colours.ink,{'marker-end':'url(#ad-axis-arrow)'});line(100,430,100,40,colours.ink,{'marker-end':'url(#ad-axis-arrow)'});text(100,30,'General Price Level',{'font-size':12,class:'ew-axis-title'});text(588,448,'Real National Income',{'font-size':12,'text-anchor':'end',class:'ew-axis-title'});text(88,446,'0',{'font-size':12});
  $('show-ad').closest('label').hidden=move;
  if(s.showAD&&!move)curve(110,'AD',colours.ad);
@@ -50,7 +53,13 @@
  if(s.movement)line(X(a.q),Y(a.p),X(b.q),Y(b.p),colours.red,{'marker-end':'url(#ad-red-arrow)'});
  points(a,b,true);summary=`AS Unchanged · P ${dir(b.p-a.p)} · Real Output Supplied ${dir(b.q-a.q)}`;
  $('mechanism').innerHTML='<p>A stays fixed at the selected starting position. B moves along the same AS curve. The straight arrow connects A to B; the points may lie on different sections of the unchanged AS curve.</p><p>On horizontal SRAS, output varies at an unchanged price level. On the intermediate section, price and output vary together. On vertical LRAS, price varies at unchanged full-employment output.</p><p>The slider selects a position along AS; price alone cannot uniquely locate a point on its horizontal section, and output alone cannot locate one on its vertical section. A and B are supply combinations, not necessarily equilibria. Optional AD is a reference only.</p>';
- }else{if(s.amount)supplyCurve(85,20,'AS₀','#8fcea3');supplyCurve(p.full,p.level,s.amount?'AS₁':'AS₀',colours.as);const parts=[factors[s.factor]+' '+dir(s.amount)];
+ }else{if(s.amount)supplyCurve(85,20,'AS₀','#8fcea3');supplyCurve(p.full,p.level,s.amount?'AS₁':'AS₀',colours.as);
+ if(s.amount){
+  const a=s.factor==='resources'?{q:85,p:90}:s.factor==='productivity'?M.supply(.35,85,20):{q:30,p:20};
+  const b=s.factor==='resources'?{q:p.full,p:90}:s.factor==='productivity'?M.supply(.35,p.full,p.level):{q:30,p:p.level};
+  line(X(a.q),Y(a.p),X(b.q),Y(b.p),colours.red,{'marker-end':'url(#ad-red-arrow)','data-as-shift-arrow':''});
+ }
+ const parts=[factors[s.factor]+' '+dir(s.amount)];
  if(s.factor==='exchange'&&s.amount)parts.push(s.amount>0?'Appreciation':'Depreciation');
  if(s.factor==='productivity'){parts.push('COP '+dir(p.level-20)+' & Productive Capacity '+dir(p.full-85),'SRAS & LRAS '+(s.amount===0?'Unchanged':s.amount>0?'Increase':'Decrease'));}
  else if(s.factor!=='resources')parts.push('COP '+dir(p.level-20),'SRAS '+(p.level===20?'Unchanged':p.level<20?'Increases':'Decreases'));
