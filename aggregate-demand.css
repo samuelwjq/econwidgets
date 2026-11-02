@@ -1,7 +1,7 @@
 /* Model-specific extensions only; shared tokens and resources are unchanged. */
 .ew-ad [hidden] { display:none !important; }
 .ew-ad .ew-control-group output { font-size:12px; min-width:72px; }
-.ew-ad .ew-summary-strip { height:auto; min-height:40px; padding-block:6px; }
+
 .ew-ad .ad-equation { font-weight:700; }
 .ew-ad .ew-diagram text { paint-order:stroke; stroke:#fff; stroke-width:3px; stroke-linejoin:round; }
 .ew-ad .ew-diagram .ad-bold { font-weight:700; }

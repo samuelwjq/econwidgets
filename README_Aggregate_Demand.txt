@@ -11,7 +11,7 @@ FEATURES
 - Movement Along AD mode changes the general price level while AD stays fixed.
 - AS hidden initially; optional smooth Keynesian AS with a horizontal section,
   an upward-sloping section, and a vertical full-employment section.
-- AS steepness and full-employment controls appear only when AS is shown.
+- SRAS level and full-employment controls appear only when AS is shown.
 - AD initially intersects the upward-sloping AS section.
 - Initial and current equilibria appear in component-change mode with AS shown.
 - Movement-mode points are positions on AD, not equilibrium claims.
@@ -40,3 +40,8 @@ VALIDATION
 - Copy reported the shared interface's download fallback in this embedded
   browser; successful native clipboard access is not certified.
 - Exhaustive browser testing of every control combination was not performed.
+
+REVISION: Summary strip follows shared 28px desktop/tablet and 40px at <=480px.
+SRAS slider moves the horizontal section up/down; LRAS moves capacity left/right.
+Original AD geometry is fixed; shifted AD reaches the plot boundaries.
+Axis coordinate guides are always enabled. Price labels use P subscripts.
