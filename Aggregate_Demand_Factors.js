@@ -48,7 +48,7 @@
    if(changed)curve(110,'AD₀',colours.initial,Math.abs(shift)<12?-24:0);curve(110+shift,changed?'AD₁':'AD₀',colours.ad,Math.abs(shift)<12&&changed?0:0);
    if(changed)line(X(60),Y(50),X(60+shift),Y(50),colours.red,{'marker-end':'url(#ad-red-arrow)'});
    if(s.showAS)points(eq0,eq1,false);
-   const impact=[`${M.components[s.component]} (${s.component}) ${dir(s.amount)}`];if(['X','M'].includes(s.component))impact.push(`Net Exports (X−M) ${shift===0?'Unchanged':shift>0?'↑':'↓'}`);impact.push(shift===0?'AD Unchanged':shift>0?'AD Increases':'AD Decreases');if(s.showAS)impact.push(`P ${dir(eq1.p-eq0.p)}`,`RNY ${dir(eq1.q-eq0.q)}`);summary=impact.join(' · ');
+   const impact=[`${M.components[s.component]} (${s.component}) ${dir(s.amount)}`];if(['X','M'].includes(s.component))impact.push(`Net Exports (X−M) ${shift===0?'Unchanged':shift>0?'↑':'↓'}`);impact.push(shift===0?'AD Unchanged':shift>0?'AD Increases (Rightwards Shift)':'AD Decreases (Leftwards Shift)');if(s.showAS)impact.push(`P ${dir(eq1.p-eq0.p)}`,`RNY ${dir(eq1.q-eq0.q)}`);summary=impact.join(' · ');
    const reason=s.component==='M'?'Imports are subtracted in AD = C + I + G + (X − M). Holding C, I, G and X constant, higher imports reduce net exports and demand for domestic output; lower imports increase them.':s.component==='X'?'Holding imports constant, higher exports increase net exports (X − M), while lower exports reduce net exports.':`An autonomous change in ${M.components[s.component].toLowerCase()} changes planned expenditure on domestic output at every general price level, holding other determinants constant.`;
    $('mechanism').innerHTML=`<p class="ad-equation">AD = C + I + G + (X − M)</p><p>${reason}</p><p>${shift===0?'The selected component is unchanged, so AD stays at AD₀.':`This is a <strong>shift of AD</strong>: ${shift>0?'more':'less'} real output is demanded at every general price level. AD₀ is the initial curve and AD₁ is the new curve.`}</p><p>${s.showAS?`The new equilibrium lies on the <strong>${eq1.section} section of AS</strong>. On the horizontal section, output can change without a price-level change; on the vertical section, real output is fixed at full employment. In between, both can change.`:'AS is hidden, so no equilibrium price-level or real-income outcome is inferred from the AD shift alone.'}</p><p>Changes are qualitative and illustrative. No multiplier rounds are included. AS controls reshape a reference supply curve; both AD₀ and AD₁ are compared against the same AS.</p>`;
   }
@@ -81,7 +81,7 @@
  document.querySelector('.controls').addEventListener('input',render);
  $('component').addEventListener('change',()=>{$('change').value=0;render();});
  $('mode').addEventListener('change',()=>{$('change').value=0;$('price-level').value=50;render();});
- $('reset').onclick=()=>{$('mode').value='shift';$('component').value='C';$('change').value=0;$('price-level').value=50;$('show-as').checked=false;$('as-steep').value=20;$('as-full').value=85;$('tooltips').checked=true;$('image-style').value='colour';$('export-status').textContent='';render();};
+ $('reset').onclick=()=>{$('mode').value='movement';$('component').value='C';$('change').value=0;$('price-level').value=50;$('show-as').checked=false;$('as-steep').value=20;$('as-full').value=85;$('tooltips').checked=true;$('image-style').value='colour';$('export-status').textContent='';render();};
  window.addEventListener('resize',render);
  render();
 })();
