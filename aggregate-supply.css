@@ -1,0 +1,17 @@
+/* Model-specific extensions only; shared tokens and resources are unchanged. */
+.ew-as [hidden] { display:none !important; }
+.ew-as .ew-control-group output { font-size:12px; min-width:72px; }
+
+.ew-as .ad-equation { font-weight:700; }
+
+.ew-as .ew-diagram .ad-bold { font-weight:700; }
+.ew-as .ew-diagram [data-tip] { cursor:help; }
+
+.ew-as .controls > .ew-control-group:has(#mode), .ew-as #component-control { flex:0 1 auto; }
+.ew-as #mode { width:155px; }
+.ew-as #component { width:205px; }
+.ew-as #shift-control,.ew-as #movement-control { flex:1 1 300px; }
+.ew-as #shift-control output,.ew-as #movement-control output { display:none; }
+@media(max-width:480px){.ew-as #mode,.ew-as #component { width:100%; }.ew-as .controls > .ew-control-group:has(#mode),.ew-as #component-control { flex:1 1 100%; }}
+
+.ew-as #start-control {flex:0 1 210px;} .ew-as #start{width:190px;}
