@@ -3,6 +3,13 @@
 .ew-ad .ew-control-group output { font-size:12px; min-width:72px; }
 
 .ew-ad .ad-equation { font-weight:700; }
-.ew-ad .ew-diagram text { paint-order:stroke; stroke:#fff; stroke-width:3px; stroke-linejoin:round; }
+
 .ew-ad .ew-diagram .ad-bold { font-weight:700; }
 .ew-ad .ew-diagram [data-tip] { cursor:help; }
+
+.ew-ad .controls > .ew-control-group:has(#mode), .ew-ad #component-control { flex:0 1 auto; }
+.ew-ad #mode { width:155px; }
+.ew-ad #component { width:205px; }
+.ew-ad #shift-control,.ew-ad #movement-control { flex:1 1 300px; }
+.ew-ad #shift-control output,.ew-ad #movement-control output { display:none; }
+@media(max-width:480px){.ew-ad #mode,.ew-ad #component { width:100%; }.ew-ad .controls > .ew-control-group:has(#mode),.ew-ad #component-control { flex:1 1 100%; }}

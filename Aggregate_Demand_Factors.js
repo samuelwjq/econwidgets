@@ -30,7 +30,7 @@
   if(true){for(const p of [a,b]){line(100,Y(p.p),X(p.q),Y(p.p),'#9ca3af',{'stroke-width':1,'stroke-dasharray':'4 4'});line(X(p.q),Y(p.p),X(p.q),430,'#9ca3af',{'stroke-width':1,'stroke-dasharray':'4 4'});}coordinatePair(a,b);}
   const same=Math.hypot(a.q-b.q,a.p-b.p)<1e-6;
   const pairs=same?[[a,movement?'A = B':'E₀ = E₁',0]]:[[a,movement?'A':'E₀',-1],[b,movement?'B':'E₁',1]];
-  pairs.forEach(([p,label,i])=>{const x=X(p.q),y=Y(p.p),close=Math.hypot(X(a.q)-X(b.q),Y(a.p)-Y(b.p))<64*units();node('circle',{cx:x,cy:y,r:4,fill:i<0?'#fff':colours.ad,stroke:colours.ink,'stroke-width':1.5});const dx=(close&&i?(i<0?-23:23):-18)*units(),dy=(close&&i?(i<0?-24:24):-19)*units();line(x,y,x+dx*.65,y+dy*.65,'#9ca3af',{'stroke-width':1});tip(text(x+dx,y+dy,label,{fill:'#000',class:'ad-bold','font-size':13}),movement?'A position on AD; it need not be an equilibrium with AS.':'An intersection of AD and AS: macroeconomic equilibrium.');});
+  pairs.forEach(([p,label,i])=>{const x=X(p.q),y=Y(p.p),close=Math.hypot(X(a.q)-X(b.q),Y(a.p)-Y(b.p))<64*units();node('circle',{cx:x,cy:y,r:3.5,fill:i<0?colours.ink:'#4169e1'});const dx=(close&&i?(i<0?-23:23):-18)*units(),dy=(close&&i?(i<0?-24:24):-19)*units();line(x,y,x+dx*.65,y+dy*.65,'#9ca3af',{'stroke-width':1});tip(text(x+dx,y+dy,label,{fill:'#000',class:'ad-point','font-size':14}),movement?'A position on AD; it need not be an equilibrium with AS.':'An intersection of AD and AS: macroeconomic equilibrium.');});
  }
  function render(){
   window.WidgetInterface?.closeExplanation();drawing.replaceChildren();const s=state(),move=s.mode==='movement',shift=M.shock(s.component,s.amount),changed=!move&&shift!==0,eq0=M.equilibrium(110,s.full,s.steep),eq1=M.equilibrium(110+shift,s.full,s.steep);
@@ -54,7 +54,7 @@
   $('ad-summary').textContent=summary;$('diagram-desc').textContent=summary;
   const rows=move?[['AD curve','Unchanged'],['General price level',dir(s.price-50)],['Real output demanded',dir(50-s.price)]]:[[M.components[s.component],dir(s.amount)],...(['X','M'].includes(s.component)?[['Net exports (X − M)',dir(shift)]]:[]),['AD',shift===0?'Unchanged':shift>0?'Shifts right':'Shifts left'],...(s.showAS?[['Equilibrium price level',dir(eq1.p-eq0.p)],['Equilibrium real national income',dir(eq1.q-eq0.q)]]:[['Equilibrium outcomes','Show AS to determine them']])];
   $('summary-body').replaceChildren(...rows.map(([a,b])=>{const tr=document.createElement('tr');for(const v of [a,b]){const td=document.createElement('td');td.textContent=v;tr.append(td);}return tr;}));
-  for(const t of drawing.querySelectorAll('text')){const role=t.classList.contains('ad-bold')?'curve':t.textContent==='P₀=P₁'?'compactAxis':t.hasAttribute('font-size')?'small':'main';EconDiagramPresentation.styleText(t,role,!t.classList.contains('ew-axis-title'));}
+  for(const t of drawing.querySelectorAll('text')){const role=t.classList.contains('ad-bold')?'curve':/^[PY][₀₁]/.test(t.textContent)||t.classList.contains('ad-point')?'main':'small';EconDiagramPresentation.styleText(t,role,!t.classList.contains('ew-axis-title'));}
   for(const t of drawing.querySelectorAll('.ew-axis-title')){const b=t.getBBox();if(b.x<8)t.setAttribute('x',+t.getAttribute('x')+8-b.x);if(b.x+b.width>592)t.setAttribute('x',+t.getAttribute('x')+592-b.x-b.width);}
  }
  function chrome(){const controls=document.querySelector('.controls'),layout=document.querySelector('.layout');if(!controls.closest('.ew-fullscreen-stage')&&controls.nextElementSibling!==layout)layout.before(controls);}
