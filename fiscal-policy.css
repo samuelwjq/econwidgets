@@ -1,0 +1,30 @@
+/* Widget extensions. Shared suite resources remain unchanged. */
+.ew-equilibrium [hidden]{display:none!important}
+.ew-equilibrium .ad-bold{font-weight:700}
+.ew-equilibrium [data-tip]{cursor:help}
+.ew-equilibrium .control-row{display:flex;gap:12px;align-items:center;flex-wrap:wrap;width:100%}
+.ew-equilibrium .control-row>.ew-control-group{flex:1 1 200px;min-width:0}
+.ew-equilibrium .control-row>.compact{flex:0 1 230px}
+.ew-equilibrium select{max-width:100%}
+.ew-equilibrium .control-row>.ew-control-group label{white-space:nowrap}
+.ew-equilibrium .ew-range{min-width:90px;flex:1}
+.ew-equilibrium .control-note{font-size:12px;color:#67717e;margin:0;width:100%}
+.ew-equilibrium .ew-explanation p{margin:6px 0}
+@media(max-width:600px){.ew-equilibrium .control-row>.compact,.ew-equilibrium .control-row>.ew-control-group{flex:1 1 100%}.ew-equilibrium .control-row select{flex:1;min-width:0}}
+.ew-equilibrium .control-row>.compact:has(#initial){flex-basis:350px;flex-wrap:nowrap}
+.ew-equilibrium #initial{min-width:200px}
+@media(max-width:600px){.ew-equilibrium .control-row>.compact:has(#initial){flex:1 1 100%;flex-wrap:wrap}.ew-equilibrium #initial{min-width:0}}
+
+.ew-equilibrium #policy{min-width:220px}.ew-equilibrium .control-row:has(#policy)>.compact{flex-basis:290px}.ew-equilibrium #long-run-explanation{font-size:13px;margin:12px 0}.ew-equilibrium #long-run-explanation h2{font-size:14px}
+
+.ew-equilibrium #multiplier{flex:0 0 auto;width:190px;max-width:100%}.ew-equilibrium .control-row:has(#multiplier)>.ew-control-group{flex:0 1 auto}
+
+/* Compact fiscal model controls. */
+.ew-equilibrium .control-row:has(#policy){flex-wrap:nowrap}
+.ew-equilibrium .control-row:has(#policy)>.compact{flex:0 0 auto;flex-wrap:nowrap}
+.ew-equilibrium #policy{min-width:0;width:220px;flex:none}
+.ew-equilibrium .control-row:has(#policy)>.ew-control-group:not(.compact){flex:1;flex-wrap:nowrap}
+.ew-equilibrium .control-row:has(#multiplier)>.ew-control-group{flex:0 1 500px}
+.ew-equilibrium #multiplier{width:100%}
+.ew-equilibrium #capacity-controls{max-width:690px}
+@media(max-width:600px){.ew-equilibrium .control-row:has(#policy){flex-wrap:wrap}.ew-equilibrium .control-row:has(#policy)>.compact,.ew-equilibrium .control-row:has(#policy)>.ew-control-group:not(.compact){flex:1 1 100%}.ew-equilibrium #policy{flex:1;width:auto}.ew-equilibrium #capacity-controls>.ew-control-group>label{white-space:normal}}
