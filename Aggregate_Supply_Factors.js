@@ -46,7 +46,7 @@
  document.querySelector('label[for="change"]').textContent={labour:'Cost',raw:'Price',exchange:'Exchange Rate',resources:'Resources',productivity:'Productivity'}[s.factor];
  $('factor-decrease').textContent=s.factor==='exchange'?'Depreciation':'Decrease';
  $('factor-increase').textContent=s.factor==='exchange'?'Appreciation':'Increase';
- line(100,430,490,430,colours.ink,{'marker-end':'url(#ad-axis-arrow)'});line(100,430,100,40,colours.ink,{'marker-end':'url(#ad-axis-arrow)'});text(100,30,'General Price Level',{'font-size':12,class:'ew-axis-title'});text(588,448,'Real National Income',{'font-size':12,'text-anchor':'end',class:'ew-axis-title'});text(88,446,'0',{'font-size':12});
+ line(100,430,490,430,colours.ink,{'marker-end':'url(#ad-axis-arrow)'});line(100,430,100,40,colours.ink,{'marker-end':'url(#ad-axis-arrow)'});text(100,30,'General Price Level',{'font-size':12,class:'ew-axis-title'});text(490,448,'RNY',{'font-size':12,'text-anchor':'middle',class:'ew-axis-title'});text(88,446,'0',{'font-size':12});
  $('show-ad').closest('label').hidden=move;
  if(s.showAD&&!move)curve(110,'AD',colours.ad);
  if(move){supplyCurve(85,20,'AS',colours.as);const start={horizontal:.22,intermediate:.5,vertical:.8}[s.start],end=s.movement>=0?start+(1-start)*s.movement/100:start+start*s.movement/100,a=M.position(start),b=M.position(end);
