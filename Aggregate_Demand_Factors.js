@@ -38,11 +38,11 @@
   for(const id of ['component-control','shift-control'])$(id).hidden=move;$('movement-control').hidden=!move;for(const id of ['as-steep-control','as-full-control'])$(id).hidden=!s.showAS;
   $('change-value').textContent=dir(s.amount);$('price-value').textContent=dir(s.price-50);
   line(100,430,490,430,colours.ink,{'marker-end':'url(#ad-axis-arrow)'});line(100,430,100,40,colours.ink,{'marker-end':'url(#ad-axis-arrow)'});
-  text(100,30,'General Price Level',{'font-size':12,class:'ew-axis-title'});text(490,448,'RNY',{'font-size':12,'text-anchor':'middle',class:'ew-axis-title'});text(88,446,'0',{'font-size':12});
+  text(100,30,'GPL',{'font-size':12,class:'ew-axis-title'});text(490,448,'RNY',{'font-size':12,'text-anchor':'middle',class:'ew-axis-title'});text(88,446,'0',{'font-size':12});
   if(s.showAS){let d=`M${X(0)},${Y(s.steep)} L${X(.6*s.full)},${Y(s.steep)}`;for(let i=1;i<=100;i++){const p=M.supply(i/100,s.full,s.steep);d+=` L${X(p.q)},${Y(p.p)}`;}d+=` L${X(s.full)},${Y(120)}`;tip(node('path',{'data-as-curve':'',d,fill:'none',stroke:colours.as,'stroke-width':2.5,'vector-effect':'non-scaling-stroke'}),'Keynesian AS: spare capacity at low output, rising costs as capacity is approached, and a full-employment output limit.');tip(text(X(s.full)+10,65,'AS',{fill:colours.as,class:'ad-bold','text-anchor':'start'}),'The vertical section represents full-employment output.');}
   curve.span=120;
   if(move){curve(110,'AD',colours.ad);const a={q:60,p:50},b={q:110-s.price,p:s.price};if(s.price!==50){line(X(a.q)+6,Y(a.p)+6,X(b.q)+6,Y(b.p)+6,colours.red,{'marker-end':'url(#ad-red-arrow)'});}points(a,b,true);
-   summary=`AD Unchanged · GPL ${dir(s.price-50)} · Real Output Demanded ${dir(50-s.price)}`;
+   summary=`AD Unchanged · GPL ${dir(s.price-50)} · RNY ${dir(50-s.price)}`;
    $('mechanism').innerHTML='<p>A change in the general price level causes a <strong>movement along the same AD curve</strong>. A lower price level increases real output demanded; a higher price level reduces it, ceteris paribus. C, I, G, X and M are held unchanged as autonomous determinants.</p><p>Points A and B are positions on AD. AS is hidden in this mode. Moving the selected point does not create a new AD–AS equilibrium.</p>';
   }else{
    if(changed)curve(110,'AD₀',colours.initial,Math.abs(shift)<12?-24:0);curve(110+shift,changed?'AD₁':'AD₀',colours.ad,Math.abs(shift)<12&&changed?0:0);

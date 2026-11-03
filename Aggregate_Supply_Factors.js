@@ -46,12 +46,12 @@
  document.querySelector('label[for="change"]').textContent={labour:'Cost',raw:'Price',exchange:'Exchange Rate',resources:'Resources',productivity:'Productivity'}[s.factor];
  $('factor-decrease').textContent=s.factor==='exchange'?'Depreciation':'Decrease';
  $('factor-increase').textContent=s.factor==='exchange'?'Appreciation':'Increase';
- line(100,430,490,430,colours.ink,{'marker-end':'url(#ad-axis-arrow)'});line(100,430,100,40,colours.ink,{'marker-end':'url(#ad-axis-arrow)'});text(100,30,'General Price Level',{'font-size':12,class:'ew-axis-title'});text(490,448,'RNY',{'font-size':12,'text-anchor':'middle',class:'ew-axis-title'});text(88,446,'0',{'font-size':12});
+ line(100,430,490,430,colours.ink,{'marker-end':'url(#ad-axis-arrow)'});line(100,430,100,40,colours.ink,{'marker-end':'url(#ad-axis-arrow)'});text(100,30,'GPL',{'font-size':12,class:'ew-axis-title'});text(490,448,'RNY',{'font-size':12,'text-anchor':'middle',class:'ew-axis-title'});text(88,446,'0',{'font-size':12});
  $('show-ad').closest('label').hidden=move;
  if(s.showAD&&!move)curve(110,'AD',colours.ad);
  if(move){supplyCurve(85,20,'AS',colours.as);const start={horizontal:.22,intermediate:.5,vertical:.8}[s.start],end=s.movement>=0?start+(1-start)*s.movement/100:start+start*s.movement/100,a=M.position(start),b=M.position(end);
  if(s.movement)line(X(a.q),Y(a.p),X(b.q),Y(b.p),colours.red,{'marker-end':'url(#ad-red-arrow)'});
- points(a,b,true);summary=`AS Unchanged · GPL ${dir(b.p-a.p)} · Real Output Supplied ${dir(b.q-a.q)}`;
+ points(a,b,true);summary=`AS Unchanged · GPL ${dir(b.p-a.p)} · RNY ${dir(b.q-a.q)}`;
  $('mechanism').innerHTML='<p>A stays fixed at the selected starting position. B moves along the same AS curve. The straight arrow connects A to B; the points may lie on different sections of the unchanged AS curve.</p><p>On horizontal SRAS, output varies at an unchanged price level. On the intermediate section, price and output vary together. On vertical LRAS, price varies at unchanged full-employment output.</p><p>The slider selects a position along AS; price alone cannot uniquely locate a point on its horizontal section, and output alone cannot locate one on its vertical section. A and B are supply combinations, not necessarily equilibria. Optional AD is a reference only.</p>';
  }else{if(s.amount)supplyCurve(85,20,'AS₀','#8fcea3');supplyCurve(p.full,p.level,s.amount?'AS₁':'AS₀',colours.as);
  if(s.amount){
