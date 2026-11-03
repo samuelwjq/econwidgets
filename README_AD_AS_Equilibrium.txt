@@ -62,3 +62,57 @@ REVISION VALIDATION
 1,680 AS arrow geometries passed endpoint-on-curve and direction checks.
 Browser verified separate toggles, defaults, reset, vertical and top-horizontal
 arrows, the 45-degree combined arrow, and phone Unchanged summary fit.
+
+LATEST ARROW REVISION
+The previous independent arrow options are replaced by one Show Shifts in
+AD/AS checkbox, off by default and after Reset. Any capacity change uses a
+horizontal arrow between vertical AS sections near the top; pure COP changes
+use a vertical arrow between horizontal sections. This supersedes earlier
+arrow descriptions. Label behaviour is unchanged pending user review.
+Syntax and 25 source-level arrow-placement cases passed for this revision;
+this latest revision has not had a visual browser check.
+
+SHARED LABEL PLACEMENT REVISION
+Curve and equilibrium labels now use EconDiagramPresentation.layoutSvg,
+the shared D&S layout engine. The nonlinear AS is registered as sampled
+curve segments, with its horizontal or vertical section used for proximity.
+AD labels use right-endpoint anchors and the shared parallel-family rules.
+E labels are free to move sideways; their above-point constraint and custom
+stacking routine are removed. E0 is dark and E1 blue, matching D&S.
+Shared collision rules protect curves, labels and equilibrium markers;
+displaced equilibrium labels use grey leaders. All shared files are unchanged.
+Browser checks passed for three initial sections with simultaneous shocks
+and a dense 390px phone iframe scenario; no shared-layout errors reported.
+Earlier custom-label descriptions are superseded by this revision.
+
+LATEST REVISION
+Paired labels use outside-only candidate positions near the same curve end.
+Shift arrows are registered as label obstacles. Expanded AD, COP and capacity
+effects; horizontal starting equilibrium adjusted to keep extremes on plot.
+Show Multiplier Effect defaults off and adds four purple AD curves at
+progressively smaller remaining distances from the final AD curve. These
+represent illustrative cumulative spending rounds, not calibrated values.
+Control-panel multiplier statement removed. Syntax and extreme model bounds
+checked; this revision still needs visual browser verification.
+
+LATEST RANGE AND LABEL REVISION
+AD response increased to 50, COP to 18, capacity to 30 internal units.
+Price plotting range increased to keep extreme equilibria visible.
+Extreme negative AD shocks saturate at positive output instead of extending
+into negative income. Purple rounds capped at three with spacing thresholds,
+labelled AD_a, AD_b, AD_c using Unicode subscripts. Point-label candidates
+are restricted to centres closer to their own equilibrium than the other.
+Sampled browser checks covered intermediate labels and expanded extremes.
+
+INTERMEDIATE CURVE COUNT REVISION
+With nonzero AD change and Show Multiplier Effect enabled, two purple
+intermediate curves always appear; a third is added at sufficient spacing.
+The lines are thinner and lighter than AD0/AD1. Their labels have staggered
+preferred anchors along the lines. At zero shift, no duplicate curves appear.
+Syntax and source checks passed; visual browser verification remains pending.
+
+MULTIPLIER REVISION
+No Further Rounds retains the initial spending shift. AD_a stays fixed when
+only multiplier changes. Later stages add fractions of induced spending.
+At No Further Rounds only AD1 represents the initial-only effect.
+Axes use GPL/RNY. Source and model checks passed; browser QA pending.
