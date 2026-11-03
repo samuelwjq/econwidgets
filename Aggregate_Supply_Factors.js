@@ -51,7 +51,7 @@
  if(s.showAD&&!move)curve(110,'AD',colours.ad);
  if(move){supplyCurve(85,20,'AS',colours.as);const start={horizontal:.22,intermediate:.5,vertical:.8}[s.start],end=s.movement>=0?start+(1-start)*s.movement/100:start+start*s.movement/100,a=M.position(start),b=M.position(end);
  if(s.movement)line(X(a.q),Y(a.p),X(b.q),Y(b.p),colours.red,{'marker-end':'url(#ad-red-arrow)'});
- points(a,b,true);summary=`AS Unchanged · P ${dir(b.p-a.p)} · Real Output Supplied ${dir(b.q-a.q)}`;
+ points(a,b,true);summary=`AS Unchanged · GPL ${dir(b.p-a.p)} · Real Output Supplied ${dir(b.q-a.q)}`;
  $('mechanism').innerHTML='<p>A stays fixed at the selected starting position. B moves along the same AS curve. The straight arrow connects A to B; the points may lie on different sections of the unchanged AS curve.</p><p>On horizontal SRAS, output varies at an unchanged price level. On the intermediate section, price and output vary together. On vertical LRAS, price varies at unchanged full-employment output.</p><p>The slider selects a position along AS; price alone cannot uniquely locate a point on its horizontal section, and output alone cannot locate one on its vertical section. A and B are supply combinations, not necessarily equilibria. Optional AD is a reference only.</p>';
  }else{if(s.amount)supplyCurve(85,20,'AS₀','#8fcea3');supplyCurve(p.full,p.level,s.amount?'AS₁':'AS₀',colours.as);
  if(s.amount){
@@ -71,7 +71,7 @@
  if(s.factor==='productivity'){parts.push('COP '+dir(p.level-20)+' & Productive Capacity '+dir(p.full-85),'SRAS & LRAS '+(s.amount===0?'Unchanged':s.amount>0?'Increase (Outwards Shift)':'Decrease (Inwards Shift)'));}
  else if(s.factor!=='resources')parts.push('COP '+dir(p.level-20),'SRAS '+(p.level===20?'Unchanged':p.level<20?'Increases (Downwards Shift)':'Decreases (Upwards Shift)'));
  if(s.factor==='resources')parts.push('Productive Capacity '+dir(p.full-85),'LRAS '+(p.full===85?'Unchanged':p.full>85?'Increases (Rightwards Shift)':'Decreases (Leftwards Shift)'));
- if(s.showAD){const a=M.equilibrium(110,85,20),b=M.equilibrium(110,p.full,p.level);points(a,b,false);parts.push('P '+dir(b.p-a.p),'RNY '+dir(b.q-a.q));}summary=parts.join(' · ');
+ if(s.showAD){const a=M.equilibrium(110,85,20),b=M.equilibrium(110,p.full,p.level);points(a,b,false);parts.push('GPL '+dir(b.p-a.p),'RNY '+dir(b.q-a.q));}summary=parts.join(' · ');
  const reason={labour:'Labour costs change unit production costs, holding productivity constant.',raw:'Raw-material prices change production costs.',exchange:'An increase means domestic-currency appreciation: imported inputs become cheaper, lowering production costs. A decrease means depreciation and reverses the effect. Only the imported-input channel is shown; AD is fixed.',resources:'The quantity of resources changes productive capacity. This case holds the horizontal SRAS price level fixed.',productivity:'Higher productivity lowers unit production costs AND raises productive capacity: SRAS moves down and LRAS moves right. Lower productivity reverses both changes.'}[s.factor];
  $('mechanism').innerHTML='<p>'+reason+'</p><p>The intermediate section adjusts smoothly between the horizontal and vertical sections. AS₀ remains fixed. AS₁ represents the changed costs and/or capacity.</p><p>'+(s.showAD?'AD is fixed. E₀ and E₁ show the initial and new macroeconomic equilibria.':'AD is hidden, so equilibrium price and income outcomes are not inferred from AS alone.')+'</p><p>Geometry is illustrative; no numerical calibration or multiplier rounds are included.</p>';
  }
