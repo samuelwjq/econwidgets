@@ -38,3 +38,7 @@ initial C response is 45% and initial I response 15% of the comparable G
 change, illustrative only, before induced consumption rounds. This updates
 the earlier consumption-only tax assumption. 270 model cases and a browser
 tax-cut/slider-step summary check passed.
+
+Tax summary now groups consumption and investment as C & I.
+
+Control panel: selectors share row 1; instrument and multiplier sliders share row 2; capacity checkbox and its optional slider share row 3. Exchange-only options follow on row 4. Small screens wrap these rows.
