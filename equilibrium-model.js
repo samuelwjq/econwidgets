@@ -8,11 +8,20 @@
   let lo=0,hi=1;for(let i=0;i<64;i++){const t=(lo+hi)/2,a=supply(t,full,level);if(intercept-a.q>a.p)lo=t;else hi=t;}
   return {...supply((lo+hi)/2,full,level),section:'Intermediate'};
  }
+ function calculate(s){
+  const initial={horizontal:80,intermediate:109,vertical:170}[s.initial];
+  const autonomous=s.ad==='none'?0:(s.ad==='increase'?1:-1)*25*s.spending/100;
+  let shift=autonomous*(1+s.multiplier/100);
+  const full=base.full+(['lras','both'].includes(s.as)?30*s.lras/100:0);
+  const level=base.level-(['sras','both'].includes(s.as)?18*s.sras/100:0);
+  shift=Math.max(level+2-initial,shift);
+  return {initial,final:initial+shift,autonomous,shift,full,level,a:equilibrium(initial,base.full,base.level),b:equilibrium(initial+shift,full,level)};
+ }
  // Capacity changes are illustrated between the vertical sections near the top.
  // Only a pure cost change uses the separated horizontal sections.
  function supplyShiftArrow(full,level){
-  if(full===base.full)return {a:{q:30,p:base.level},b:{q:30,p:level}};
-  return {a:{q:base.full,p:150},b:{q:full,p:150}};
+  if(full===85)return {a:{q:30,p:base.level},b:{q:30,p:level}};
+  return {a:{q:85,p:150},b:{q:full,p:150}};
  }
- const api=Object.freeze({base,supply,equilibrium,supplyShiftArrow});root.EquilibriumModel=api;if(typeof module!=='undefined')module.exports=api;
+ const api=Object.freeze({base,supply,equilibrium,calculate,supplyShiftArrow});root.EquilibriumModel=api;if(typeof module!=='undefined')module.exports=api;
 })(typeof globalThis!=='undefined'?globalThis:this);

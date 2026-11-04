@@ -91,7 +91,7 @@
  if(exportLabel)exportPanel.append(exportLabel);if(download){download.textContent='Download PNG';exportPanel.append(download);}if(copy){copy.textContent='Copy Diagram';bar.append(copy);}
  const svgDownload=document.createElement('button');svgDownload.type='button';svgDownload.textContent='Download SVG';exportPanel.insertBefore(svgDownload,download);
  bar.append(exportMenu);frame.after(bar);
- EconWidgetHelp.install(bar,{kind:document.body.dataset.ewHelpKind|| (document.getElementById('next')?'guided':document.body.classList.contains('ew-elasticity')?'elasticity':document.getElementById('policy-select')?'policy':'standard')});
+ EconWidgetHelp.install(bar,{kind:document.getElementById('next')?'guided':document.body.classList.contains('ew-elasticity')?'elasticity':document.getElementById('policy-select')?'policy':'standard'});
  bars.filter(n=>n!==bar).forEach(n=>{if(!n.children.length)n.remove();});
  let status=main.querySelector('#export-status,[role="status"]');
  if(!status){status=document.createElement('p');status.className='diagram-help';status.setAttribute('role','status');bar.after(status);}
@@ -183,12 +183,6 @@
  // One Export Frame: Heading, Current Context, Diagram And Visible Legends.
  function exportContext() {
   const items=[];
-  const macroCase=document.querySelector('#case-select');
-  if(macroCase)items.push(document.querySelector('#categories button[aria-pressed=true]').textContent,macroCase.selectedOptions[0].textContent);
-  const initial=document.querySelector('#initial-select');
-  if(initial&&visible(initial))items.push(initial.selectedOptions[0].textContent);
-  const shiftSlider=document.querySelector('#shift-size');
-  if(shiftSlider&&visible(shiftSlider))items.push('Shift Size '+shiftSlider.getAttribute('aria-valuetext'));
   if(policySelect)items.push(policySelect.selectedOptions[0].textContent);
   for(const id of ['step-count','case-current','elasticity-label']){const n=document.getElementById(id);if(n&&visible(n)&&n.textContent.trim())items.push(n.textContent.trim());}
   if(document.body.classList.contains('ew-elasticity')){const selected=controls.querySelector('.shift-choice button[aria-pressed="true"]');if(document.getElementById('tr')&&window.widgetState?.shock===0)items.push('No Shift');else if(selected)items.push(selected.textContent.trim());}
