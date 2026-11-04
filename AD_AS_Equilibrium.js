@@ -35,7 +35,7 @@
 
 
  function shiftArrow(a,b,kind){if(Math.hypot(a.q-b.q,a.p-b.p)>1e-7)line(X(a.q),Y(a.p),X(b.q),Y(b.p),colours.red,{'marker-end':'url(#ad-red-arrow)','data-shift-arrow':kind});}
- function render(){window.WidgetInterface?.closeExplanation();EconDiagramPresentation.resetPresentation(svg);drawing.replaceChildren();const s=state(),r=M.calculate(s),adChanged=Math.abs(r.shift)>1e-7,asChanged=r.full!==85||r.level!==20;
+ function render(){window.WidgetInterface?.closeExplanation();EconDiagramPresentation.resetPresentation(svg);drawing.replaceChildren();const s=state(),r=M.calculate(s),adChanged=Math.abs(r.shift)>1e-7,asChanged=r.full!==85||r.level!==M.base.level;
  $('multiplier').setAttribute('aria-valuetext',s.multiplier===0?'No Further Rounds':size(s.multiplier));
  for(const id of ['ad-shift','cop','capacity']){const v=+$(id).value;$(id).setAttribute('aria-valuetext',v===0?'Unchanged':size(Math.abs(v))+' '+(v>0?'increase':'decrease'));}
  line(100,430,490,430,colours.ink,{'marker-end':'url(#ad-axis-arrow)'});line(100,430,100,40,colours.ink,{'marker-end':'url(#ad-axis-arrow)'});text(100,30,'GPL',{'font-size':12,class:'ew-axis-title'});text(490,448,'RNY',{'font-size':12,'text-anchor':'middle',class:'ew-axis-title'});text(88,446,'0',{'font-size':12});
@@ -46,13 +46,13 @@
  }
 
  if(adChanged)demand(r.initial,'AD₀','#93b4f2',true);demand(r.final,adChanged?'AD₁':'AD₀',colours.ad,false);
- if(asChanged)supply(85,20,'AS₀','#8fcea3',{full:r.full,level:r.level});supply(r.full,r.level,asChanged?'AS₁':'AS₀',colours.as,asChanged?{full:85,level:20}:null);
+ if(asChanged)supply(M.base.full,M.base.level,'AS₀','#8fcea3',{full:r.full,level:r.level});supply(r.full,r.level,asChanged?'AS₁':'AS₀',colours.as,asChanged?M.base:null);
  if(adChanged&&$('show-shifts').checked){const p=55,q=r.initial-p;if(q>=0&&q<=120&&q+r.shift>=0&&q+r.shift<=120)shiftArrow({q,p},{q:q+r.shift,p},'ad');else {const p=100;shiftArrow({q:r.initial-p,p},{q:r.final-p,p},'ad');}}
  if(asChanged&&$('show-shifts').checked){const arrow=M.supplyShiftArrow(r.full,r.level);shiftArrow(arrow.a,arrow.b,'as');}
  points(r.a,r.b,false);
- const parts=[adChanged?'AD '+dir(r.shift):'AD Unchanged'];if(asChanged){if(r.level!==20)parts.push('SRAS '+dir(20-r.level));if(r.full!==85)parts.push('LRAS '+dir(r.full-85));}else parts.push('AS Unchanged');parts.push('GPL '+dir(r.b.p-r.a.p),'RNY '+dir(r.b.q-r.a.q));summary=parts.join(' · ');$('ad-summary').textContent=summary;$('diagram-desc').textContent=summary;
+ const parts=[adChanged?'AD '+dir(r.shift):'AD Unchanged'];if(asChanged){if(r.level!==M.base.level)parts.push('SRAS '+dir(M.base.level-r.level));if(r.full!==85)parts.push('LRAS '+dir(r.full-85));}else parts.push('AS Unchanged');parts.push('GPL '+dir(r.b.p-r.a.p),'RNY '+dir(r.b.q-r.a.q));summary=parts.join(' · ');$('ad-summary').textContent=summary;$('diagram-desc').textContent=summary;
  const adWords=adChanged?'AD '+(r.shift>0?'increases (Rightwards Shift).':'decreases (Leftwards Shift).'):s.ad!=='none'?'AD is unchanged because '+'the initial spending change is Zero.':'AD is unchanged.';
- const asWords=[];if(r.level!==20)asWords.push('SRAS '+(r.level<20?'increases (Downwards Shift)':'decreases (Upwards Shift)'));if(r.full!==85)asWords.push('LRAS '+(r.full>85?'increases (Rightwards Shift)':'decreases (Leftwards Shift)'));
+ const asWords=[];if(r.level!==M.base.level)asWords.push('SRAS '+(r.level<M.base.level?'increases (Downwards Shift)':'decreases (Upwards Shift)'));if(r.full!==85)asWords.push('LRAS '+(r.full>85?'increases (Rightwards Shift)':'decreases (Leftwards Shift)'));
  $('mechanism').innerHTML='<p><strong>'+adWords+' '+(asWords.length?asWords.join('; ')+'.':'AS is unchanged.')+'</strong></p><p>E₀ starts on the '+r.a.section.toLowerCase()+' section; E₁ lies on the '+r.b.section.toLowerCase()+' section. P '+(Math.abs(r.b.p-r.a.p)<1e-6?'is unchanged':r.b.p>r.a.p?'increases':'decreases')+'; real national income '+(Math.abs(r.b.q-r.a.q)<1e-6?'is unchanged':r.b.q>r.a.q?'increases':'decreases')+'.</p><p>For the same initial spending change, a larger multiplier gives a larger total AD shift. The AS section determines how the equilibrium adjustment is divided between price and real national income. The controls are qualitative; the diagram is not a numerical forecast.</p>';
  if($('show-multiplier').checked){$('mechanism').innerHTML+='<p>The initial spending change generates income. Further rounds of induced consumption enlarge the total AD shift. ADₐ shows the initial change only; later purple curves show cumulative spending stages.</p>';if(s.multiplier===0){for(const label of drawing.querySelectorAll('.ad-bold'))if(label.textContent==='AD₁')label.dataset.tip='Initial spending change only: no further rounds.';}}
  styleLabels();
@@ -98,7 +98,7 @@
  }
  for(const label of drawing.querySelectorAll('.ad-point')){
   const x=+label.dataset.pointX,y=+label.dataset.pointY,old=label.textContent==='E₀';
-  label.setAttribute('x',x+(old?-18:18));label.setAttribute('y',y-16);label.setAttribute('text-anchor',old?'end':'start');label.setAttribute('fill',old?colours.ink:'#4169e1');
+  label.setAttribute('x',x+(old?-18:18));label.setAttribute('y',y-16);label.setAttribute('text-anchor',old?'end':'start');label.setAttribute('fill','#000000');
   labels.push({id:'label-'+label.textContent,element:label,kind:'point',role:'main',anchorUser:{x,y},leader:true,candidates:(()=>{
    const matrix=svg.getScreenCTM(),own=new DOMPoint(x,y).matrixTransform(matrix),otherLabel=[...drawing.querySelectorAll('.ad-point')].find(e=>e!==label),other=otherLabel?new DOMPoint(+otherLabel.dataset.pointX,+otherLabel.dataset.pointY).matrixTransform(matrix):null,box=label.getBoundingClientRect(),result=[];
    for(let radius=16;radius<=160;radius+=8)for(let i=0;i<16;i++){const cx=own.x+radius*Math.cos(i*Math.PI/8),cy=own.y+radius*Math.sin(i*Math.PI/8);if(!other||Math.hypot(cx-own.x,cy-own.y)<Math.hypot(cx-other.x,cy-other.y)-.5)result.push({x:cx-box.width/2,y:cy-box.height/2});}return result;
