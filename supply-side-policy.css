@@ -1,0 +1,28 @@
+/* Policy controls; suite presentation resources are unchanged. */
+.ew-equilibrium [hidden]{display:none!important}
+.ew-equilibrium .ad-bold{font-weight:700}
+.ew-equilibrium [data-tip]{cursor:help}
+.ew-equilibrium .control-row{display:flex;gap:10px 20px;align-items:center;flex-wrap:wrap;width:100%}
+.ew-equilibrium .control-row>.ew-control-group{flex:1 1 300px;min-width:0;flex-wrap:nowrap}
+.ew-equilibrium .control-row>.ew-control-group>label{white-space:nowrap}
+.ew-equilibrium .policy-selectors>.ew-control-group{flex:0 1 auto}
+.ew-equilibrium .policy-selectors select{flex:0 1 auto;min-width:0;max-width:100%}
+.ew-equilibrium #initial{width:210px}
+.ew-equilibrium #policy{width:auto}
+.ew-equilibrium .ew-range{min-width:90px;flex:1}
+.ew-equilibrium .policy-sliders>.ew-control-group{align-items:center}
+.ew-equilibrium .ew-explanation p{margin:6px 0}
+@media(max-width:600px){
+ .ew-equilibrium .control-row{gap:8px}
+ .ew-equilibrium .control-row>.ew-control-group,.ew-equilibrium .policy-selectors>.ew-control-group{flex:1 1 100%}
+ .ew-equilibrium .policy-selectors select{flex:1;width:auto!important}
+}
+
+.ew-equilibrium .policy-selectors>.ew-control-group:last-child{flex:1 1 360px}
+.ew-equilibrium .policy-selectors #policy{flex:1;width:0}
+.ew-equilibrium .policy-sliders>.ew-control-group{max-width:640px}
+@media(max-width:600px){
+ .ew-equilibrium .policy-selectors>.ew-control-group:last-child{flex-basis:100%}
+}
+
+.ew-equilibrium .ew-summary-strip{height:auto;min-height:28px;padding-block:4px}
