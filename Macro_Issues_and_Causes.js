@@ -146,10 +146,6 @@
   summary=parts.join(' · ');
   if ($('ad-summary').textContent!==summary) $('ad-summary').textContent=summary;
   $('diagram-desc').textContent=categories[categoryIndex].category+' · '+entry.title+'. '+summary;
-  $('case-explanation').textContent=amount===0?'At 0, the economy is at its initial equilibrium. Move the slider to see the effect of the selected cause.':entry.explanation;
-  $('price-note').hidden=!['Inflation','Deflation'].includes(categories[categoryIndex].category);
-  $('case-note').hidden=!entry.note;
-  $('case-note').textContent=entry.note??'';
  }
  function styleLabels(){
  const P=EconDiagramPresentation,C=EconDiagramConfig,segments=[],labels=[],families=[];

@@ -11,6 +11,4 @@
 .ew-macro-issues #shift-label { white-space: nowrap; line-height: 20px; }
 .ew-macro-issues .macro-range { min-width: 0; }
 .ew-macro-issues .macro-range input { width: 100%; margin: 0; }
-.ew-macro-issues .macro-explanation { background: #eff6ff; border: 1px solid #cbdcf7; border-radius: 8px; padding: 10px 12px; margin-top: 8px; }
-.ew-macro-issues .macro-explanation p { margin: 6px 0; }
 .ew-macro-issues .ew-summary-strip { min-height: 28px; height: auto; padding-block: 5px; }
