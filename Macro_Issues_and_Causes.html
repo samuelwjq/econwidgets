@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Macro Issues &amp; Causes</title>
+<link rel="stylesheet" href="econ-widgets.css"><link rel="stylesheet" href="aggregate-equilibrium.css">
+<script defer src="diagram-config.js"></script><script defer src="diagram-presentation.js"></script><script defer src="export-presentation.js"></script><script defer src="equilibrium-model.js"></script><script defer src="macro-issues-cases.js"></script><script defer src="Macro_Issues_and_Causes.js"></script><script defer src="widget-help.js"></script><script defer src="widget-interface.js"></script><script defer src="widget-fullscreen.js"></script></head>
+<body class="ew-page ew-equilibrium ew-macro-issues" data-ew-help-kind="macro-issues"><div class="ew-shell">
+<header class="widget-header ew-header"><h1>Macro Issues &amp; Causes</h1><p>Macroeconomics</p></header>
+<nav class="related-widget ew-nav" aria-label="Widget navigation"><a href="index.html">Back to Main Index</a></nav>
+<div class="controls ew-controls">
+  <div class="control-row macro-categories" id="categories" role="group" aria-label="Phenomenon / Aim"></div>
+  <div class="control-row macro-case-row">
+    <label for="case-select">Cause</label><select id="case-select"></select>
+    <div id="initial-controls" class="macro-inline">
+      <label for="initial-select">Initial Equilibrium</label><select id="initial-select"></select>
+    </div>
+  </div>
+  <div id="shift-controls" class="control-row">
+    <label for="shift-size" id="shift-label"></label>
+    <div class="macro-range">
+      <input type="range" id="shift-size" min="0" max="100" value="0">
+      <div class="ew-slider-captions" aria-hidden="true"><span>0</span><span id="shift-end"></span></div>
+    </div>
+  </div>
+  <div class="toggle-grid ew-options">
+    <label><input id="show-shifts" type="checkbox">Show Shifts in AD/AS</label>
+    <label><input id="tooltips" type="checkbox" checked>Tooltips</label>
+  </div>
+</div>
+<div class="layout ew-layout"><main class="main-content ew-main"><div class="diagram-frame ew-diagram-frame" id="frame"><div class="ew-summary-strip" aria-label="Diagram summary" aria-live="polite" id="ad-summary"></div><svg id="diagram" class="ew-diagram" viewBox="0 0 600 510" role="img" aria-labelledby="diagram-title diagram-desc"><title id="diagram-title">Macro Issues &amp; Causes</title><desc id="diagram-desc"></desc><defs><marker id="ad-axis-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M1 1 L9 5 L1 9 Z" fill="#374151"/></marker><marker id="ad-red-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M1 1 L9 5 L1 9 Z" fill="#dc2626"/></marker><clipPath id="ad-plot-clip"><rect x="100" y="50" width="380" height="380"/></clipPath></defs><g id="ad-drawing"></g></svg><div id="ad-legend" class="ew-legend-slot"></div></div>
+<div class="tooltip" id="diagram-tooltip" hidden role="note"></div><div class="toolbar"><button type="button" id="reset">Reset Diagram</button><label class="export-format" for="image-style">Image Style <select id="image-style"><option value="colour">Colour</option><option value="grayscale">Grayscale (Print)</option></select></label><button type="button" id="download">Download PNG</button><button type="button" id="copy">Copy Diagram</button></div><p id="export-status" role="status" class="diagram-help"></p><section id="macro-explanation" class="ew-explanation macro-explanation" aria-labelledby="explanation-title">
+  <h2 id="explanation-title">What to Notice</h2>
+  <p id="case-explanation"></p>
+  <p id="price-note" hidden>The diagram compares two equilibria. Inflation and deflation refer to sustained changes in GPL over time.</p>
+  <p id="case-note" hidden></p>
+</section></main>
+<aside class="sidebar ew-glossary"><h2 class="glossary-title ew-glossary-title">Glossary</h2>
+<details><summary>Aggregate Demand (AD)</summary><p>Total planned expenditure on domestic final goods and services at each general price level. AD = C + I + G + (X − M).</p></details>
+<details><summary>Aggregate Supply (AS)</summary><p>Total real output producers are willing and able to supply at each general price level over a period of time. The Keynesian curve has horizontal, intermediate and vertical sections.</p></details>
+<details><summary>Macroeconomic Equilibrium</summary><p>The intersection of AD and AS determines the equilibrium general price level and real national income.</p></details>
+<details><summary>General Price Level (GPL)</summary><p>The average level of prices of goods and services in the economy.</p></details>
+<details><summary>Real National Income (RNY)</summary><p>The value of the economy’s output adjusted for price changes.</p></details>
+<details><summary>Productive Capacity</summary><p>The output an economy can produce when its resources are fully employed. The vertical section of AS marks this level.</p></details>
+<details><summary>Actual and Potential Growth</summary><p>Actual growth is an increase in real output. Potential growth is an increase in productive capacity. Negative actual growth is a fall in real output.</p></details>
+<details><summary>Inflation and Deflation</summary><p>Inflation is a sustained rise in GPL. Deflation is a sustained fall in GPL.</p></details>
+<details><summary>Demand-Deficient Unemployment</summary><p>Unemployment caused by insufficient AD. Firms produce less and require fewer workers.</p></details>
+<details><summary>Negative Output Gap</summary><p>The amount by which actual real output is below potential output.</p></details>
+</aside></div></div></body></html>
