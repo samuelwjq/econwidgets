@@ -1,5 +1,5 @@
-Repo contains HTML based interactive widgets for A level Economics diagrams.
+Repo contains HTML based interactive widgets for teaching of A level Economics.
 
-Topics: Central Economic Problem, Demand & Supply, Elasticities, Govt Intervention, Market Failure.
+Widgets meant for either guided instruction or independent revision.
 
 Page: https://samuelwjq.github.io/econwidgets/index.html
